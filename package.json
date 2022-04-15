@@ -1,0 +1,20 @@
+{
+  "name": "algopractice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "TraversingArrays.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garofalof/algopractice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/garofalof/algopractice/issues"
+  },
+  "homepage": "https://github.com/garofalof/algopractice#readme"
+}
