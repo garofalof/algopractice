@@ -57,12 +57,12 @@ function findUnsorted(nums) {
 
 console.log('Result for findUnsorted: ', findUnsorted(nums2));
 
-//Explanation:
-//-Set pointers at beginning of array and end of array
-//-Create max and min variables to track pivots (make sure to initialize with -Infinity and +Infinity for first iteration)
-//-Create pointer variables to track subarray start and end
-//-While left < array length
-//  -If left >= max, update max to left value, else we've found our dip and need to set end to left index
-//  -If right <= min, update min to right value, else we've found our bump and need to set start to right index
-//  -Increase left index and decrease right index
-//-If done iterating, return subarray with start and end indices
+// Explanation:
+// -Set pointers at beginning of array and end of array
+// -Create max and min variables to track pivots (make sure to initialize with -Infinity and +Infinity for first iteration)
+// -Create pointer variables to track subarray start and end
+// -While left < array length
+//   -If left >= max, update max to left value, else we've found our dip and need to set end to left index
+//   -If right <= min, update min to right value, else we've found our bump and need to set start to right index
+//   -Increase left index and decrease right index
+// -If done iterating, return subarray with start and end indices
