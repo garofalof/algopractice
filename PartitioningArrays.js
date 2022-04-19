@@ -22,7 +22,7 @@ function zerosFirst(nums) {
 // -While i < array length
   // -If curr is equal to zero, swap with val at boundary index and increment       boundary index
   // -Increment i
-// If done interating, return array
+// -If done interating, return array
 
 console.log('Result for zerosFirst: ', zerosFirst(nums1));
 
