@@ -289,5 +289,4 @@ function findPeak(array) {
     // -Return mid
 // -If done iterating without returning result, return -1 (should not happen)
 
-
 console.log(findPeak(nums7));
