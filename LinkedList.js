@@ -690,13 +690,13 @@ function linkedListPalindrome(list) {
 // -Space complexity: O(1)
 
 let list = new LinkedList();
-list.head = new ListNode('A');
+list.head = new ListNode("A");
 let head = list.head;
-head.next = new ListNode('B');
+head.next = new ListNode("B");
 let child = head.next;
-child.next = new ListNode('B');
+child.next = new ListNode("B");
 let secondChild = child.next;
-secondChild.next = new ListNode('A');
+secondChild.next = new ListNode("A");
 let thirdChild = secondChild.next;
 list.tail = thirdChild;
 
