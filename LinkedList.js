@@ -253,11 +253,11 @@ function findCycle(list) {
 // Explanation:
 // -Set fast and slow pointers to list head
 // -While fast not null
-  // -Set fast to fast.next
-  // -If fast equals slow, return true
-  // -If fast not null
-    // -Set fast to fast.next and check if fast equals slow. If fast slow, return true.
-  // -Once done incrementing fast pointer and checking if equal to slow, set slow to slow.next
+// -Set fast to fast.next
+// -If fast equals slow, return true
+// -If fast not null
+// -Set fast to fast.next and check if fast equals slow. If fast slow, return true.
+// -Once done incrementing fast pointer and checking if equal to slow, set slow to slow.next
 // -If break out of while loop, no cycle found so we return false
 
 let list = new LinkedList();
@@ -336,13 +336,13 @@ console.log(findCycleLength(list));
 // -Set fast to fast.next
 // -If fast equals slow, break
 // -If fast not null:
-  // -Set fast to fast.next
-  // -If fast equals slow, break
+// -Set fast to fast.next
+// -If fast equals slow, break
 // -Set slow to slow.next
 // -Once done iterating, if fast equals null return -1 as no cycle found
 // -If cycle found, set fast to fast.next and set node count
 // -Loop through cycle until fast and slow meet
-  // -On each cycle, update fast to fast.next and increase node count by one
+// -On each cycle, update fast to fast.next and increase node count by one
 // -Once fast and slow meet, return node count
 
 // Notes:
@@ -380,14 +380,14 @@ secondChild.next = new ListNode(2);
 let thirdChild = secondChild.next;
 list.tail = thirdChild;
 
-console.log(findMedianNode(list))
+console.log(findMedianNode(list));
 
 // Explanation:
 // -Check to see if list is greater than zero or one node
 // -Set fast and slow pointers to head
 // -While fast.next is not null
-  // -Set fast to fast.next
-  // -If fast.next not null, set fast to fast.next and slow to slow.next
+// -Set fast to fast.next
+// -If fast.next not null, set fast to fast.next and slow to slow.next
 // -Once fast pointer reaches end of list, return slow pointer
 
 // Notes:
@@ -448,6 +448,19 @@ function findCycleStart(list) {
 // Time Complexity: O(n)
 // Space Complexity: O(1)
 
+let list = new LinkedList();
+list.head = new ListNode(5);
+let head = list.head;
+head.next = new ListNode(4);
+let child = head.next;
+child.next = new ListNode(3);
+let secondChild = child.next;
+secondChild.next = new ListNode(2);
+let thirdChild = secondChild.next;
+thirdChild.next = child;
+
+console.log(findCycleStart(list));
+
 // Implement a Least Recently Used (LRU) cache
 
 function LRUCache(capacity) {
@@ -471,8 +484,8 @@ function LRUCache(capacity) {
         this.map.delete(first);
       }
       return this.map;
-    }
-  }
+    },
+  };
 }
 
 let cache = new LRUCache(5);
@@ -491,15 +504,15 @@ console.log(cache);
 // Explanation:
 // -Return object with properties map, capacity, get, and put
 // -For get property:
-  // -If key doesn't exist in map, return -1
-  // -Get key and set to temp value
-  // -Delete key from curr position in list
-  // -Set key, val pair at end of list
+// -If key doesn't exist in map, return -1
+// -Get key and set to temp value
+// -Delete key from curr position in list
+// -Set key, val pair at end of list
 // -For put property:
-  // -Delete key
-  // -Set key, val pair at beginning of list
-  // -Check if cache size exceeds capacity
-    // -If so, grab first value and delete
+// -Delete key
+// -Set key, val pair at beginning of list
+// -Check if cache size exceeds capacity
+// -If so, grab first value and delete
 
 // Notes:
 // -Time complexity: O(1) for both reads and writes
@@ -507,8 +520,8 @@ console.log(cache);
 
 // Given two strings S and T, return the minimum window substring of S such that every character in T (including duplicates) is included in the window.
 
-const s = 'ADOBECODEBANC';
-const t = 'ABC';
+const s = "ADOBECODEBANC";
+const t = "ABC";
 
 function minWindow(s, t) {
   let charCount = t.length;
@@ -531,7 +544,7 @@ function minWindow(s, t) {
     char[s[r]]--;
     r++;
     while (charCount === 0) {
-      if ((r - l) < minLength) {
+      if (r - l < minLength) {
         minLength = r - l;
         minStartIndex = l;
       }
@@ -542,7 +555,149 @@ function minWindow(s, t) {
       l++;
     }
   }
-  return minLength === Infinity ? '' : s.substring(minStartIndex, minStartIndex + minLength);
+  return minLength === Infinity
+    ? ""
+    : s.substring(minStartIndex, minStartIndex + minLength);
 }
 
+// Explanation:
+// -Set char count to length of t. Each time we encounter a character in t, we decrement char count until we reach zero.
+// -Set minLength to Infinity. We'll update minLength when right - left < minLength.
+// -Set minStartIndex to zero. We'll update minStartIndex to left index every time right - left < minLength.
+// -Set char to empty map. We'll use map to check chars as we traverse s.
+// -Loop through t and add count to char map
+// -Set left and right pointer to zero
+// -While right index less than s length:
+// -If char at right pointer in t and count greater than 0, decrement charCount
+// -Decrement char at right pointer by 1 in char map
+// -Increase right pointer index by 1
+// -Once all characters in t have been encountered in s:
+// -If right - left < minLength, update minLength to right - left and set minStartIndex to left pointer index
+// -Increase char at left pointer by 1 in char map
+// -If char at left pointer in char map > 0, increase charCount by 1
+// -Increase left pointer index by 1
+// -Once done iterating, check to see if minLength equals Infinity. If so, return empty string as no substring found, else return substring expanding out from minStartIndex
+
+// Notes:
+// -Time complexity: O(n), where n is length of string s. We iterate through the entire doc and we do O(1) work at each step.
+// -Space complexity: O(n), where n is the length of string s. At worst, the result might contain the entire string.
+
 console.log(minWindow(s, t));
+
+// Reverse a linked list in place
+
+function reverseLinkedList(list) {
+  let prev = null;
+  let curr = list.head;
+
+  while (curr !== null) {
+    let next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
+  }
+
+  return prev;
+}
+
+// Explanation:
+// -Set prev to null and curr to head
+// -While curr not null:
+// -Set temp variable next to curr.next
+// -Set curr.next to prev
+// -Set prev to curr
+// -Set curr to next
+// -Once done iterating through list, return prev
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+let list = new LinkedList();
+list.head = new ListNode(5);
+let head = list.head;
+head.next = new ListNode(4);
+let child = head.next;
+child.next = new ListNode(3);
+let secondChild = child.next;
+secondChild.next = new ListNode(2);
+let thirdChild = secondChild.next;
+list.tail = thirdChild;
+
+console.log(reverseLinkedList(list));
+
+// Given a linked list, determine if it is a palindrome
+
+function linkedListPalindrome(list) {
+  if (list.head === null) {
+    return false;
+  }
+
+  function findMedian(list) {
+    let fast = list.head;
+    let slow = list.head;
+    while (fast.next !== null) {
+      fast = fast.next;
+      if (fast.next === null) {
+        break;
+      }
+      fast = fast.next;
+      slow = slow.next;
+    }
+    return slow;
+  }
+
+  function reverse(node) {
+    let prev = null;
+    let curr = node;
+    while (curr !== null) {
+      let next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
+    }
+    return prev;
+  }
+
+  let median = findMedian(list);
+  let last = reverse(median);
+  let start = list.head;
+  let end = last;
+
+  while (start !== null && end !== null) {
+    if (start.val !== end.val) {
+      return false;
+    }
+    start = start.next;
+    end = end.next;
+  }
+
+  return true;
+}
+
+// Explanation:
+// -If list head is null, return false as linked list is empty
+// -Set median to median node using slow and fast pointer helper function
+// -Reverse back half of list starting at median using reverse helper function and set last to new median node
+// -Set start to list head and end to last
+// -While start and end not null:
+// -If start val and end val not equal, return false as no palindrome present
+// -Else set start to start.next and end to end.next
+// -If iterate through whole list without returning false, list is palindrome so we return true
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+let list = new LinkedList();
+list.head = new ListNode('A');
+let head = list.head;
+head.next = new ListNode('B');
+let child = head.next;
+child.next = new ListNode('B');
+let secondChild = child.next;
+secondChild.next = new ListNode('A');
+let thirdChild = secondChild.next;
+list.tail = thirdChild;
+
+console.log(linkedListPalindrome(list));
