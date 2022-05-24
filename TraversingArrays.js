@@ -2,7 +2,7 @@
 // [-4,-2,-1,0,3,5] -> [0,1,4,9,16,25]
 // How can you do it in O(n) time?
 
-let nums1 = [-4,-2,-1,0,3,5];
+let nums1 = [-4, -2, -1, 0, 3, 5];
 
 function sortedSquares(nums) {
   let start = 0;
@@ -28,16 +28,16 @@ function sortedSquares(nums) {
 // -Set pointers at beginning and end
 // -Create result array and a pointer that points to the end of the result array
 // -While start <= end:
-  // -If absolute value of nums[start] is greater than nums[end], set result[resultIndex] to square of nums[start] and increment start
-  // -Else set result[resultIndex] to square of nums[end] and decrement end
-  // -For each iteration, decremenet result[index]
+// -If absolute value of nums[start] is greater than nums[end], set result[resultIndex] to square of nums[start] and increment start
+// -Else set result[resultIndex] to square of nums[end] and decrement end
+// -For each iteration, decremenet result[index]
 // -At end of iteration, return result
 
-console.log('Result for sortedSquares: ', sortedSquares(nums1));
+console.log("Result for sortedSquares: ", sortedSquares(nums1));
 
 // Given an array of integers, find the continuous subarray, which when sorted, results in the entire array being sorted. For example: A = [0,2,3,1,8,6,9], result is the subarray [2,3,1,8,6]
 
-let nums2 = [0,2,3,1,8,6,9];
+let nums2 = [0, 2, 3, 1, 8, 6, 9];
 
 function findUnsorted(nums) {
   let left = 0;
@@ -47,8 +47,8 @@ function findUnsorted(nums) {
   let start = -1;
   end = 0;
   while (left < nums.length) {
-    nums[left] >= max ? max = nums[left] : end = left;
-    nums[right] <= min ? min = nums[right] : start = right;
+    nums[left] >= max ? (max = nums[left]) : (end = left);
+    nums[right] <= min ? (min = nums[right]) : (start = right);
     left++;
     right--;
   }
@@ -65,4 +65,4 @@ function findUnsorted(nums) {
 //   -Increase left index and decrease right index
 // -If done iterating, return subarray with start and end indices
 
-console.log('Result for findUnsorted: ', findUnsorted(nums2));
+console.log("Result for findUnsorted: ", findUnsorted(nums2));

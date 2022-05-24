@@ -21,12 +21,12 @@ function binarySearch(array, target) {
 // Explanation:
 // -Set low bound at 0 and high bound at end of array
 // -While low bound <= high bound
-  // -Set mid to Math.floor(low + (high - low) / 2)
-  // -If mid less than target
-    // -Set low bound to mid + 1
-  // -Else if mid greater than target
-    // -Set high bound to mid - 1
-  // -Else return mid
+// -Set mid to Math.floor(low + (high - low) / 2)
+// -If mid less than target
+// -Set low bound to mid + 1
+// -Else if mid greater than target
+// -Set high bound to mid - 1
+// -Else return mid
 // -If done iterating with no result, return -1
 
 // Notes:
@@ -40,7 +40,7 @@ console.log(binarySearch(nums1, 9));
 // Given a sorted array that can contain duplicates, find the first occurrence of a target element T.
 // For example, if A = [2,3,4,4,5,6] and T = 4, return index 2.
 
-const nums2 = [2,3,4,4,5,6];
+const nums2 = [2, 3, 4, 4, 5, 6];
 
 function binarySearchWithDups(array, target) {
   let low = 0;
@@ -49,7 +49,10 @@ function binarySearchWithDups(array, target) {
     let mid = Math.floor(low + (high - low) / 2);
     if (array[mid] < target) {
       low = mid + 1;
-    } else if (array[mid] > target || (a[mid] === target && mid > 0 && a[mid - 1] === target)) {
+    } else if (
+      array[mid] > target ||
+      (a[mid] === target && mid > 0 && a[mid - 1] === target)
+    ) {
       high = mid - 1;
     } else {
       return mid;
@@ -60,8 +63,8 @@ function binarySearchWithDups(array, target) {
 
 // Explanation:
 // -We make one small modification to the above function:
-  // -If mid is greater than target OR mid equals target and mid is greater than first index and mid - 1 equals target
-    // -We set high to mid - 1
+// -If mid is greater than target OR mid equals target and mid is greater than first index and mid - 1 equals target
+// -We set high to mid - 1
 
 console.log(binarySearchWithDups(nums2, 4));
 
@@ -70,7 +73,7 @@ console.log(binarySearchWithDups(nums2, 4));
 // A = [1,2,4,5,6,8] and T = 0, return index 0
 // A = [1,2,4,5,6,8] and T = 4, return index 3
 
-const nums3 = [1,2,4,5,6,8];
+const nums3 = [1, 2, 4, 5, 6, 8];
 
 function binarySearchWithDupsInsert(array, target) {
   let low = 0;
@@ -89,11 +92,11 @@ function binarySearchWithDupsInsert(array, target) {
 // Explanation:
 // -Set low bound to 0 and high bound to last index in array
 // -While low bound <= high bound
-  // -Set mid to Math.floor(low + (high - low) / 2)
-  // -If mid <= target
-    // -Set low bound to mid + 1
-  // -Else if mid greater than target
-    // -Set high bound to mid - 1
+// -Set mid to Math.floor(low + (high - low) / 2)
+// -If mid <= target
+// -Set low bound to mid + 1
+// -Else if mid greater than target
+// -Set high bound to mid - 1
 // -If done iterating, return low bound
 
 console.log(binarySearchWithDupsInsert(nums3, 3));
@@ -101,7 +104,7 @@ console.log(binarySearchWithDupsInsert(nums3, 3));
 // Given a sorted array of Integers, find the target. If the target is not found,return the element closest to the target.
 // For example, A = [1,2,4,5,7,8,9], Target = 6 -> Output Index = 3 or 4 (since both 5 and 7 are equally close)
 
-const nums4 = [1,2,4,5,7,8,9];
+const nums4 = [1, 2, 4, 5, 7, 8, 9];
 
 function binarySearchFindClosest(array, target) {
   let low = 0;
@@ -122,7 +125,10 @@ function binarySearchFindClosest(array, target) {
 }
 
 function record(array, mid, result, target) {
-  if (result === -1 || Math.abs(array[mid] - target) < Math.abs(array[result] - target)) {
+  if (
+    result === -1 ||
+    Math.abs(array[mid] - target) < Math.abs(array[result] - target)
+  ) {
     return mid;
   }
   return result;
@@ -130,9 +136,9 @@ function record(array, mid, result, target) {
 
 // Explanation:
 // -Classic binary search algorithm w/ an extra step:
-  // -Every iteration, we check to see if the difference between mid and target is less than the difference from previous result and target
-  // -If so, we udpate result to mid
-  // -Else we keep our previous result
+// -Every iteration, we check to see if the difference between mid and target is less than the difference from previous result and target
+// -If so, we udpate result to mid
+// -Else we keep our previous result
 // -Once we complete the iteration, we return the result
 
 console.log(binarySearchFindClosest(nums4, 6));
@@ -140,7 +146,7 @@ console.log(binarySearchFindClosest(nums4, 6));
 // Given an array that is cyclically sorted, find the minimum element. A cyclically sortedarray is a sorted array rotated by some number of elements. Assume all elements are unique.
 // For example: A = [4,5,1,2,3], which is just [1,2,3,4,5] rotated by 2. Result = index 2
 
-const nums5 = [4,5,1,2,3];
+const nums5 = [4, 5, 1, 2, 3];
 
 function cylicallySortedMin(array) {
   let low = 0;
@@ -159,10 +165,10 @@ function cylicallySortedMin(array) {
 // Explanation:
 // -Set low bound to 0 and high bound to last index in array
 // -While low bound < high bound
-  // -Set mid to Math.floor(low + (high - low) / 2)
-  // -If mid value > high value
-    // -Set low to mid + 1
-  // -Else set high to mid
+// -Set mid to Math.floor(low + (high - low) / 2)
+// -If mid value > high value
+// -Set low to mid + 1
+// -Else set high to mid
 // -If done iterating, return low
 
 // Notes:
@@ -235,14 +241,14 @@ function squareRoot(num) {
 // -If num is 0 or 1, return 0 or 1
 // -Set low to 0 and high to num divided by 2
 // -While low <= high
-  // -Set mid to Math.floor(low + (high - low) / 2)
-  // -If mid squared greater than num
-    // -Set high to mid - 1
-  // -Else if mid squared < num
-    // -Check to see if mid + 1 squared is greater than num
-    // -If so, return mid, else set low to mid + 1
-  // -Else if mid squared equals num
-    // -Return mid
+// -Set mid to Math.floor(low + (high - low) / 2)
+// -If mid squared greater than num
+// -Set high to mid - 1
+// -Else if mid squared < num
+// -Check to see if mid + 1 squared is greater than num
+// -If so, return mid, else set low to mid + 1
+// -Else if mid squared equals num
+// -Return mid
 // -Should not happen, but if done iterating without returning result, return -1
 
 console.log(squareRoot(5));
@@ -251,7 +257,7 @@ console.log(squareRoot(5));
 // Assume there are no duplicates. Also, assume that A[-1] and A[length] are negative infinity (-∞). So A[0] can be a peak if A[1] < A[0].
 // For example, A = [1,3,4,5,2] => Peak = 5, A = [5,3,1] => Peak = 5, A = [1,3,5] => Peak = 5
 
-const nums7 = [1,3,4,5,2];
+const nums7 = [1, 3, 4, 5, 2];
 
 function findPeak(array) {
   let low = 0;
@@ -276,17 +282,17 @@ function findPeak(array) {
 // Explanation:
 // -Set low bound to 0 and high bound to last index in array
 // -While low <= high
-  // -Set mid equal to Math.floor(low + (high - low) / 2)
-  // -If mid > 0, set left to array[mid - 1], else neighbor out of bounds and set to -Infinity
-  // -If mid < array length, set right to array[mid + 1], else neighbor out of bounds and set to -Infinity
-  // -If left, mid, and right are sloping upwards to the right
-    // -Set low to mid + 1
-  // -If left, mid, and right are sloping upwards to the left
-    // -Set high to mid - 1
-  // -If mid is a valley
-    // -Go either way
-  // -Else mid must be peak
-    // -Return mid
+// -Set mid equal to Math.floor(low + (high - low) / 2)
+// -If mid > 0, set left to array[mid - 1], else neighbor out of bounds and set to -Infinity
+// -If mid < array length, set right to array[mid + 1], else neighbor out of bounds and set to -Infinity
+// -If left, mid, and right are sloping upwards to the right
+// -Set low to mid + 1
+// -If left, mid, and right are sloping upwards to the left
+// -Set high to mid - 1
+// -If mid is a valley
+// -Go either way
+// -Else mid must be peak
+// -Return mid
 // -If done iterating without returning result, return -1 (should not happen)
 
 console.log(findPeak(nums7));

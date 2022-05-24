@@ -15,12 +15,12 @@ function kadanesAlgorithm(nums) {
 
 // Explanation (Kadane's Algorithm):
 // -Set max sum and max end to first element in array
-  // -Loop through entirety of array
-    // -Set max end equal to highest of max end plus curr or curr
-    // -Set max sum equal to highest of max sum or max end
+// -Loop through entirety of array
+// -Set max end equal to highest of max end plus curr or curr
+// -Set max sum equal to highest of max sum or max end
 // -If done iterating, return max sum
 
-console.log('Result for kadanesAlgorithm: ', kadanesAlgorithm(nums1));
+console.log("Result for kadanesAlgorithm: ", kadanesAlgorithm(nums1));
 
 // Given a String, find the longest substring with unique characters.
 // For example: "whatwhywhere" --> "atwhy"
@@ -56,20 +56,20 @@ function findLongestSubstring(str) {
 // -Set longest to zero
 // -Set longestRange to [0, 0]
 // -While pointers are within array range
-  // -If set doesn't have letter
-   // -Add letter to set and increment right pointer
-   // -If length of pointers greater than longest
-    // -Set longest to length of pointers and updated longest range with pointer indices
-  // -Else
-    // -Delete character from set and increment left pointer
+// -If set doesn't have letter
+// -Add letter to set and increment right pointer
+// -If length of pointers greater than longest
+// -Set longest to length of pointers and updated longest range with pointer indices
+// -Else
+// -Delete character from set and increment left pointer
 // -Return substring of characters within longest range
 
-console.log('Result for findLongestSubstring: ', findLongestSubstring(str1));
+console.log("Result for findLongestSubstring: ", findLongestSubstring(str1));
 
 // Given an array of integers, both -ve and +ve, find a contiguous subarray that sums to 0.
 // For example: [2,4,-2,1,-3,5,-3] --> [4,-2,1,-3]
 
-let nums2 = [2,4,-2,1,-3,5,-3];
+let nums2 = [2, 4, -2, 1, -3, 5, -3];
 
 function findSumsZero(nums) {
   let sum = 0;
@@ -92,20 +92,20 @@ function findSumsZero(nums) {
 // -Set running sum to zero
 // -Create empty object to track sums at each index
 // -Iterate through array
-  // -Add curr to sum
-  // -If running sum equals zero
-    // -Return subarray from 0 to i inclusive
-  // -If sum exists in object
-    // -Return subarray from sum index + 1 to i inclusive
-  // -If sum not in object, add sum and index to object
+// -Add curr to sum
+// -If running sum equals zero
+// -Return subarray from 0 to i inclusive
+// -If sum exists in object
+// -Return subarray from sum index + 1 to i inclusive
+// -If sum not in object, add sum and index to object
 // -If done iterating and found nothing, return null
 
-console.log('Result for findSumsZero: ', findSumsZero(nums2));
+console.log("Result for findSumsZero: ", findSumsZero(nums2));
 
 // Given an array of positive and negative integers, find a subarray whose sum equals X.
 // For example: Input = [2,4,-2,1,-3,5,-3], X = 5 --> Result = [2,4,-2,1]
 
-let nums3 = [2,4,-2,1,-3,5,-3];
+let nums3 = [2, 4, -2, 1, -3, 5, -3];
 let target = 5;
 
 function findSumTarget(nums, target) {
@@ -129,10 +129,10 @@ function findSumTarget(nums, target) {
 // -Set running sum to zero
 // -Create empty object to track sums at each index
 // -Iterate through array
-  // -Add curr to sum
-  // -If sum equals target
-    // -Return subarray from 0 to i inclusive
-  // -If sum object contains sum - target
-    // -Sum has increased by target and we return subarray from sums[sum - target] + 1 to i inclusive
-  // -If sum - target not in object, add sum and index to object
+// -Add curr to sum
+// -If sum equals target
+// -Return subarray from 0 to i inclusive
+// -If sum object contains sum - target
+// -Sum has increased by target and we return subarray from sums[sum - target] + 1 to i inclusive
+// -If sum - target not in object, add sum and index to object
 // If done iterating and nothing found, return null

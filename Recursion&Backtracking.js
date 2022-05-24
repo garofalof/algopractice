@@ -11,7 +11,7 @@ function fibonacci(num) {
     if (num < 3) {
       return 1;
     }
-    return memory[num] = helper(num - 1) + helper(num - 2);
+    return (memory[num] = helper(num - 1) + helper(num - 2));
   }
 
   return helper(num);
@@ -22,11 +22,11 @@ function fibonacci(num) {
 // -Create helper function
 // -Return helper(num)
 // -Inside helper:
-  // -If num in memory
-    // -Return memory[num]
-  // -If num < 3
-    // -Return 1
-  // -Else return memory[num] = helper(num - 1) + helper(num - 2);
+// -If num in memory
+// -Return memory[num]
+// -If num < 3
+// -Return 1
+// -Else return memory[num] = helper(num - 1) + helper(num - 2);
 
 console.log(fibonacci(9));
 
@@ -60,26 +60,40 @@ console.log(power(2, 4));
 
 // Given an array of integers, print all combinations of size X.
 
-let nums1 = [1, 2, 3, 4]
+let nums1 = [1, 2, 3, 4];
 
 function printCombinations(array, size) {
   let result = [];
   let buffer = [];
 
   function helper(start, length, size) {
-    console.log(`Inside helper, start is ${start}, len is ${length}, and size is ${size}. Result is ${result} and buffer is ${buffer}`);
+    console.log(
+      `Inside helper, start is ${start}, len is ${length}, and size is ${size}. Result is ${result} and buffer is ${buffer}`
+    );
     if (buffer.length === size) {
       console.log(`Buffer length (${buffer.length}) equals max size (${size})`);
       result.push([...buffer]);
-      console.log(`Pushed buffer ${[...buffer]} to result. Result updated to ${result}`);
+      console.log(
+        `Pushed buffer ${[...buffer]} to result. Result updated to ${result}`
+      );
       return;
     }
     for (let i = start; i < length; i++) {
-      console.log(`Iterating through array, curr index is ${i} and curr val is ${array[i]}`);
+      console.log(
+        `Iterating through array, curr index is ${i} and curr val is ${array[i]}`
+      );
       buffer.push(array[i]);
-      console.log(`Pushed curr val (${array[i]}) to buffer. Buffer updated to: ${buffer}. About to recurse with start increased to ${i + 1}`);
+      console.log(
+        `Pushed curr val (${
+          array[i]
+        }) to buffer. Buffer updated to: ${buffer}. About to recurse with start increased to ${
+          i + 1
+        }`
+      );
       helper(i + 1, length, size);
-      console.log(`Finished recursing through buffer, about to remove last item from buffer ${buffer}`);
+      console.log(
+        `Finished recursing through buffer, about to remove last item from buffer ${buffer}`
+      );
       buffer.pop();
       console.log(`Emptied buffer to ${buffer}`);
     }
@@ -95,11 +109,11 @@ function printCombinations(array, size) {
 // -Set buffer to empty array
 // -Recurse through helper with start at 0
 // -Inside helper function that takes starting index, input array length, and max size:
-  // -Base case: if buffer length equals max size, push buffer to result and return out of recursion
-  // -Iterate from start to array length
-    // -Push current value to buffer
-    // -Recurse through helper with start index moved up one
-    // -Once done recursing, remove last item from buffer
+// -Base case: if buffer length equals max size, push buffer to result and return out of recursion
+// -Iterate from start to array length
+// -Push current value to buffer
+// -Recurse through helper with start index moved up one
+// -Once done recursing, remove last item from buffer
 // -Once done recursing, return result
 
 // Notes:
@@ -112,22 +126,23 @@ console.log(printCombinations(nums1, 2));
 // For example, 213 => AD, AE, AF, BD, BE, BF, CE, CE, CF
 
 function letterCombinations(digits) {
-
   let map = {
-    2: 'abc',
-    3: 'def',
-    4: 'ghi',
-    5: 'jkl',
-    6: 'mno',
-    7: 'pqrs',
-    8: 'tuv',
-    9: 'wxyz',
+    2: "abc",
+    3: "def",
+    4: "ghi",
+    5: "jkl",
+    6: "mno",
+    7: "pqrs",
+    8: "tuv",
+    9: "wxyz",
   };
 
   const result = [];
 
   function helper(index, buffer) {
-    console.log(`Inside helper, digits are ${digits}, index is ${index} and buffer is ${buffer}`);
+    console.log(
+      `Inside helper, digits are ${digits}, index is ${index} and buffer is ${buffer}`
+    );
     if (index === digits.length) {
       console.log(`Index (${index}) equals digits length (${digits.length})`);
       result.push(buffer);
@@ -136,25 +151,31 @@ function letterCombinations(digits) {
     }
 
     for (let letter of map[digits[index]]) {
-      console.log(`Iterating through digit letters, current digit is ${digits[index]} and current letter is ${letter}`);
-      console.log(`Recursing through helper with index increased to ${index + 1} and ammended buffer of ${buffer + letter}`);
+      console.log(
+        `Iterating through digit letters, current digit is ${digits[index]} and current letter is ${letter}`
+      );
+      console.log(
+        `Recursing through helper with index increased to ${
+          index + 1
+        } and ammended buffer of ${buffer + letter}`
+      );
       helper(index + 1, buffer + letter);
     }
-  };
+  }
 
-  helper(0, '');
-  console.log('Done recursing, about to return result');
+  helper(0, "");
+  console.log("Done recursing, about to return result");
   return result;
-};
+}
 
 // Explanation:
 // -Create map of phone digits
 // -Set result to empty array
 // -Recurse through helper with index at 0 and buffer set to empty string
 // -Inside helper function that takes position index and buffer string:
-  // -Base case: if position index equals digits length, push buffer string to result
-  // -Iterate through letters at current digit index
-    // -Recurse through helper by increase index by 1 and buffer string by current letter
+// -Base case: if position index equals digits length, push buffer string to result
+// -Iterate through letters at current digit index
+// -Recurse through helper by increase index by 1 and buffer string by current letter
 // -Once done recursing, return result
 
 // Notes:
@@ -162,7 +183,7 @@ function letterCombinations(digits) {
 // -Time complexity is exponential, specifically O(4^n), where n is the length of the phone number. At each function call, we can call at most 4 function calls.
 // -Space complexity is O(n), where n is the length of the phone number. The O(n) space is taken both by the buffer and the call stack.
 
-console.log(letterCombinations('245'));
+console.log(letterCombinations("245"));
 
 // Given an array of integers A, print all its subsets.
 // For example:
@@ -181,16 +202,24 @@ function subsets(nums) {
       buffer.push(nums[i]);
       console.log(`Pushed ${nums[i]} to buffer: ${buffer}`);
       result.push([...buffer]);
-      console.log(`Pushed ${[...buffer]} to result: ${result}. About to iterate through helper with index increased to ${i + 1}`);
+      console.log(
+        `Pushed ${[
+          ...buffer,
+        ]} to result: ${result}. About to iterate through helper with index increased to ${
+          i + 1
+        }`
+      );
       helper(i + 1, buffer);
-      console.log(`Done recursing, about to pop last item off of buffer: ${buffer}`);
+      console.log(
+        `Done recursing, about to pop last item off of buffer: ${buffer}`
+      );
       buffer.pop();
       console.log(`Buffer updated to ${buffer}`);
     }
   }
 
   helper(0, []);
-  console.log('Done iterating, about to return result');
+  console.log("Done iterating, about to return result");
   return result;
 }
 
@@ -198,11 +227,11 @@ function subsets(nums) {
 // -Set result array to first result, empty array
 // -Recurse through helper function with index 0 and empty buffer array
 // -Inside helper function that takes start index and buffer array:
-  // -Iterate through nums array with i set to index
-    // -Push current val to buffer
-    // -Push buffer array to result
-    // -Recurse through helper with index increased by 1 and current buffer
-    // -Pop last item from buffer
+// -Iterate through nums array with i set to index
+// -Push current val to buffer
+// -Push buffer array to result
+// -Recurse through helper with index increased by 1 and current buffer
+// -Pop last item from buffer
 // -When done recursing, return result
 
 // Notes:
@@ -216,7 +245,6 @@ console.log(subsets(nums2));
 // For example,
 // Input: A = [1,2,3] and X = 2
 // Output: [[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]]
-
 
 let nums3 = [1, 2, 3, 4];
 
@@ -246,11 +274,11 @@ function permutations(nums, size) {
 // -Set result to empty array
 // -Recurse through helper function with empty set as buffer
 // -Inside helper function that takes buffer:
-  // -Base case: if buffer size equals target size, push buffer to result
-  // -Iterate through nums
-    // -If buffer contains curr val, continue
-    // -Else add curr val to buffer and recurse through helper with new buffer
-    // -If hit base case, delete last val from buffer
+// -Base case: if buffer size equals target size, push buffer to result
+// -Iterate through nums
+// -If buffer contains curr val, continue
+// -Else add curr val to buffer and recurse through helper with new buffer
+// -If hit base case, delete last val from buffer
 // -If done recursing, return result
 
 // Notes:
@@ -292,16 +320,15 @@ function findChange(target, coins) {
 // -Set result to empty array
 // -Call helper function with start index of 0, buffer as empty array, and sum of 0
 // -Insider helper function:
-  // -Base case: if sum > target, return to exit recursive call
-  // -Base case: if sum = taraget, push buffer to result and return to exit recursive call
-  // -Iterate through coins with i = start index
-    // -Push curr coins val to buffer
-    // -Recurse through helper with sum updated to sum + curr coin val
-    // -If hit base case, pop last coin from buffer
+// -Base case: if sum > target, return to exit recursive call
+// -Base case: if sum = taraget, push buffer to result and return to exit recursive call
+// -Iterate through coins with i = start index
+// -Push curr coins val to buffer
+// -Recurse through helper with sum updated to sum + curr coin val
+// -If hit base case, pop last coin from buffer
 // -If done recursing, return result
 
 console.log(findChange(5, coins));
-
 
 // You are given a 2D array that represents a maze. It can have 2 values - 0 and 1. 1 represents a wall and 0 represents a path. The objective of the maze is to reach the bottom right corner, or A[A.length-1][A.length-1]. You start from A[0][0] and can only go in 4 directions - up, down, left or right. Find if a path exists.
 // For example, a path exists in the following maze:
@@ -317,7 +344,7 @@ function pathExists(maze) {
   for (let row of maze) {
     let memoRow = [];
     for (let node of row) {
-      memoRow.push('Unvisited');
+      memoRow.push("Unvisited");
     }
     memo.push(memoRow);
   }
@@ -329,17 +356,22 @@ function pathExists(maze) {
     if (row === maze.length - 1 && col === maze[0].length - 1) {
       return true;
     }
-    if (memo[row][col] === 'Not Found' || memo[row][col] === 'Visiting') {
+    if (memo[row][col] === "Not Found" || memo[row][col] === "Visiting") {
       return false;
     }
-    memo[row][col] = 'Visiting';
-    let pairs = [[row + 1, col], [row - 1, col], [row, col + 1], [row, col - 1]];
+    memo[row][col] = "Visiting";
+    let pairs = [
+      [row + 1, col],
+      [row - 1, col],
+      [row, col + 1],
+      [row, col - 1],
+    ];
     for (let pair of pairs) {
       if (findPath(maze, pair[0], pair[1], memo)) {
         return true;
       }
     }
-    memo[row][col] = 'Not Found';
+    memo[row][col] = "Not Found";
     return false;
   }
 
@@ -354,34 +386,41 @@ function pathExists(maze) {
 // -Create memo array
 // -Call helper function findPath with maze, row 0, col 0, and memo as params
 // -Inside findPath:
-  // -1st base case: if row / col are out of bounds or val is equal to 1, path is not valid so we return false
-  // -2nd base case: if row and col are at the end of maze, path is valid so we return true
-  // -3rd base case: if curr row / col in memo is 'Not Found' or 'Visiting', path is not valid so we return false
-  // -Set curr row / col in memo to visiting
-  // -Create array of pairs for down, up, right, left
-  // -Iterate through pairs
-    // -If findPath returns true w/ current pair, valid path found so we return true
-  // -If done iterating with no valid path found, set row / col in memo to 'Not Found' and return false
+// -1st base case: if row / col are out of bounds or val is equal to 1, path is not valid so we return false
+// -2nd base case: if row and col are at the end of maze, path is valid so we return true
+// -3rd base case: if curr row / col in memo is 'Not Found' or 'Visiting', path is not valid so we return false
+// -Set curr row / col in memo to visiting
+// -Create array of pairs for down, up, right, left
+// -Iterate through pairs
+// -If findPath returns true w/ current pair, valid path found so we return true
+// -If done iterating with no valid path found, set row / col in memo to 'Not Found' and return false
 
 // Notes:
 // -Time complexity is linear w/ memoization, as we only visit each node once, and O(4^n) without memoization, as each node makes 4 calls
 // -Space complexity is O(n) on both the memo and recursion stack
 
-console.log(pathExists([[0, 1, 1, 1], [0, 0, 0, 1], [1, 0, 0, 1], [1, 1, 0, 0]]));
+console.log(
+  pathExists([
+    [0, 1, 1, 1],
+    [0, 0, 0, 1],
+    [1, 0, 0, 1],
+    [1, 1, 0, 0],
+  ])
+);
 
 // Given a Sudoku board, find a solution. The board can have some squares filled out already. You have to fill the rest of the squares./
 // Rules of Sudoku are as follows: In each column, row and 3 x 3 square, you cannot have duplicate numbers. Also, only numbers 1-9 are allowed.
 
 const board = [
-  ["5","3",".",".","7",".",".",".","."],
-  ["6",".",".","1","9","5",".",".","."],
-  [".","9","8",".",".",".",".","6","."],
-  ["8",".",".",".","6",".",".",".","3"],
-  ["4",".",".","8",".","3",".",".","1"],
-  ["7",".",".",".","2",".",".",".","6"],
-  [".","6",".",".",".",".","2","8","."],
-  [".",".",".","4","1","9",".",".","5"],
-  [".",".",".",".","8",".",".","7","9"]
+  ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+  ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+  [".", "9", "8", ".", ".", ".", ".", "6", "."],
+  ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+  ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+  ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+  [".", "6", ".", ".", ".", ".", "2", "8", "."],
+  [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+  [".", ".", ".", ".", "8", ".", ".", "7", "9"],
 ];
 
 function solveSudoku(board) {
@@ -402,7 +441,7 @@ function solveSudoku(board) {
   }
   for (let row = 0; row < board.length; row++) {
     for (let col = 0; col < board[0].length; col++) {
-      if (board[row][col] === '.') {
+      if (board[row][col] === ".") {
         for (let i = 1; i <= 9; i++) {
           const val = i.toString();
           if (isValid(board, row, col, val)) {
@@ -412,7 +451,7 @@ function solveSudoku(board) {
             }
           }
         }
-        board[row][col] = '.';
+        board[row][col] = ".";
         return false;
       }
     }
@@ -422,16 +461,16 @@ function solveSudoku(board) {
 
 // Explanation:
 // -Iterate through rows
-  // -For each row, iterate through columns
-    // -If spot is empty:
-      // -Try values 1 through 9
-        // -Check to see if valid:
-         // -Inside valid checker:
-          // -Start row and start col equal to floor of row / 3 and col / 3
-          // -Try 9 rows, cols, and block spots
-         // -If row, cols, and blocks clear, set curr row and col to val
-         // -Keep recursing until sudoku is solved
-      // -If values 1 through 9 invalid, we've hit dead end and need to set spot to '.' and return false
+// -For each row, iterate through columns
+// -If spot is empty:
+// -Try values 1 through 9
+// -Check to see if valid:
+// -Inside valid checker:
+// -Start row and start col equal to floor of row / 3 and col / 3
+// -Try 9 rows, cols, and block spots
+// -If row, cols, and blocks clear, set curr row and col to val
+// -Keep recursing until sudoku is solved
+// -If values 1 through 9 invalid, we've hit dead end and need to set spot to '.' and return false
 // -If all spots filled, return true
 
 // Notes:
@@ -447,8 +486,8 @@ console.log(solveSudoku(board));
 
 // Output: Return one of these: "i like mango tango", "i like man go tan go", "i like mango tan go", "i like man go tango"
 
-const s = 'ilikemangotango';
-const dictionary = ['i', 'like', 'mango', 'tango', 'man', 'go', 'tan'];
+const s = "ilikemangotango";
+const dictionary = ["i", "like", "mango", "tango", "man", "go", "tan"];
 
 function wordBreak(string, dictionary) {
   let memo = [];
@@ -459,7 +498,7 @@ function wordBreak(string, dictionary) {
     if (index === string.length) {
       return true;
     }
-    if (memo[index] === 'Not Found') {
+    if (memo[index] === "Not Found") {
       return false;
     }
     for (let i = index; i < string.length; i++) {
@@ -470,7 +509,7 @@ function wordBreak(string, dictionary) {
           return true;
         } else {
           result.pop();
-          memo[i + 1] = 'Not Found';
+          memo[i + 1] = "Not Found";
         }
       }
     }
@@ -488,16 +527,16 @@ function wordBreak(string, dictionary) {
 // -Initiate dictionary as new set
 // -Check if backtracking returns true with start index of 0
 // -Inside backtracking:
-  // -If reached end of string, return true
-  // -If memoized index equals not found, return false
-  // -Iterate from index to end of string
-  // -Increase substring length until word found in dictionary
-  // -If word in dictionary
-    // -Push curr substring to result
-    // -Check to see if backtrack returns true with index increased by one
-      // -If so, return true and return result
-      // -Else pop last word from result and mark memo[i + 1] to Not Found
-  // -If exit string iteration, no word found so we return false
+// -If reached end of string, return true
+// -If memoized index equals not found, return false
+// -Iterate from index to end of string
+// -Increase substring length until word found in dictionary
+// -If word in dictionary
+// -Push curr substring to result
+// -Check to see if backtrack returns true with index increased by one
+// -If so, return true and return result
+// -Else pop last word from result and mark memo[i + 1] to Not Found, as there is no combo from i
+// -If exit string iteration, no word found so we return false
 // -Outside backtracking, no words found so we return null
 
 // Notes:
