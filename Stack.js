@@ -182,7 +182,7 @@ stack.pop();
 stack.pop();
 console.log(stack.findMax());
 
-// Given an arithmetic expression with *, /, - &+ operators and single digit numbers, evaluate it and return the result
+// Given an arithmetic expression with *, /, - & + operators and single digit numbers, evaluate it and return the result
 
 function evaluateExpression(exp) {
   function isOperand(num) {
@@ -251,4 +251,85 @@ function evaluateExpression(exp) {
 // -While operator stack has nums, process final operations
 // -Once done process final operations, return last num in operand stack
 
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n), as we store a copy of operand / operator in each of the stacks
+
 console.log(evaluateExpression("1 / 3 + 2"));
+
+// Given an arithmetic expression with *, /, - & + operators and single digit numbers, evaluate it and return the result. The expression can also contain parantheses.
+
+function evaluateExpressionWithParen(exp) {
+  function isOperand(num) {
+    return num >= 0 && num <= 9;
+  }
+
+  function process(operator, operand) {
+    let num2 = operand.pop();
+    let num1 = operand.pop();
+    let op = operator.pop();
+    let result = 0;
+    if (op === "/") {
+      result = num1 / num2;
+    } else if (op === "*") {
+      result = num1 * num2;
+    } else if (op === "+") {
+      result = num1 + num2;
+    } else {
+      result = num1 - num2;
+    }
+    operand.push(result);
+  }
+
+  exp = exp.split(" ");
+  let operand = [];
+  let operator = [];
+  let precedence = {
+    "/": 2,
+    "*": 2,
+    "+": 1,
+    "-": 1,
+    "(": 0,
+    ")": 0,
+  };
+
+  for (let char of exp) {
+    if (isOperand(Number(char))) {
+      operand.push(Number(char));
+    } else if (precedence[char] > 0) {
+      let lastOperator = operator.length - 1;
+      while (
+        operator.length &&
+        precedence[operator[lastOperator]] >= precedence[char]
+      ) {
+        process(operator, operand);
+      }
+      operator.push(char);
+    } else if (char === "(") {
+      operator.push(char);
+    } else if (char === ")") {
+      while (operator[operator.length - 1] !== "(") {
+        process(operator, operand);
+      }
+      operator.pop();
+    }
+  }
+
+  while (operator.length) {
+    process(operator, operand);
+  }
+
+  return operand.pop();
+}
+
+// Explanation:
+// -Similar to problem above w/ the following conditionals added:
+// -If we encounter char '(', we push that char to operator stack
+// -If we encounter char ')', we process all operations inside parantheses until we reach '(' in operator stack.
+// After we reach '(' in operator stack, we are done processing everything inside parantheses, so we pop '(' from operator stack.
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n), as we store a copy of operand / operator in each of the stacks
+
+console.log(evaluateExpressionWithParen("1 + ( 3 / 2 )"));
