@@ -165,3 +165,121 @@ var isPalindrome = function(s) {
 // -Space complexity: O(1), as no extra space is required
 
 console.log(isPalindrome('A man, a plan, a canal: Panama'));
+
+// Given the root of a binary tree, invert the tree, and return its root
+
+var invertTree = function(root) {
+  let work = [root];
+
+  while (work.length) {
+    let curr = work.pop();
+    console.log(curr);
+    if (curr !== null) {
+      [curr.left, curr.right] = [curr.right, curr.left];
+      work.push(curr.left, curr.right);
+    }
+  }
+
+  return root;
+};
+
+// Explanation:
+// -Set stack to root
+// -While stack has work:
+// -Pop last item from stack and set to curr
+// -Reassign right and left values
+// -Once done working through tree, return root
+
+// Notes:
+// -Time complexity: O(n), since we visit each node in the tree once
+// -Space complexity: O(n)
+
+function treeNode(val, left, right) {
+  return {
+    val: (val === undefined ? 0 : val),
+    left: (left === undefined ? null : left),
+    right: (right === undefined ? null : right)
+  };
+}
+
+let t = new treeNode(4);
+t.left = new treeNode(2);
+t.right = new treeNode(7);
+let leftChild = t.left;
+let rightChild = t.right;
+leftChild.left = new treeNode(1);
+leftChild.right = new treeNode(3);
+rightChild.left = new treeNode(6);
+rightChild.right = new treeNode(9);
+console.log(invertTree(t));
+
+// Given two strings s and t, return true if t is an anagram of s, and false otherwise
+
+var isAnagram = function(s, t) {
+  if (s.length !== t.length) {
+    return false;
+  }
+
+  s = s.split('').sort();
+  t = t.split('').sort();
+
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] !== t[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// Explanation:
+// -If s and t are not same length, return false
+// -Sort s and t
+// -For each char in s:
+// -If char at index i is not same for s and t, return false
+// -If done iterating, return true as we have valid anagram
+
+// Notes:
+// -Time complexity: O(n log n), as sorting costs O(n log n) and comparing two strings costs O(n)
+// -Space complexity: O(1)
+
+console.log(isAnagram('anagram', 'nagaram'));
+
+// Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.
+
+// You must write an algorithm with O(log n) runtime complexity.
+
+var search = function(nums, target) {
+  let low = 0;
+  let high = nums.length - 1;
+  while (low <= high) {
+    let mid = low + Math.floor((high - low) / 2);
+    if (nums[mid] === target) {
+      return mid;
+    } else if (nums[mid] < target) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+  return -1;
+};
+
+// Explanation:
+// -Set low to 0 and high to last index of nums array
+// -While low <= high:
+// -Set mid to midpoint between high and low
+// -If num and mid equals target, return mid ind
+// -Else if num at mid < target, set low to mid + 1
+// -Else set high to mid - 1
+// -If done iterating, no target found so we return -1
+
+console.log(search([1, 3, 5, 7, 9, 12], 9));
+
+// An image is represented by an m x n integer grid image where image[i][j] represents the pixel value of the image.
+
+// You are also given three integers sr, sc, and newColor. You should perform a flood fill on the image starting from the pixel image[sr][sc].
+
+// To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with newColor.
+
+// Return the modified image after performing the flood fill.
