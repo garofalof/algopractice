@@ -283,3 +283,50 @@ console.log(search([1, 3, 5, 7, 9, 12], 9));
 // To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with newColor.
 
 // Return the modified image after performing the flood fill.
+
+var floodFill = function(image, sr, sc, newColor, firstColor = image[sr][sc]) {
+  if (sr < 0 || sc < 0 || sr >= image.length || sc >= image[sr].length || image[sr][sc] !== firstColor || image[sr][sc] === newColor) {
+    return image;
+  }
+
+  image[sr][sc] = newColor;
+
+  floodFill(image, sr + 1, sc, newColor, firstColor);
+  floodFill(image, sr - 1, sc, newColor, firstColor);
+  floodFill(image, sr, sc + 1, newColor, firstColor);
+  floodFill(image, sr, sc - 1, newColor, firstColor);
+
+  return image;
+}
+
+// Explanation:
+// -Base case: if sr or sc are out of bounds or if current node is not equal to original color or current node is already new color, return image
+// -Set current node to new color
+// -Recurse on all 4-directional nodes
+// -Once done recursing, return image
+
+// Notes:
+// -Time complexity: O(n), where n is the number of pixels in the image
+// -Space complexity: O(n), which is the size of the implicit call stack when recursing
+
+console.log(floodFill([[0,0,0],[0,0,0]], 1, 0, 2));
+
+// Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+
+var maxSubArray = function(nums) {
+  let maxEnd = nums[0];
+  let maxSum = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    maxEnd = Math.max(maxEnd + nums[i], nums[i]);
+    maxSum = Math.max(maxSum, maxEnd);
+  }
+  return maxSum;
+};
+
+// Explanation:
+// -Set max end and max sum to first element in nums
+// -For each num in nums past first element:
+// -Set max end to greater of max end plus curr num or curr num
+// -Set max sum to greater of max sum or max end
+
+console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));
