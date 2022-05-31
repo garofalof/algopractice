@@ -166,7 +166,7 @@ var isPalindrome = function(s) {
 
 console.log(isPalindrome('A man, a plan, a canal: Panama'));
 
-// Given the root of a binary tree, invert the tree, and return its root
+// 226. Invert Binary Tree
 
 var invertTree = function(root) {
   let work = [root];
@@ -213,7 +213,7 @@ rightChild.left = new treeNode(6);
 rightChild.right = new treeNode(9);
 console.log(invertTree(t));
 
-// Given two strings s and t, return true if t is an anagram of s, and false otherwise
+// 242. Valid Anagram
 
 var isAnagram = function(s, t) {
   if (s.length !== t.length) {
@@ -245,9 +245,7 @@ var isAnagram = function(s, t) {
 
 console.log(isAnagram('anagram', 'nagaram'));
 
-// Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.
-
-// You must write an algorithm with O(log n) runtime complexity.
+// 704. Binary Search
 
 var search = function(nums, target) {
   let low = 0;
@@ -276,13 +274,7 @@ var search = function(nums, target) {
 
 console.log(search([1, 3, 5, 7, 9, 12], 9));
 
-// An image is represented by an m x n integer grid image where image[i][j] represents the pixel value of the image.
-
-// You are also given three integers sr, sc, and newColor. You should perform a flood fill on the image starting from the pixel image[sr][sc].
-
-// To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with newColor.
-
-// Return the modified image after performing the flood fill.
+// 733. Flood Fill
 
 var floodFill = function(image, sr, sc, newColor, firstColor = image[sr][sc]) {
   if (sr < 0 || sc < 0 || sr >= image.length || sc >= image[sr].length || image[sr][sc] !== firstColor || image[sr][sc] === newColor) {
@@ -311,7 +303,7 @@ var floodFill = function(image, sr, sc, newColor, firstColor = image[sr][sc]) {
 
 console.log(floodFill([[0,0,0],[0,0,0]], 1, 0, 2));
 
-// Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+// 53. Maximum Subarray
 
 var maxSubArray = function(nums) {
   let maxEnd = nums[0];
@@ -330,3 +322,50 @@ var maxSubArray = function(nums) {
 // -Set max sum to greater of max sum or max end
 
 console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));
+
+// 235. Lowest Common Ancestor of a Binary Search Tree
+
+var lowestCommonAncestor = function(root, p, q) {
+  while (root) {
+      if (root.val < p.val && root.val < q.val) {
+          root = root.right;
+      } else if (root.val > p.val && root.val > q.val) {
+          root = root.left;
+      } else {
+          break;
+      }
+  }
+  return root;
+};
+
+// Explanation:
+// -While node not null:
+// -If curr node val less than val of nodes p and q, update node to node.right
+// -Else if curr node val greater than val of nodes p and q, update node to node.left
+// -Else node is lowest common ancestor so we break
+// -If ancestor found or node is null, return curr node
+
+// Notes:
+// -Time complexity: O(n), where n is the number of nodes in the BST
+// -Space complexity: O(1)
+
+function TreeNode(val) {
+  return {
+    val,
+    right: null,
+    left: null
+  };
+}
+
+let bst = new TreeNode(6);
+bst.left = new TreeNode(2);
+bst.right = new TreeNode(8);
+let leftChild = bst.left;
+let rightChild = bst.right;
+leftChild.left = new TreeNode(0);
+leftChild.right = new TreeNode(4);
+leftChild.right.left = new TreeNode(3);
+leftChild.right.right = new TreeNode(5);
+rightChild.left = new TreeNode(7);
+rightChild.right = new TreeNode(9);
+console.log(lowestCommonAncestor(bst, leftChild, leftChild.right));
