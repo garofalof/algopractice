@@ -1,14 +1,14 @@
 // 1. Two Sum
 
-var twoSum = function(nums, target) {
+var twoSum = function (nums, target) {
   let map = new Map();
   for (let i = 0; i < nums.length; i++) {
-      let curr = nums[i];
-      let diff = target - curr;
-      if (map.has(diff)) {
-          return [map.get(diff), i];
-      }
-      map.set(curr, i);
+    let curr = nums[i];
+    let diff = target - curr;
+    if (map.has(diff)) {
+      return [map.get(diff), i];
+    }
+    map.set(curr, i);
   }
   return -1;
 };
@@ -28,32 +28,32 @@ console.log(twoSum([3, 9, 4, 1, 7], 7));
 
 // 20. Valid Parentheses
 
-var isValid = function(s) {
+var isValid = function (s) {
   let stack = [];
   let map = {
-      '(': ')',
-      '{': '}',
-      '[': ']'
+    "(": ")",
+    "{": "}",
+    "[": "]",
   };
 
   for (let i = 0; i < s.length; i++) {
-      let curr = s[i];
-      let last = stack.length - 1;
-      if (curr === '(') {
-          stack.push(map[curr]);
-      } else if (curr === '{') {
-          stack.push(map[curr]);
-      } else if (curr === '[') {
-          stack.push(map[curr]);
-      } else if (!stack.length || curr !== stack.pop()) {
-          return false;
-      }
+    let curr = s[i];
+    let last = stack.length - 1;
+    if (curr === "(") {
+      stack.push(map[curr]);
+    } else if (curr === "{") {
+      stack.push(map[curr]);
+    } else if (curr === "[") {
+      stack.push(map[curr]);
+    } else if (!stack.length || curr !== stack.pop()) {
+      return false;
+    }
   }
 
   return stack.length === 0;
 };
 
-console.log(isValid('{[]}'));
+console.log(isValid("{[]}"));
 
 // Explanation:
 // -Create empty stack and map w/ characters
@@ -89,7 +89,7 @@ var mergeTwoLists = function (l1, l2) {
   head.next = mergeTwoLists(l1, l2);
 
   return head;
-}
+};
 
 // Explanation:
 // -If l1 equals null, we've reached end of l1 and will return l2 as remainder of merged list
@@ -103,13 +103,13 @@ var mergeTwoLists = function (l1, l2) {
 // -Time complexity: O(n + m), as each recursive call increments the pointer to l1 or l2 by one, there will be exactly one call to mergeTwoLists per element in each list. Therefore, the time complexity is linear in the combined size of the lists.
 // -Space complexity: O(n + m), as the first call to mergeTwoLists does not return until the ends of both l1 and l2 have been reached, so n + m stack frames consume O(n + m) space.
 
-let list1 = {val: 1, next: {val: 3, next: {val: 5, next: null}}};
-let list2 = {val: 2, next: {val: 4, next: {val: 6, next: null}}};
+let list1 = { val: 1, next: { val: 3, next: { val: 5, next: null } } };
+let list2 = { val: 2, next: { val: 4, next: { val: 6, next: null } } };
 console.log(mergeTwoLists(list1, list2));
 
 // 121. Best Time to Buy and Sell Stock
 
-var maxProfit = function(prices) {
+var maxProfit = function (prices) {
   let min = Infinity;
   let max = 0;
   for (let i = 0; i < prices.length; i++) {
@@ -131,12 +131,12 @@ var maxProfit = function(prices) {
 // -Space complexity: O(1), as only two variables are used
 // -This approach to the solution is known as Kadane's algorithm
 
-console.log(maxProfit([7,1,5,3,6,4]));
+console.log(maxProfit([7, 1, 5, 3, 6, 4]));
 
 // 125. Valid Palindrome
 
-var isPalindrome = function(s) {
-  let str = s.toLowerCase().replace(/[^a-z0-9]/gi, '');
+var isPalindrome = function (s) {
+  let str = s.toLowerCase().replace(/[^a-z0-9]/gi, "");
 
   let start = 0;
   let end = str.length - 1;
@@ -164,11 +164,11 @@ var isPalindrome = function(s) {
 // -Time complexity: O(n), where n is the length of string, as we traverse over each character at most once, until the two pointers meet in the middle, or when we break and return early
 // -Space complexity: O(1), as no extra space is required
 
-console.log(isPalindrome('A man, a plan, a canal: Panama'));
+console.log(isPalindrome("A man, a plan, a canal: Panama"));
 
 // 226. Invert Binary Tree
 
-var invertTree = function(root) {
+var invertTree = function (root) {
   let work = [root];
 
   while (work.length) {
@@ -196,9 +196,9 @@ var invertTree = function(root) {
 
 function treeNode(val, left, right) {
   return {
-    val: (val === undefined ? 0 : val),
-    left: (left === undefined ? null : left),
-    right: (right === undefined ? null : right)
+    val: val === undefined ? 0 : val,
+    left: left === undefined ? null : left,
+    right: right === undefined ? null : right,
   };
 }
 
@@ -215,13 +215,13 @@ console.log(invertTree(t));
 
 // 242. Valid Anagram
 
-var isAnagram = function(s, t) {
+var isAnagram = function (s, t) {
   if (s.length !== t.length) {
     return false;
   }
 
-  s = s.split('').sort();
-  t = t.split('').sort();
+  s = s.split("").sort();
+  t = t.split("").sort();
 
   for (let i = 0; i < s.length; i++) {
     if (s[i] !== t[i]) {
@@ -230,7 +230,7 @@ var isAnagram = function(s, t) {
   }
 
   return true;
-}
+};
 
 // Explanation:
 // -If s and t are not same length, return false
@@ -243,11 +243,11 @@ var isAnagram = function(s, t) {
 // -Time complexity: O(n log n), as sorting costs O(n log n) and comparing two strings costs O(n)
 // -Space complexity: O(1)
 
-console.log(isAnagram('anagram', 'nagaram'));
+console.log(isAnagram("anagram", "nagaram"));
 
 // 704. Binary Search
 
-var search = function(nums, target) {
+var search = function (nums, target) {
   let low = 0;
   let high = nums.length - 1;
   while (low <= high) {
@@ -276,8 +276,15 @@ console.log(search([1, 3, 5, 7, 9, 12], 9));
 
 // 733. Flood Fill
 
-var floodFill = function(image, sr, sc, newColor, firstColor = image[sr][sc]) {
-  if (sr < 0 || sc < 0 || sr >= image.length || sc >= image[sr].length || image[sr][sc] !== firstColor || image[sr][sc] === newColor) {
+var floodFill = function (image, sr, sc, newColor, firstColor = image[sr][sc]) {
+  if (
+    sr < 0 ||
+    sc < 0 ||
+    sr >= image.length ||
+    sc >= image[sr].length ||
+    image[sr][sc] !== firstColor ||
+    image[sr][sc] === newColor
+  ) {
     return image;
   }
 
@@ -289,7 +296,7 @@ var floodFill = function(image, sr, sc, newColor, firstColor = image[sr][sc]) {
   floodFill(image, sr, sc - 1, newColor, firstColor);
 
   return image;
-}
+};
 
 // Explanation:
 // -Base case: if sr or sc are out of bounds or if current node is not equal to original color or current node is already new color, return image
@@ -301,11 +308,21 @@ var floodFill = function(image, sr, sc, newColor, firstColor = image[sr][sc]) {
 // -Time complexity: O(n), where n is the number of pixels in the image
 // -Space complexity: O(n), which is the size of the implicit call stack when recursing
 
-console.log(floodFill([[0,0,0],[0,0,0]], 1, 0, 2));
+console.log(
+  floodFill(
+    [
+      [0, 0, 0],
+      [0, 0, 0],
+    ],
+    1,
+    0,
+    2
+  )
+);
 
 // 53. Maximum Subarray
 
-var maxSubArray = function(nums) {
+var maxSubArray = function (nums) {
   let maxEnd = nums[0];
   let maxSum = nums[0];
   for (let i = 1; i < nums.length; i++) {
@@ -321,19 +338,19 @@ var maxSubArray = function(nums) {
 // -Set max end to greater of max end plus curr num or curr num
 // -Set max sum to greater of max sum or max end
 
-console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));
+console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4]));
 
 // 235. Lowest Common Ancestor of a Binary Search Tree
 
-var lowestCommonAncestor = function(root, p, q) {
+var lowestCommonAncestor = function (root, p, q) {
   while (root) {
-      if (root.val < p.val && root.val < q.val) {
-          root = root.right;
-      } else if (root.val > p.val && root.val > q.val) {
-          root = root.left;
-      } else {
-          break;
-      }
+    if (root.val < p.val && root.val < q.val) {
+      root = root.right;
+    } else if (root.val > p.val && root.val > q.val) {
+      root = root.left;
+    } else {
+      break;
+    }
   }
   return root;
 };
@@ -353,7 +370,7 @@ function TreeNode(val) {
   return {
     val,
     right: null,
-    left: null
+    left: null,
   };
 }
 
@@ -372,7 +389,7 @@ console.log(lowestCommonAncestor(bst, leftChild, leftChild.right));
 
 // 110. Balanced Binary Tree
 
-var isBalanced = function(root) {
+var isBalanced = function (root) {
   function dfs(node) {
     if (!node) {
       return 0;
@@ -399,7 +416,7 @@ function TreeNode(val) {
   return {
     val,
     right: null,
-    left: null
+    left: null,
   };
 }
 
@@ -418,7 +435,7 @@ console.log(isBalanced(bst));
 
 // 141. Linked List Cycle
 
-var hasCycle = function(head) {
+var hasCycle = function (head) {
   if (!head) {
     return false;
   }
@@ -452,7 +469,7 @@ var hasCycle = function(head) {
 function ListNode(val) {
   return {
     val,
-    next: null
+    next: null,
   };
 }
 
@@ -465,18 +482,18 @@ console.log(hasCycle(list));
 
 // 232. Implement Queue using Stacks
 
-var MyQueue = function() {
+var MyQueue = function () {
   return {
     s1: [],
     s2: [],
     front: null,
-    push: function(val) {
+    push: function (val) {
       if (this.s1.length === 0) {
         this.front = val;
       }
       this.s1.push(val);
     },
-    pop: function() {
+    pop: function () {
       if (this.s2.length === 0) {
         while (this.s1.length !== 0) {
           this.s2.push(this.s1.pop());
@@ -484,15 +501,15 @@ var MyQueue = function() {
       }
       return this.s2.pop();
     },
-    peek: function() {
+    peek: function () {
       if (this.s2.length === 0) {
         return this.front;
       }
       return this.s2[this.s2.length - 1];
     },
-    empty: function() {
+    empty: function () {
       return this.s1.length === 0 && this.s2.length === 0;
-    }
+    },
   };
 };
 
