@@ -532,3 +532,136 @@ q.push(5);
 console.log(q.pop());
 console.log(q.peek());
 console.log(q.empty());
+
+// 278. First Bad Version
+
+var solution = function(isBadVersion) {
+  return function(n) {
+    let left = 0;
+    let right = n;
+
+    while (left < right) {
+        let mid = left + Math.floor((right - left) / 2);
+        if (isBadVersion(mid)) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return left;
+  };
+}
+
+// Explanation:
+// -Set left to 0 and right to n
+// -While left < right:
+// -Get midpoint
+// -If midpoint version is bad, set right to midpoint
+// -Else set left to mid + 1
+// -When done iterating, return left
+
+// Notes:
+// -Time complexity: O(log n), as the search space is halved each time
+// -Space complexity: O(1)
+
+// 383. Ransom Note
+
+var canConstruct = function(ransomNote, magazine) {
+  if (ransomeNote.length > magazine.length) {
+    return false;
+  }
+
+  let map = {};
+
+  for (let i = 0; i < magazine.length; i++) {
+    let curr = magazine[i];
+    map[curr] = map[curr] ? map[curr] + 1 : 1;
+  }
+
+  for (let i = 0; i < ransomNote.length; i++) {
+    let curr = ransomNote[i];
+    if (!map[curr] || map[curr] - 1 < 0) {
+      return false;
+    }
+    map[curr]--;
+  }
+
+  return true;
+};
+
+// Explanation:
+// -If magazine length shorter than ransom note, return false as not enough chars available
+// -Create map of character count in magazine
+// -For each char in ransom note:
+// -If curr char does not exist in map or count - 1 < 0, return false
+// -Decrease curr char count in map
+// -If we successfully iterate through ransom note, return true
+
+// Notes:
+// -Time complexity: O(n), where n is magazine length
+// -Space complexity: O(n), where n is number of chars in magazine
+
+console.log(canConstruct('aa', 'aab'));
+
+// 70. Climbing Stairs
+
+var climbStairs = function(n) {
+  if (n === 1) {
+    return 1;
+  }
+
+  let buffer = new Array(n + 1).fill(0);
+  buffer[1] = 1;
+  buffer[2] = 2;
+
+  for (let i = 3; i <= n; i++) {
+    buffer[i] = buffer[i - 1] + buffer[i - 2];
+  }
+
+  return buffer[n];
+}
+
+// Explanation:
+// -If n equals 1, return 1
+// -Create buffer array of length n + 1
+// -Set index 1 and 2 to 1 and 2, as there is 1 way of reaching step one and two ways of reaching step 2
+// -For each subsequent index in buffer:
+// -Set curr index  to sum of index - 1 and index - 2 in buffer
+// -Once done iterating, return last element in buffer
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(climbStairs(8));
+
+// 409. Longest Palindrome
+
+var longestPalindrome = function(str) {
+  let result = 0;
+  let map = {};
+
+  for (let char of str) {
+    map[char] = map[char] ? map[char] + 1 : 1;
+    if (map[char] % 2 === 0) {
+      result += 2;
+    }
+  }
+
+  return str.length > result ? result + 1 : result;
+}
+
+// Explanation:
+// -Set result count to 0 and map to empty object
+// -For each char in string:
+// -Set char count in map to curr + 1 if exists, else 1
+// -If curr count is divisible by 2, increase result count by 2
+// -Once done iterating, check to see if string length > result
+// -If so return result + 1, else return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n), given that map is, at worst, size of string length
+
+console.log(longestPalindrome('abccccdd'));
