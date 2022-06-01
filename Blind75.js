@@ -369,3 +369,149 @@ leftChild.right.right = new TreeNode(5);
 rightChild.left = new TreeNode(7);
 rightChild.right = new TreeNode(9);
 console.log(lowestCommonAncestor(bst, leftChild, leftChild.right));
+
+// 110. Balanced Binary Tree
+
+var isBalanced = function(root) {
+  function dfs(node) {
+    if (!node) {
+      return 0;
+    }
+    let left = 1 + dfs(node.left);
+    let right = 1 + dfs(node.right);
+    if (Math.abs(left - right) > 1) {
+      return Infinity;
+    }
+    return Math.max(left, right);
+  }
+
+  return dfs(root) === Infinity ? false : true;
+};
+
+// Explanation:
+// -Bottom up approach where we find height by going all the way down children of sub trees first. As we work our way back up, if at any point height difference between less and right is greater than 1, we return Infinity. Else we return the max of left and right height at all subtree levels, which will be 1. If our recursive function returns Infinity, our subtree is unbalanced so we return false. Else we return true.
+
+// Notes:
+// -Time complexity: O(n), as we compute the height for every subtree and its children in constant time
+// -Space complexity: O(n), as the recursion stack may go up to O(n) if the tree is unbalanced
+
+function TreeNode(val) {
+  return {
+    val,
+    right: null,
+    left: null
+  };
+}
+
+let bst = new TreeNode(6);
+bst.left = new TreeNode(2);
+bst.right = new TreeNode(8);
+let leftChild = bst.left;
+let rightChild = bst.right;
+leftChild.left = new TreeNode(0);
+leftChild.right = new TreeNode(4);
+leftChild.right.left = new TreeNode(3);
+leftChild.right.right = new TreeNode(5);
+rightChild.left = new TreeNode(7);
+rightChild.right = new TreeNode(9);
+console.log(isBalanced(bst));
+
+// 141. Linked List Cycle
+
+var hasCycle = function(head) {
+  if (!head) {
+    return false;
+  }
+
+  let slow = head;
+  let fast = head.next;
+
+  while (slow !== fast) {
+    if (!fast || !fast.next) {
+      return false;
+    }
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+
+  return true;
+};
+
+// Explanation:
+// -If head is null, return false
+// -Set slow pointer to head and fast pointer to head.next
+// -While slow not equal to fast:
+// -If fast or fast.next is null, no cycle exists so we return false
+// -Else increment slow by 1 and fast by 2 until pointers cross
+// -Once done iterating through list, return true
+
+// Notes:
+// -Time complexity: O(n), as we max visit all nodes plus cycle length
+// -Space complexity: O(1)
+
+function ListNode(val) {
+  return {
+    val,
+    next: null
+  };
+}
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = list.next;
+console.log(hasCycle(list));
+
+// 232. Implement Queue using Stacks
+
+var MyQueue = function() {
+  return {
+    s1: [],
+    s2: [],
+    front: null,
+    push: function(val) {
+      if (this.s1.length === 0) {
+        this.front = val;
+      }
+      this.s1.push(val);
+    },
+    pop: function() {
+      if (this.s2.length === 0) {
+        while (this.s1.length !== 0) {
+          this.s2.push(this.s1.pop());
+        }
+      }
+      return this.s2.pop();
+    },
+    peek: function() {
+      if (this.s2.length === 0) {
+        return this.front;
+      }
+      return this.s2[this.s2.length - 1];
+    },
+    empty: function() {
+      return this.s1.length === 0 && this.s2.length === 0;
+    }
+  };
+};
+
+// Explanation:
+// -Set stack 1 and 2 to empty array and front to null
+// -For push function, if stack 1 is empty set front to val. Then push val to stack 1.
+// -For pop function, if stack 2 is empty pop items off stack 1 and push them to stack 2. Once done emptying stack 1, return popped item off stack 2
+// -For peek function, if stack 2 is empty return front. Else return last item in stack 2.
+// -For empty function, return whether length of stack 1 and 2 is equal to 0
+
+// Notes:
+// -Time complexity: O(1) for push, O(1) amortized for pop, O(1) for peek, and O(1) for empty
+// -Stack complexity: O(n) for push, O(1) for pop, O(1) for empty, and O(1) for empty
+
+let q = new MyQueue();
+q.push(2);
+q.push(3);
+q.push(4);
+q.push(5);
+console.log(q.pop());
+console.log(q.peek());
+console.log(q.empty());
