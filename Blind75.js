@@ -665,3 +665,121 @@ var longestPalindrome = function(str) {
 // -Space complexity: O(n), given that map is, at worst, size of string length
 
 console.log(longestPalindrome('abccccdd'));
+
+// 155. Min Stack
+
+var MinStack = function() {
+  return {
+    stack: [],
+    push: function(val) {
+      if (this.stack.length === 0) {
+        this.stack.push([val, val]);
+      } else {
+        let currentMin = this.stack[this.stack.length - 1][1];
+        let newMin = Math.min(currentMin, val);
+        this.stack.push([val, newMin]);
+      }
+    },
+    pop: function() {
+      let curr = this.stack.pop();
+      return curr[0];
+    },
+    top: function() {
+      return this.stack[this.stack.length - 1][0];
+    },
+    getMin: function() {
+      return this.stack[this.stack.length - 1][1];
+    }
+  };
+}
+
+// Explanation:
+// -Set stack to empty array
+// -For push function:
+// -If stack empty, push val as val and val as min. Else, set new min to lesser of curr min or val and push val and new min to stack
+// -For pop function:
+// -Remove last element in stack and return that element
+// -For top function:
+// -Return last val in stack
+// -For getMin function:
+// -Return last min in stack
+
+// Notes:
+// -Time complexity: O(1) for all operations
+// -Space complexity: O(n), as worst case all operations are push and there will be O(2 * n) space used
+
+let stack = new MinStack();
+stack.push(-2);
+stack.push(0);
+stack.push(-3);
+console.log(stack.getMin());
+stack.pop();
+console.log(stack.top());
+console.log(stack.getMin());
+
+// 206. Reverse Linked List
+
+var reverseList = function(head) {
+  let prev = null;
+  let curr = head;
+
+  while (curr) {
+    let temp = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = temp;
+  }
+
+  return prev;
+};
+
+// Explanation:
+// -Set prev to null and curr to head
+// -While curr not null:
+// -Set temp to curr.next
+// -Set curr.next to prev
+// -Set prev to curr
+// -Set curr to temp
+// -Once done iterating, return prev
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+function ListNode(val) {
+  return {
+    val,
+    next: null
+  };
+}
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = new ListNode(5);
+console.log(reverseList(list));
+
+// 169. Majority Element
+
+var majorityElement = function(nums) {
+  let map = {};
+  for (let i = 0; i < nums.length; i++) {
+    let curr = nums[i];
+    map[curr] = map[curr] ? map[curr] + 1 : 1;
+    if (map[curr] > nums.length / 2) {
+      return curr;
+    }
+  }
+};
+
+// Explanation:
+// -Set map to empty object
+// -For each num in nums:
+// -Either increase map[curr] or set it to 1 if it doesn't exist in map
+// -Check if map[curr] is majority element
+// -If so, return curr
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
