@@ -786,3 +786,76 @@ var majorityElement = function(nums) {
 // Notes:
 // -Time complexity: O(n)
 // -Space complexity: O(n)
+
+// 543. Diameter of Binary Tree
+
+var diameterOfBinaryTree = function(root) {
+  function dfs(node) {
+    if (node === null) {
+        return 0;
+    }
+
+    let left = dfs(node.left);
+    let right = dfs(node.right);
+
+    diameter = Math.max(diameter, left + right);
+    return Math.max(left, right) + 1;
+  }
+
+  let diameter = 0;
+  dfs(root);
+  return diameter;
+};
+
+// Explanation:
+// -Set diameter to 0
+// -For each node starting from root:
+// -If node is null, return 0
+// -Recurse on each child
+// -When we make our way fully down subtree depth, set diameter to max of diameter or left and right path
+// -Return max of left or right plus one to previous node path
+// -Once done recursing, return diameter
+
+// Notes:
+// -Time complexity: O(n), as we only enter and exit from each node once
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let t = new Node(1);
+t.left = new Node(2);
+t.right = new Node(3);
+let leftChild = t.left;
+leftChild.left = new Node(4);
+leftChild.right = new Node(5);
+console.log(diameterOfBinaryTree(t));
+
+// 876. Middle of the Linked List
+
+var middleNode = function(head) {
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast.next) {
+      slow = slow.next;
+      fast = fast.next.next;
+  }
+
+  return slow;
+};
+
+// Explanation:
+// -Set slow and fast pointers to head
+// -While fast and fast.next are not null:
+// -Set slow to slow.next and fast to fast.next.next
+// -Once fast.next is null, we return slow
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)

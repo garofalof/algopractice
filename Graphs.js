@@ -211,6 +211,23 @@ function cloneGraph(root) {
   return graph;
 }
 
+
+// Explanation:
+// -Create map and copy of root
+// -Set key / value of root and root copy in map
+// -Perform dfs on root and root copy
+// -For each node in dfs:
+// -Mark state as visiting
+// -For each edge in curr node edges:
+// -Set edge in map if it doesn't exist
+// -If edge is unvisited, perform dfs on curr edge
+// -Once we visit all edges, mark node as visited
+// -Once done with dfs, push copied nodes to graph and return graph
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n + e), where n is number of nodes and e is number of edges
+
 function Graph() {
   return {
     nodes: [],
@@ -232,22 +249,6 @@ function Graph() {
   };
 }
 
-// Explanation:
-// -Create map and copy of root
-// -Set key / value of root and root copy in map
-// -Perform dfs on root and root copy
-// -For each node in dfs:
-// -Mark state as visiting
-// -For each edge in curr node edges:
-// -Set edge in map if it doesn't exist
-// -If edge is unvisited, perform dfs on curr edge
-// -Once we visit all edges, mark node as visited
-// -Once done with dfs, push copied nodes to graph and return graph
-
-// Notes:
-// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
-// -Space complexity: O(n + e), where n is number of nodes and e is number of edges
-
 let g = new Graph();
 g.addNode(1);
 g.addNode(2);
@@ -258,3 +259,263 @@ g.addEdge(g.nodes[0], g.nodes[2]);
 g.addEdge(g.nodes[1], g.nodes[2]);
 g.addEdge(g.nodes[2], g.nodes[3]);
 console.log(cloneGraph(g.nodes[0]));
+
+// Given a graph and a target number, find if target exists in the graph
+
+function Queue() {
+  return {
+    queue: {},
+    front: 0,
+    back: 0,
+    enqueue: function(val) {
+      this.queue[this.back] = val;
+      this.back++;
+    },
+    dequeue: function() {
+      let curr = this.queue[this.front];
+      delete this.queue[this.front];
+      this.front++;
+      return curr;
+    }
+  }
+}
+
+function findTarget(root, target) {
+  root.state = 'Visiting';
+  let q = new Queue();
+  q.enqueue(root);
+
+  while (Object.keys(q.queue).length) {
+    let curr = q.dequeue();
+
+    if (curr.val === target) {
+      return true;
+    }
+
+    for (let edge of curr.edges) {
+      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+        edge.state = 'Visiting';
+        q.enqueue(edge);
+      }
+    }
+
+    curr.state = 'Visited';
+  }
+
+  return false;
+}
+
+// Explanation:
+// -Set root node state to visiting
+// -Implement queue
+// -Add root node to queue
+// -While queue has work:
+// -Dequeue last node
+// -If node val equals target, return true
+// -For each edge in curr node edges:
+// -If edge unvisited, set edge state to visit and add to queue
+// -After adding edges to queue, set curr node state to visited
+// -If we work through all nodes and don't return true, return false
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n), where n is number of nodes. We can store at most n nodes on the queue, and we also use n space to store state of each node
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      let node = { val, edges: [] };
+      this.nodes.push(node);
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+        }
+        if (curr === to) {
+          this.nodes[i].edges.push(from);
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addEdge(g.nodes[0], g.nodes[1]);
+g.addEdge(g.nodes[0], g.nodes[2]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[2], g.nodes[3]);
+console.log(findTarget(g.nodes[0], 4));
+console.log(findTarget(g.nodes[0], 5));
+
+// Given a graph and a node, print the graph in order of distance from node. All nodes of distance 1 from node, followed by nodes of distance 2 from node, etc.
+
+function Queue() {
+  return {
+    queue: {},
+    front: 0,
+    back: 0,
+    enqueue: function(val) {
+      this.queue[this.back] = val;
+      this.back++;
+    },
+    dequeue: function() {
+      let curr = this.queue[this.front];
+      delete this.queue[this.front];
+      this.front++;
+      return curr;
+    }
+  };
+}
+
+function printLevels(root) {
+  let curr = new Queue();
+  let next = new Queue();
+  root.state = 'Visiting';
+  curr.enqueue(root);
+
+  let result = '';
+
+  while (Object.keys(curr.queue).length) {
+    let node = curr.dequeue();
+    result += node.val + ' ';
+
+    for (let edge of node.edges) {
+      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+        next.enqueue(edge);
+        edge.state = 'Visiting';
+      }
+    }
+
+    node.state = 'Visited';
+
+    if (Object.keys(curr.queue).length === 0) {
+      result += '\n';
+      curr = next;
+      next = new Queue();
+    }
+  }
+
+  return result;
+}
+
+// Explanation:
+// -Implement queues for curr and next
+// -Set root state to visiting
+// -Add root to curr queue
+// -Set result to empty string
+// -While curr queue has work:
+// -Set node to last element in curr
+// -Add node to result on curr line
+// -For each edge of node edges:
+// -If edge is unvisited, add to next queue and update edge state to visiting
+// -Once done adding edges, set curr node state to visited
+// -If curr queue is empty:
+// -Add new line to result and update curr queue to next and next to empty queue
+// -Once done iterating through graph, return result
+
+// Notes:
+// -Time Complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n), where n is number of nodes
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      let node = { val, edges: [] };
+      this.nodes.push(node);
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+        }
+        if (curr === to) {
+          this.nodes[i].edges.push(from);
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addEdge(g.nodes[0], g.nodes[1]);
+g.addEdge(g.nodes[0], g.nodes[2]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[2], g.nodes[3]);
+console.log(printLevels(g.nodes[0]));
+
+// You are given 2 words, both of the same length. Your task is to transform one word to another changing only one letter each time. Each intermediate word should be a valid word in the dictionary. Print out the length of the path.
+
+function Queue() {
+  return {
+    queue: {},
+    front: 0,
+    back: 0,
+    enqueue: function(val) {
+      this.queue[this.back] = val;
+      this.back++;
+    },
+    dequeue: function() {
+      let curr = this.queue[this.front];
+      delete this.queue[this.front];
+      this.front++;
+      return curr;
+    }
+  };
+}
+
+function wordLadder(str1, str2, dict) {
+  let combinations = {};
+
+  for (let word of dict) {
+    for (let i = 0; i < word.length; i++) {
+      let root = word.substring(0, i) + '*' + word.substring(i + 1);
+      if (combinations[root] === undefined) {
+        combinations[root] = [];
+      }
+      combinations[root].push(word);
+    }
+  }
+
+  let q = new Queue();
+  let visited = new Set();
+  let levels = 0;
+  q.enqueue(str1);
+
+  while (Object.keys(q.queue).length) {
+    let word = q.dequeue();
+
+    if (word === str2) {
+      return levels + 1;
+    }
+
+    for (let i = 0; i < word.length; i++) {
+      let root = word.substring(0, i) + '*' + word.substring(i + 1);
+
+      for (let edge of (combinations[root] || [])) {
+        if (!visited.has(edge)) {
+          visited.add(edge);
+          q.enqueue(edge);
+        }
+      }
+    }
+
+    levels++;
+  }
+
+  return -1;
+}
+
+console.log(wordLadder('hit', 'cog', ['hot','dot','dog','lot','log','cog']));
