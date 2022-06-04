@@ -859,3 +859,93 @@ var middleNode = function(head) {
 // Notes:
 // -Time complexity: O(n)
 // -Space complexity: O(1)
+
+function ListNode(val) {
+  return {
+    val,
+    next: null
+  };
+}
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = new ListNode(5);
+console.log(middleNode(list));
+
+// 104. Maximum Depth of Binary Tree
+
+var maxDepth = function(root) {
+  let stack = [[root, 1]];
+  let maxDepth = 0;
+
+  while (stack.length) {
+      let [curr, depth] = stack.pop();
+      if (curr) {
+          maxDepth = Math.max(maxDepth, depth);
+          stack.push([curr.left, depth + 1]);
+          stack.push([curr.right, depth + 1]);
+      }
+  }
+
+  return maxDepth;
+};
+
+// Explanation:
+// -Push root and root depth to stack
+// -Set max depth to 0
+// -While stack has work:
+// -Pop last node off stack
+// -If node not null:
+// -Set max depth to greater of maxDepth or curr node depth
+// -Push left and right nodes w/ depth to stack
+// -Once done iterating, return maxDepth
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let tree = new Node(5);
+tree.left = new Node(3);
+tree.right = new Node(8);
+let leftChild = tree.left;
+leftChild.left = new Node(1);
+leftChild.right = new Node(4);
+console.log(maxDepth(tree));
+
+
+// 217. Contains Duplicate
+
+var containsDuplicate = function(nums) {
+  let map = new Map();
+
+  for (let num of nums) {
+    if (map.has(num)) {
+        return true;
+    }
+      map.set(num);
+  }
+  return false;
+};
+
+// Explanation:
+// -Create map
+// -For each num in nums:
+// -If map has num, return true
+// -Else set num in map
+// -If we don't find a duplicate, return false
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log([0, 1, 2, 1, 4]);
