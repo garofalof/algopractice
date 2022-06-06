@@ -458,24 +458,6 @@ console.log(printLevels(g.nodes[0]));
 
 // You are given 2 words, both of the same length. Your task is to transform one word to another changing only one letter each time. Each intermediate word should be a valid word in the dictionary. Print out the length of the path.
 
-function Queue() {
-  return {
-    queue: {},
-    front: 0,
-    back: 0,
-    enqueue: function(val) {
-      this.queue[this.back] = val;
-      this.back++;
-    },
-    dequeue: function() {
-      let curr = this.queue[this.front];
-      delete this.queue[this.front];
-      this.front++;
-      return curr;
-    }
-  };
-}
-
 function wordLadder(str1, str2, dict) {
   let combinations = {};
 
@@ -489,13 +471,13 @@ function wordLadder(str1, str2, dict) {
     }
   }
 
-  let q = new Queue();
+  let q = [str1];
+  let edges = [];
   let visited = new Set();
   let levels = 0;
-  q.enqueue(str1);
 
-  while (Object.keys(q.queue).length) {
-    let word = q.dequeue();
+  while (q.length) {
+    let word = q.pop();
 
     if (word === str2) {
       return levels + 1;
@@ -507,15 +489,220 @@ function wordLadder(str1, str2, dict) {
       for (let edge of (combinations[root] || [])) {
         if (!visited.has(edge)) {
           visited.add(edge);
-          q.enqueue(edge);
+          edges.push(edge);
         }
       }
     }
 
-    levels++;
+    if (q.length === 0) {
+      q = edges;
+      edges = [];
+      levels++;
+    }
   }
 
-  return -1;
+  return 0;
 }
 
+// Explanation:
+// -For each word in dict, create roots and push words to root. For example, word 'dog' will exist in roots '*og', 'd*g', and 'do*'.
+// -Add start string to queue
+// -Create buffer array for edges
+// -Create set of visited words
+// -Set levels to 0
+// -While queue has work:
+// -Pop curr word from queue
+// -If curr word equals end word, return levels + 1
+// -For each char in curr word:
+// -Create root
+// -For each edge at curr root in map:
+// -If edge not visited, add edge to visited and push edge to edges
+// -Once curr level is done, update queue to edges and increase levels by 1
+// -If while loop breaks, we return 0 as path not possible
+
+// Notes
+// -Time complexity: O(n * m^2), where n is the number of words in dict and m is the length of the longest word. This is due to substring operations in mapping process.
+// -Space complexity: O(n * m^2), where n is the number of words in dict and m is the length of the longest word
+
 console.log(wordLadder('hit', 'cog', ['hot','dot','dog','lot','log','cog']));
+
+// Sort a graph in topological order
+
+function topoSort(graph) {
+  function dfs(node, stack) {
+    node.state = 'Visiting';
+
+    for (let edge of node.edges) {
+      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+        dfs(edge, stack);
+      }
+    }
+
+    node.state = 'Visited';
+    stack.push(node);
+  }
+
+  let stack = [];
+
+  for (let node of graph.nodes) {
+    if (node.state !== 'Visiting' && node.state !== 'Visited') {
+      dfs(node, stack);
+    }
+  }
+
+  return stack;
+}
+
+// Explanation:
+// -Set stack to empty array
+// -For each node in graph:
+// -If node unvisited:
+// -Set node to visiting
+// -For each node edge:
+// -If edge unvisited, recurse on edge
+// -At max depth, mark edge as visited and push node to stack
+// -Once done recursing through graph, return stack
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n), where n is number of nodes
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      let node = { val, edges: [] };
+      this.nodes.push(node);
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+        }
+        if (curr === to) {
+          this.nodes[i].edges.push(from);
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addNode(5);
+g.addEdge(g.nodes[0], g.nodes[2]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[1], g.nodes[3]);
+g.addEdge(g.nodes[2], g.nodes[4]);
+g.addEdge(g.nodes[3], g.nodes[4]);
+console.log(topoSort(g));
+
+// Given a directed graph, find the length of the longest path in the graph. The path can start from any node, not necessarily a root node.
+
+function findDiameter(root) {
+  function topoSort(node) {
+    function dfs(node, stack) {
+      node.state = 'Visiting';
+
+      for (let edge of node.edges) {
+        if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+          dfs(edge, stack);
+        }
+      }
+
+      node.state = 'Visited';
+      stack.push(node);
+    }
+
+    let stack = [];
+    dfs(node, stack);
+    return stack;
+  }
+
+  if (root === null) {
+    return 0;
+  }
+
+  let stack = topoSort(root);
+  console.log('stack is ', JSON.stringify(stack));
+
+  for (let node of stack) {
+    node.longestPath = 0;
+  }
+
+  let diameter = 0;
+
+  while (stack.length) {
+    let curr = stack.pop();
+    diameter = Math.max(diameter, curr.longestPath);
+
+    for (let edge of curr.edges) {
+      if (curr.longestPath + 1 > edge.longestPath) {
+        edge.longestPath = curr.longestPath + 1;
+      }
+    }
+  }
+
+  return diameter;
+}
+
+// Explanation:
+// -If root is null, return 0
+// -Set stack to topologically sorted graph
+// -For each node in stack, set longest path to 0
+// -Set initial diameter to 0
+// -While stack has work:
+// -Pop last node off stack
+// -Update diameter to greater of diameter or curr node longest path
+// -For each edge of curr node:
+// -If curr longest path + 1 is greater than edge longest path, update edge longest path to curr longest path + 1
+// -Once done iterating through stack, return diameter
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n), where n is number of nodes
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      let node = { val, edges: [] };
+      this.nodes.push(node);
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+          break;
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode('A'); 0
+g.addNode('B'); 1
+g.addNode('C'); 2
+g.addNode('D'); 3
+g.addNode('E'); 4
+g.addNode('F'); 5
+g.addNode('G'); 6
+g.addNode('H'); 7
+g.addNode('I'); 8
+g.addEdge(g.nodes[0], g.nodes[1]);
+g.addEdge(g.nodes[0], g.nodes[3]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[1], g.nodes[5]);
+g.addEdge(g.nodes[3], g.nodes[4]);
+g.addEdge(g.nodes[4], g.nodes[8]);
+g.addEdge(g.nodes[5], g.nodes[6]);
+g.addEdge(g.nodes[5], g.nodes[7]);
+g.addEdge(g.nodes[7], g.nodes[8]);
+console.log(findDiameter(g.nodes[0]));
