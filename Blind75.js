@@ -1192,3 +1192,42 @@ var kClosest = function(points, k) {
 // -Space complexity: O(k), as both our map and result array are limited to k elements
 
 console.log(kClosest([[3,3],[5,-1],[-2,4]], 2));
+
+// 3. Longest Substring Without Repeating Characters
+
+var lengthOfLongestSubstring = function(s) {
+  let seen = new Set();
+  let longest = 0;
+  let start = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    let curr = s[i];
+
+    while (seen.has(curr)) {
+      seen.delete(s[start]);
+      start++;
+    }
+
+    seen.add(curr);
+    longest = Math.max(longest, i - start + 1);
+  }
+
+  return longest;
+};
+
+// Explanation:
+// -Set seen to empty set
+// -Set longest to 0
+// -Set start index to 0
+// -For each char in string:
+// -While set has curr:
+// -Delete start from set and increase start pointer by 1
+// -Add curr to set
+// -Update longest to max of longest or curr range
+// -Once done iterating through chars, return longest
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(min(m, n)), where m is the size of alphabet/charset and n is size of string
+
+console.log(lengthOfLongestSubstring('abcdabef'));
