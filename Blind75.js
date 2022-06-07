@@ -949,3 +949,52 @@ var containsDuplicate = function(nums) {
 // -Space complexity: O(n)
 
 console.log([0, 1, 2, 1, 4]);
+
+// 57. Insert Interval
+
+var insert = function(intervals, newInterval) {
+  let result = [];
+  let i = 0;
+
+  while (i < intervals.length && intervals[i][1] < newInterval[0]) {
+    result.push(intervals[i]);
+    i++;
+  }
+
+  while (i < intervals.length && intervals[i][0] <= newInterval[1]) {
+    newInterval[0] = Math.min(intervals[i][0], newInterval[0]);
+    newInterval[1] = Math.max(intervals[i][1], newInterval[1]);
+    i++;
+  }
+
+  result.push(newInterval);
+
+  while (i < intervals.length) {
+    result.push(intervals[i]);
+    i++;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set result to empty array
+// -Set index pointer to 0
+// -For each interval in intervals:
+// -If interval end < new interval start, push interval to result and increase index count
+// -For each interval in intervals:
+// -If interval start <= new interval end:
+// -Set new interval start to min of interval start or new interval start
+// -Set new interval end to max of interval end or new interval end
+// -Increase index count
+// -Push new interval to result
+// -Push remaining intervals to result
+// -Return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(insert([[1,3],[6,9]], [2, 5]));
+console.log(insert([[1,2],[3,5],[6,7],[8,10],[12,16]], [4, 8]));
+
