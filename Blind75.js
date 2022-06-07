@@ -998,3 +998,197 @@ var insert = function(intervals, newInterval) {
 console.log(insert([[1,3],[6,9]], [2, 5]));
 console.log(insert([[1,2],[3,5],[6,7],[8,10],[12,16]], [4, 8]));
 
+// 542. 01 Matrix
+
+var updateMatrix = function(mat) {
+  let direction = [0, 1, 0, -1, 0];
+  let queue = [];
+
+  for (let row = 0; row < mat.length; row++) {
+    for (let col = 0; col < mat[0].length; col++) {
+      if (mat[row][col] === 0) {
+        queue.push([row, col]);
+      } else {
+        mat[row][col] = -1;
+      }
+    }
+  }
+
+  while (queue.length) {
+    let [row, col] = queue.shift();
+
+    for (let i = 0; i < direction.length; i++) {
+      let newRow = row + direction[i];
+      let newCol = col + direction[i + 1];
+
+      if (newRow < 0 || newRow >= mat.length || newCol < 0 || newCol >= mat[0].length || mat[newRow][newCol] !== -1) {
+        continue;
+      }
+
+      mat[newRow][newCol] = mat[row][col] + 1;
+      queue.push([newRow, newCol]);
+    }
+  }
+
+  return mat;
+};
+
+// Explanation:
+// -Set direction helper to array w/ directions
+// -Set queue to empty array
+// -Iterate over matrix
+// -If node equals 0, push to queue
+// -Else set node value to -1
+// -While queue has work:
+// -Pop element from front of queue
+// -For each direction right, down, left, up:
+// -If node out of bounds or equal to 0, continue
+// -Else set new direction node to curr node val plus 1
+// -Then push new node to queue
+// -Once queue is done, return updated matrix
+
+// Notes
+// -Time complexity: O(r * c), where r is number of rows and c is number of columns
+// -Space complexity: O(r * c)
+
+console.log(updateMatrix([
+  [0, 0, 0],
+  [0, 1, 0],
+  [1, 1, 1]
+]));
+
+// 973. K Closest Points to Origin
+
+function MaxHeap() {
+  return {
+    heap: [null],
+    parent: function(i) {
+      return Math.floor(i / 2);
+    },
+    left: function(i) {
+      return 2 * i;
+    },
+    right: function(i) {
+      return (2 * i) + 1;
+    },
+    swap: function(heap, index, target) {
+      [this.heap[index], this.heap[target]] = [this.heap[target], this.heap[index]];
+    },
+    getMax: function() {
+      return this.heap[1];
+    },
+    insert: function(val) {
+      this.heap.push(val);
+      let size = this.heap.length;
+
+      if (size > 2) {
+        let index = size - 1;
+        let parent = this.parent(index);
+
+        while (this.heap[index] > this.heap[parent]) {
+          if (index >= 1) {
+            this.swap(this.heap, index, parent);
+            if (parent > 1) {
+              index = parent;
+              parent = this.parent(index);
+            } else {
+              break;
+            }
+          }
+        }
+      }
+    },
+    remove: function() {
+      let largest = this.heap[1];
+      let size = this.heap.length;
+
+      if (size < 2) {
+        return null;
+      } else if (size === 2) {
+        this.heap.pop();
+      } else {
+        this.heap[1] = this.heap[size - 1];
+        this.heap.pop();
+
+        if (size === 3) {
+          if (this.heap[1] < this.heap[2]) {
+            this.swap(this.heap, 1, 2);
+          }
+          return largest;
+        }
+
+        let index = 1;
+        let left = this.left(index);
+        let right = this.right(index);
+
+        while (this.heap[index] <= this.heap[left] || this.heap[index] <= this.heap[right]) {
+          if (this.heap[left] > this.heap[right]) {
+            this.swap(this.heap, index, left);
+            index = left;
+          } else {
+            this.swap(this.heap, index, right);
+            index = right;
+          }
+
+          left = this.left(index);
+          right = this.right(index);
+
+          if (this.heap[left] === undefined || this.heap[right] === undefined) {
+            break;
+          }
+        }
+      }
+
+      return largest;
+    }
+  };
+}
+
+var kClosest = function(points, k) {
+  let heap = new MaxHeap();
+  let map = {};
+
+  for (let i = 0; i < points.length; i++) {
+    let [x, y] = points[i];
+    let dist = Math.pow(x, 2) + Math.pow(y, 2);
+
+    if (i < k) {
+      heap.insert(dist);
+      map[dist] = map[dist] ? map[dist] + 1 : 1;
+    } else if (dist <= heap.getMax()) {
+      let max = heap.remove();
+      delete map[max];
+      heap.insert(dist);
+      map[dist] = map[dist] ? map[dist] + 1 : 1;
+    }
+  }
+
+  let result = [];
+
+  for (let [x, y] of points) {
+    let dist = Math.pow(x, 2) + Math.pow(y, 2);
+    if (map[dist]) {
+      result.push([x, y]);
+      map[dist]--;
+    }
+  }
+
+  return result;
+}
+
+// Explanation:
+// -Implement max heap
+// -Set map to empty obj to keep track of distances
+// -For each point in points:
+// -Insert first k distances to heap and map
+// -For each subsequent point:
+// -If dist <= max in heap:
+// -Remove max from heap and map
+// -Insert new dist into max heap and map
+// -Once we have k smallest elements, push them to result and return result
+
+// Notes:
+// -Time complexity: O(n log k), as adding / removing from heap takes O(log k) time when capped at k elements
+// -Space complexity: O(k), as both our map and result array are limited to k elements
+
+console.log(kClosest([[3,3],[5,-1],[-2,4]], 2));
