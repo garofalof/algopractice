@@ -706,3 +706,308 @@ g.addEdge(g.nodes[5], g.nodes[6]);
 g.addEdge(g.nodes[5], g.nodes[7]);
 g.addEdge(g.nodes[7], g.nodes[8]);
 console.log(findDiameter(g.nodes[0]));
+
+// Given a graph, find if there is a cycle
+
+function detectCycle(graph) {
+  let { nodes } = graph;
+
+  if (nodes.length === 0 || nodes === null) {
+    return false;
+  }
+
+  function dfs(node) {
+    node.state = 'Visiting';
+
+    let { edges } = node;
+
+    for (let edge of edges) {
+      if (edge.state === 'Visiting' || dfs(edge)) {
+        return true;
+      }
+    }
+
+    node.state = 'Visited';
+    return false;
+  }
+
+  for (let node of nodes) {
+    console.log('on node: ', node);
+    if (node.state === 'Visiting' || dfs(node)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Explanation:
+// -For each node in graph:
+// -Perform dfs on node
+// -While in dfs search:
+// -Mark node as visiting
+// -For each node's edge:
+// -If node's edge is marked as visiting or result of dfs on edge is true, return true and exit
+// -Else mark node as visited and return false
+// -If we perform dfs on a node and its edges without finding a cycle, mark node as visited and return false
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n)
+// -We look for neighbors in visiting state, not visited. This is because if a neighbor has been visited, that means we have processed all nodes from that neighbor without finding a cycle.
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      this.nodes.push({ val, edges: [] });
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+          break;
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addNode(5);
+g.addEdge(g.nodes[1], g.nodes[0]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[2], g.nodes[3]);
+console.log(detectCycle(g));
+
+ // Given a graph, color its nodes with 2 colors - red and blue - such that no 2 neighbors have the same color
+
+ function colorGraph(graph) {
+   for (let node of graph.nodes) {
+     node.state = 'Unvisited';
+     node.level = -1;
+   }
+
+   let red = [];
+   let blue = [];
+
+   for (let node of graph.nodes) {
+     if (node.state === 'Unvisited') {
+       let groups = getBipartiteGroups(node);
+
+       if (groups === null) {
+         return null;
+       }
+
+       red.push(groups[0]);
+       blue.push(groups[1]);
+     }
+   }
+
+   return { red, blue };
+
+   function getBipartiteGroups(start) {
+     start.level = 0;
+     start.state = 'Visiting';
+     let queue = [start];
+     let odds = [];
+     let evens = [];
+
+     while (queue.length) {
+       let curr = queue.shift();
+
+       if (curr.level % 2 === 0) {
+         evens.push(curr);
+       } else {
+         odds.push(curr);
+       }
+
+       for (let edge of curr.edges) {
+         if (edge.state === 'Unvisited') {
+           edge.level = curr.level + 1;
+           queue.push(edge);
+           edge.state = 'Visiting';
+         } else if (edge.level === curr.level) {
+           return null;
+         }
+       }
+
+       curr.state = 'Visited';
+     }
+
+     return [odds, evens];
+   }
+ }
+
+ // Explanation:
+ // -Map over nodes setting state to unvisited and level to -1
+ // -Create red and blue arrays
+ // -For each node in nodes:
+ // -If state is unvisited:
+ // -Set curr node level to 0 and push node to queue
+ // -While queue has work:
+ // -Dequeue curr node
+ // -Add to odds or evens based on curr level
+ // -For each edge in curr node's edges:
+ // -If edge not visited:
+ // -Set edge level to 1 + curr level, add edge to queue, and mark edge as visiting
+ // -Else if edge level equals curr level, odd cycle found so we return null
+ // -Once done iterating through edges, mark curr node as visited
+ // -Once done iterating through queue, return odds and evens to curr node groups
+ // -Push odds to red and evens to blue
+ // -Once done iterating through nodes, return red and blue groups
+
+ // Notes:
+ // -Time complexity: O(n + e), where n is number of nodes and e is number of edges, if we can remove from queue in constant time. O(n^2 * e) if we use JS shift
+ // -Space complexity: O(n), where n is number of nodes
+
+ function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      this.nodes.push({ val, edges: [] });
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+        }
+        if (curr === to) {
+          this.nodes[i].edges.push(from);
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addEdge(g.nodes[0], g.nodes[1]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[2], g.nodes[3]);
+g.addEdge(g.nodes[3], g.nodes[0]);
+console.log(colorGraph(g));
+
+// Given a graph, mark each connected component with a different color
+
+function connectedColor(graph) {
+  let color = 0;
+
+  for (let node of graph.nodes) {
+    if (!node.state) {
+      color++;
+      dfs(node, color);
+    }
+  }
+
+  return graph;
+
+  function dfs(node, color) {
+    node.state = true;
+    node.color = color;
+
+    for (let edge of node.edges) {
+      if (!edge.state) {
+        dfs(edge, color);
+      }
+    }
+  };
+}
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function(val) {
+      this.nodes.push({ val, edges: [] });
+    },
+    addEdge: function(from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].edges.push(to);
+        }
+        if (curr === to) {
+          this.nodes[i].edges.push(from);
+        }
+      }
+    }
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addNode(5);
+g.addNode(6);
+g.addEdge(g.nodes[0], g.nodes[1]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[2], g.nodes[0]);
+g.addEdge(g.nodes[3], g.nodes[4]);
+g.addEdge(g.nodes[4], g.nodes[5]);
+g.addEdge(g.nodes[5], g.nodes[3]);
+console.log(connectedColor(g));
+
+// You are given a 2d array of 1s and 0s. 1 denotes land and 0 denotes water. Land can be connected diagonally or on either 4 ends. You want to find the number of islands in the array.
+
+function countIslands(matrix) {
+  let count = 0;
+
+  for (let row = 0; row < matrix.length; row++) {
+    for (let col = 0; col < matrix[row].length; col++) {
+      let curr = matrix[row][col];
+
+      if (curr === 1) {
+        count++;
+        dfs(matrix, row, col);
+      }
+    }
+  }
+
+  function dfs(matrix, row, col) {
+    if (row < 0 || col < 0 || row >= matrix.length || col >= matrix[row].length || matrix[row][col] === 0) {
+      return;
+    }
+
+    matrix[row][col] = 0;
+    let directions = [0, 1, 0, -1, 0];
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      dfs(matrix, row + directions[i], col + directions[i + 1]);
+    }
+  }
+
+  return count;
+}
+
+// Explanation:
+// -Set count to 0
+// -For each node in matrix:
+// -If node equals 1:
+// -Increase count by 1
+// -Perform dfs on node
+// -In dfs:
+// -Base case: if node out of bounds or equal to 0, return and exit dfs
+// -Set node to 0, as we don't want to revisit
+// -Recurse on left, right, up, and down neighbors of node
+// -Once done recursing, return count
+
+// Notes:
+// -Time complexity: O(r + c), where r is number of rows and c is number of columns
+// -Space complexity: O(r + c) on the recursion stack
+
+console.log(countIslands([
+  [1, 0, 1, 0, 1],
+  [1, 1, 0, 0, 0],
+  [0, 1, 0, 1, 1]
+]));
