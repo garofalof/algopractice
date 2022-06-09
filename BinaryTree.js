@@ -298,3 +298,283 @@ bt.right = new Node(3);
 bt.left.left = new Node(4);
 bt.left.right = new Node(5);
 console.log(postorderTraverse(bt));
+
+
+// Find the height of a binary tree
+
+// Recursive (Bottom Up)
+
+function findHeight(root) {
+  if (root === null) {
+    return -1;
+  }
+
+  return 1 + Math.max(findHeight(root.left), findHeight(root.right));
+}
+
+// Explanation:
+// -If root is null, return -1
+// -Return 1 + max of recursive call on left node and right node
+// -The recursive call finds the height of the left and right subtrees
+
+// Notes
+// -Time complexity: O(n)
+// -Space complexity: O(h) on the recursion stack, where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(5);
+console.log(findHeight(bt));
+
+// Recursive (Top Down)
+
+function findHeight(root) {
+  let height = -1;
+  dfs(root, -1);
+  return height;
+
+  function dfs(node, prev) {
+    if (node === null) {
+      return;
+    }
+
+    let curr = prev + 1;
+
+    if (curr > height) {
+      height = curr;
+    }
+
+    dfs(node.left, curr);
+    dfs(node.right, curr);
+  }
+}
+
+// Explanation:
+// -Set max height to -1
+// -Perform dfs on root node
+// -In dfs, for each node:
+// -If node null, return and exit out of search
+// -Set curr height to prev height + 1
+// -If curr height > curr max height, update max height to curr height
+// -Visit all nodes and left and right subtrees and update height
+
+// Notes
+// -Time complexity: O(n)
+// -Space complexity: O(h) on the recursion stack, where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(5);
+console.log(findHeight(bt));
+
+// Iterative
+
+function findHeight(root) {
+  if (root === null) {
+    return 0;
+  }
+
+  let stack = [[root, 0]];
+  let max = -Infinity;
+
+  while (stack.length) {
+    let [curr, height] = stack.pop();
+    if (curr) {
+      max = Math.max(max, height);
+      stack.push([curr.left, height + 1], [curr.right, height + 1]);
+    }
+  }
+
+  return max;
+}
+
+// Explanation:
+// -If root null, return 0
+// -Push root and initial height of 0 to stack
+// -Set max to -infinity
+// -While stack has work:
+// -Pop last node off stack and get curr node and height
+// -If node not null:
+// -Updated max to greater of max or curr node height
+// -Push left and right nodes and their heights to stack
+// -Once done iterating through tree, return max
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(h), where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(5);
+console.log(findHeight(bt));
+
+// Given a binary tree, find if it is balanced or not
+
+function isBalanced(root) {
+  function dfs(node) {
+    if (node === null) {
+      return 0;
+    }
+
+    let left = 1 + dfs(node.left);
+    let right = 1 + dfs(node.right);
+
+    if (Math.abs(left - right) > 1) {
+      return Infinity;
+    }
+
+    return Math.max(left, right);
+  }
+
+  return dfs(root) === Infinity ? false : true;
+}
+
+// Explanation:
+// -Our function goes all the way to the bottom and checks height at all subtree levels
+// -If diff is > 1, we return Infinity, as it will prevent our max height calculation from updating subtree heights on way up
+// -Else we return max of left and right subtrees
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(h) on the recursion stack, where h is the height of our tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(6);
+bt.left.left.right = new Node(5);
+console.log(isBalanced(bt));
+
+// Find the diameter of a binary tree. The diameter is the longest path from any 2 nodes in the tree.
+
+function binaryTreeDiameter(root) {
+  let diameter = 0;
+
+  dfs(root);
+  return diameter;
+
+  function dfs(node) {
+    if (node === null) {
+      return 0;
+    }
+
+    let left = dfs(node.left);
+    let right = dfs(node.right);
+
+    diameter = Math.max(diameter, left + right);
+    return Math.max(left, right) + 1;
+  }
+}
+
+// Explanation:
+// -Initalize an integer variable diameter to keep track of the longest path we find from the DFS
+// -Implement a recursive function which takes a node as input. It should recursively explore the entire tree rooted at the given node. Once it's finished, it should return the longest path out of its left and right branches:
+// -If node is None, we have reached the end of the tree, hence we should return 0
+// -We want to recursively explore node's children, so we call our recursive function again with node's left and right children. In return, we get the longest path of its left and right children left path and right path
+// -If left path plus right path is longer than the current longest diameter found, then we need to update diameter
+// -Finally, we return the longer one of left path and right path and add 1 to account for the edge connecting our path to its parent
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(h) on the recursion stack, where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(6);
+bt.left.left.right = new Node(5);
+console.log(binaryTreeDiameter(bt));
+
+// Given a Binary Tree, print all paths from root to leaf
+
+function printPaths(root) {
+  dfs(root);
+
+  function dfs(node, memo = []) {
+    if (node === null) {
+      return;
+    }
+
+    memo.push(node.val);
+
+    if (node.left === null && node.right === null) {
+      console.log('path found ', memo);
+    }
+
+    dfs(node.left, memo);
+    dfs(node.right, memo);
+    memo.pop();
+  }
+}
+
+// Explanation:
+// -Traverse down left and right subtrees until we reach leaves
+// -Once we reach leaf, we print path and pop it off of memo stack
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(h) on both the memo and recursion stack, where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(6);
+bt.left.left.right = new Node(5);
+console.log(printPaths(bt));
