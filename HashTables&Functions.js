@@ -22,7 +22,7 @@ function hash(str) {
 // -Time complexity: O(n)
 // -Space complexity: O(1)
 
-console.log(hash('hello there my old friend'));
+console.log(hash("hello there my old friend"));
 
 // String Search: Find the index where the larger string contains a target string
 
@@ -58,8 +58,11 @@ function stringSearch(str, target) {
 
   for (let i = target.length; i < str.length; i++) {
     let toRemove = str.charCodeAt(i - target.length);
-    hash = ((hash - toRemove * xPow)) * x + str.charCodeAt(i);
-    if (hash === hashT && target === str.substring(i - target.length + 1, i + 1)) {
+    hash = (hash - toRemove * xPow) * x + str.charCodeAt(i);
+    if (
+      hash === hashT &&
+      target === str.substring(i - target.length + 1, i + 1)
+    ) {
       return i - target.length + 1;
     }
   }
@@ -85,4 +88,4 @@ function stringSearch(str, target) {
 // -Time complexity: O(n)
 // -Space complexity: O(1)
 
-console.log(stringSearch('hello', 'llo'));
+console.log(stringSearch("hello", "llo"));

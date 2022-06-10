@@ -42,7 +42,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -89,7 +89,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -141,7 +141,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -191,7 +191,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -240,7 +240,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -259,7 +259,7 @@ function postorderTraverse(root) {
 
   while (stack.length) {
     let curr = stack.pop();
-    console.log('curr result is ', result);
+    console.log("curr result is ", result);
 
     if (curr) {
       result.push(curr);
@@ -288,7 +288,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -298,7 +298,6 @@ bt.right = new Node(3);
 bt.left.left = new Node(4);
 bt.left.right = new Node(5);
 console.log(postorderTraverse(bt));
-
 
 // Find the height of a binary tree
 
@@ -325,7 +324,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -376,7 +375,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -427,7 +426,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -472,7 +471,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -521,7 +520,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -546,7 +545,7 @@ function printPaths(root) {
     memo.push(node.val);
 
     if (node.left === null && node.right === null) {
-      console.log('path found ', memo);
+      console.log("path found ", memo);
     }
 
     dfs(node.left, memo);
@@ -567,7 +566,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -578,3 +577,175 @@ bt.left.left = new Node(4);
 bt.left.right = new Node(6);
 bt.left.left.right = new Node(5);
 console.log(printPaths(bt));
+
+// Given a binary tree and two nodes A and B, find their lowest common ancestor. Assume that each node has a pointer to its parent node.
+
+function lowestCommonAncestor(a, b) {
+  if (a === null || b === null) {
+    return null;
+  }
+
+  let pointerA = a;
+  let pointerB = b;
+  let depthA = -1;
+  let depthB = -1;
+
+  while (pointerA) {
+    depthA++;
+    pointerA = pointerA.parent;
+  }
+  while (pointerB) {
+    depthB++;
+    pointerB = pointerB.parent;
+  }
+
+  let lowestNode = depthA > depthB ? a : b;
+  let highestNode = depthA > depthB ? b : a;
+
+  for (let i = 0; i < Math.abs(depthA - depthB); i++) {
+    lowestNode = lowestNode.parent;
+  }
+  while (lowestNode !== highestNode) {
+    lowestNode = lowestNode.parent;
+    highestNode = highestNode.parent;
+  }
+
+  return lowestNode;
+}
+
+// Explanation:
+// -If either node A or B are null, return null as no ancestor exists
+// -Set pointer A to node A and pointer B to node B
+// -Set depth A to -1 and depth B to -1
+// -For both A and B, traverse up until we reach root and increase depth at each pass
+// -If depth A > depth B, set lowest node to A and highest node to B
+// -Else set lowest node to B and highest node to A
+// -Raise lowest node to same depth as highest node
+// -While lowest node not equal to highest node, raise each node until they converge
+// -Once nodes converge, return lowest or highest nodes
+
+// Notes:
+// -Time complexity: O(h), where h is the height of the binary tree
+// -Space complexity: O(1)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+    parent: null,
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(5);
+bt.left.parent = bt;
+bt.right.parent = bt;
+bt.left.left.parent = bt.left;
+bt.left.right.parent = bt.left;
+console.log(lowestCommonAncestor(bt.left.left, bt.right));
+
+// Given 2 nodes of a tree A and B, find their lowest common ancestor
+
+function lowestCommonAncestor(root, a, b, message = "root") {
+  console.log(`recursive call, ${root} is being called from ${message}`);
+  if (root === null || root === a || root === b) {
+    return root;
+  }
+
+  let leftAncestor = lowestCommonAncestor(root.left, a, b, "left");
+  let rightAncestor = lowestCommonAncestor(root.right, a, b, "right");
+
+  if (leftAncestor !== null && rightAncestor !== null) {
+    return root;
+  }
+
+  return leftAncestor !== null ? leftAncestor : rightAncestor;
+}
+
+// Explanation:
+// -If curr node is null, we return null and exit
+// -If curr node is a or b, we return curr node and exit
+// -If curr node not a or b, we check left and right subtrees
+// -If left or right ancestor not equal to null, that means we found a or b in each subtree and the curr node is the LCA. This is the only case where left ancestor and right ancestor are not null.
+// -Now we know either left ancestor or right ancestor is null, so we return whichever is not null to our recursive function. This ensures that an LCA found in a subtree is propagated up.
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(h) on the recursion stack
+// -Alternatively, we could solve this iteratively by iterating through tree and assigning parents up to nodes a and b and working our way backwards up the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.left.left = new Node(4);
+bt.left.right = new Node(6);
+bt.left.left.right = new Node(5);
+console.log(lowestCommonAncestor(bt, bt.left.left.right, bt.right));
+
+// Given inorder and preorder traversals of a binary tree, reconstruct the binary tree
+
+function buildTree(preorder, inorder) {
+  let map = new Map();
+
+  for (let i = 0; i < inorder.length; i++) {
+    map.set(inorder[i], i);
+  }
+
+  let preorderIdx = 0;
+
+  return arrayToTree(preorder, 0, preorder.length - 1);
+
+  function arrayToTree(preorder, left, right) {
+    if (left > right) {
+      return null;
+    }
+
+    let rootValue = preorder[preorderIdx];
+    let root = new Node(rootValue);
+    preorderIdx++;
+
+    root.left = arrayToTree(preorder, left, map.get(rootValue) - 1);
+    root.right = arrayToTree(preorder, map.get(rootValue) + 1, right);
+
+    return root;
+  }
+}
+
+// Explanation:
+// -Push inorder vals to map with their respective indexes
+// -Set preorder index to 0
+// -Call array to tree on full preorder array
+// -For array to tree:
+// -If left > right, return null
+// -Get root value at current preorder index
+// -Create node w/ that value
+// -Increase preorder index by 1
+// -Create left subtree by using 0 and inorder index - 1 as bounds
+// -Create right subtree by using inorder index + 1 and preorder length as bounds
+// -Once done create nodes at all depths, return root
+
+// Notes:
+// -Time complexity: O(n) for both building hashmap and building tree
+// -Space complexity: O(n) for both building the hashmap and storing the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+console.log(buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]));

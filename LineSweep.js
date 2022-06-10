@@ -47,7 +47,13 @@ function findOverlap(intervals) {
 // -Time complexity: O(n)
 // -Space complexity: O(n)
 
-console.log(findOverlap([[1, 3], [5, 7], [6, 9]]));
+console.log(
+  findOverlap([
+    [1, 3],
+    [5, 7],
+    [6, 9],
+  ])
+);
 
 // Given a list of intervals, merge all overlapping intervals. At the end of the merge, there should be no overlapping intervals.
 
@@ -85,7 +91,14 @@ function mergeIntervals(intervals) {
 // -Time complexity: O(n log n), n for linear scan of list and log n for sort
 // -Space complexity: O(n)
 
-console.log(mergeIntervals([[7, 9], [1, 3], [6, 8], [3, 5]]));
+console.log(
+  mergeIntervals([
+    [7, 9],
+    [1, 3],
+    [6, 8],
+    [3, 5],
+  ])
+);
 
 // You are given a list of buildings that are part of a skyline. For each building, you are given the start, end, and height points. So if a building has [start=1, end=4, height=5], it represents a building of height 5 from point 1 on a number line to point 4.
 // Given a list of such buildings that may overlap, you want to draw the skyline.
@@ -160,4 +173,12 @@ function drawSkyline(buildings) {
 // -Time complexity: O(n^2), as we perform linear splice operation on every point. If we were to use max heap, we could bring down to O(n log n)
 // -Space complexity: O(n)
 
-console.log(drawSkyline([[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]));
+console.log(
+  drawSkyline([
+    [2, 9, 10],
+    [3, 7, 15],
+    [5, 12, 12],
+    [15, 20, 10],
+    [19, 24, 8],
+  ])
+);

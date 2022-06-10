@@ -4,13 +4,13 @@ function Graph() {
   return {
     nodes: [],
     edges: [],
-    addNode: function(val) {
+    addNode: function (val) {
       this.nodes.push(val);
     },
-    contains: function(val) {
+    contains: function (val) {
       return this.nodes.includes(val);
     },
-    removeNode: function(val) {
+    removeNode: function (val) {
       let curr = this.nodes.indexOf(val);
       this.nodes.splice(curr, 1);
       for (let i = 0; i < this.edges.length; i++) {
@@ -20,28 +20,31 @@ function Graph() {
         }
       }
     },
-    hasEdge: function(from, to) {
+    hasEdge: function (from, to) {
       for (let i = 0; i < this.edges.length; i++) {
         let curr = this.edges[i];
-        if (curr[0] === from && curr[1] === to || curr[0] === to && curr[1] === from) {
+        if (
+          (curr[0] === from && curr[1] === to) ||
+          (curr[0] === to && curr[1] === from)
+        ) {
           return true;
         }
       }
       return false;
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       if (this.hasEdge(from, to)) {
         return;
       }
       this.edges.push([from, to]);
     },
-    removeEdge: function(from, to) {
+    removeEdge: function (from, to) {
       if (!this.hasEdge(from, to)) {
         return;
       }
       let curr = this.edges.indexOf([from, to]);
       this.edges.splice(curr, 1);
-    }
+    },
   };
 }
 
@@ -88,30 +91,30 @@ console.log(g);
 
 function findNode(graph, target) {
   function dfs(node, target) {
-    node.state = 'Visiting';
+    node.state = "Visiting";
 
     if (node.val === target) {
       return true;
     }
 
     for (let edge of node.edges) {
-      if (edge.state === 'Unvisited' && dfs(edge, target)) {
+      if (edge.state === "Unvisited" && dfs(edge, target)) {
         return true;
       }
     }
 
-    node.state = 'Visited';
+    node.state = "Visited";
     return false;
   }
 
   let nodes = graph.nodes;
 
   for (let node of nodes) {
-    node.state = 'Unvisited';
+    node.state = "Unvisited";
   }
 
   for (let node of nodes) {
-    if (node.state === 'Unvisited' && dfs(node, target)) {
+    if (node.state === "Unvisited" && dfs(node, target)) {
       return true;
     }
   }
@@ -139,11 +142,11 @@ function findNode(graph, target) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       let node = { val, edges: [] };
       this.nodes.push(node);
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -153,7 +156,7 @@ function Graph() {
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -177,19 +180,19 @@ console.log(findNode(g, 5));
 
 function cloneGraph(root) {
   function dfs(root, map) {
-    root.state = 'Visiting';
+    root.state = "Visiting";
     let edges = root.edges;
 
     for (let edge of edges) {
       if (!map.has(edge)) {
         map.set(edge, edge);
       }
-      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+      if (edge.state !== "Visiting" && edge.state !== "Visited") {
         dfs(edge, map);
       }
     }
 
-    root.state = 'Visited';
+    root.state = "Visited";
   }
 
   if (root === null) {
@@ -211,7 +214,6 @@ function cloneGraph(root) {
   return graph;
 }
 
-
 // Explanation:
 // -Create map and copy of root
 // -Set key / value of root and root copy in map
@@ -231,11 +233,11 @@ function cloneGraph(root) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       let node = { val, edges: [] };
       this.nodes.push(node);
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -245,7 +247,7 @@ function Graph() {
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -267,21 +269,21 @@ function Queue() {
     queue: {},
     front: 0,
     back: 0,
-    enqueue: function(val) {
+    enqueue: function (val) {
       this.queue[this.back] = val;
       this.back++;
     },
-    dequeue: function() {
+    dequeue: function () {
       let curr = this.queue[this.front];
       delete this.queue[this.front];
       this.front++;
       return curr;
-    }
-  }
+    },
+  };
 }
 
 function findTarget(root, target) {
-  root.state = 'Visiting';
+  root.state = "Visiting";
   let q = new Queue();
   q.enqueue(root);
 
@@ -293,13 +295,13 @@ function findTarget(root, target) {
     }
 
     for (let edge of curr.edges) {
-      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
-        edge.state = 'Visiting';
+      if (edge.state !== "Visiting" && edge.state !== "Visited") {
+        edge.state = "Visiting";
         q.enqueue(edge);
       }
     }
 
-    curr.state = 'Visited';
+    curr.state = "Visited";
   }
 
   return false;
@@ -324,11 +326,11 @@ function findTarget(root, target) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       let node = { val, edges: [] };
       this.nodes.push(node);
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -338,7 +340,7 @@ function Graph() {
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -361,42 +363,42 @@ function Queue() {
     queue: {},
     front: 0,
     back: 0,
-    enqueue: function(val) {
+    enqueue: function (val) {
       this.queue[this.back] = val;
       this.back++;
     },
-    dequeue: function() {
+    dequeue: function () {
       let curr = this.queue[this.front];
       delete this.queue[this.front];
       this.front++;
       return curr;
-    }
+    },
   };
 }
 
 function printLevels(root) {
   let curr = new Queue();
   let next = new Queue();
-  root.state = 'Visiting';
+  root.state = "Visiting";
   curr.enqueue(root);
 
-  let result = '';
+  let result = "";
 
   while (Object.keys(curr.queue).length) {
     let node = curr.dequeue();
-    result += node.val + ' ';
+    result += node.val + " ";
 
     for (let edge of node.edges) {
-      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+      if (edge.state !== "Visiting" && edge.state !== "Visited") {
         next.enqueue(edge);
-        edge.state = 'Visiting';
+        edge.state = "Visiting";
       }
     }
 
-    node.state = 'Visited';
+    node.state = "Visited";
 
     if (Object.keys(curr.queue).length === 0) {
-      result += '\n';
+      result += "\n";
       curr = next;
       next = new Queue();
     }
@@ -427,11 +429,11 @@ function printLevels(root) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       let node = { val, edges: [] };
       this.nodes.push(node);
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -441,7 +443,7 @@ function Graph() {
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -463,7 +465,7 @@ function wordLadder(str1, str2, dict) {
 
   for (let word of dict) {
     for (let i = 0; i < word.length; i++) {
-      let root = word.substring(0, i) + '*' + word.substring(i + 1);
+      let root = word.substring(0, i) + "*" + word.substring(i + 1);
       if (combinations[root] === undefined) {
         combinations[root] = [];
       }
@@ -484,9 +486,9 @@ function wordLadder(str1, str2, dict) {
     }
 
     for (let i = 0; i < word.length; i++) {
-      let root = word.substring(0, i) + '*' + word.substring(i + 1);
+      let root = word.substring(0, i) + "*" + word.substring(i + 1);
 
-      for (let edge of (combinations[root] || [])) {
+      for (let edge of combinations[root] || []) {
         if (!visited.has(edge)) {
           visited.add(edge);
           edges.push(edge);
@@ -524,28 +526,30 @@ function wordLadder(str1, str2, dict) {
 // -Time complexity: O(n * m^2), where n is the number of words in dict and m is the length of the longest word. This is due to substring operations in mapping process.
 // -Space complexity: O(n * m^2), where n is the number of words in dict and m is the length of the longest word
 
-console.log(wordLadder('hit', 'cog', ['hot','dot','dog','lot','log','cog']));
+console.log(
+  wordLadder("hit", "cog", ["hot", "dot", "dog", "lot", "log", "cog"])
+);
 
 // Sort a graph in topological order
 
 function topoSort(graph) {
   function dfs(node, stack) {
-    node.state = 'Visiting';
+    node.state = "Visiting";
 
     for (let edge of node.edges) {
-      if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+      if (edge.state !== "Visiting" && edge.state !== "Visited") {
         dfs(edge, stack);
       }
     }
 
-    node.state = 'Visited';
+    node.state = "Visited";
     stack.push(node);
   }
 
   let stack = [];
 
   for (let node of graph.nodes) {
-    if (node.state !== 'Visiting' && node.state !== 'Visited') {
+    if (node.state !== "Visiting" && node.state !== "Visited") {
       dfs(node, stack);
     }
   }
@@ -570,11 +574,11 @@ function topoSort(graph) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       let node = { val, edges: [] };
       this.nodes.push(node);
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -584,7 +588,7 @@ function Graph() {
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -606,15 +610,15 @@ console.log(topoSort(g));
 function findDiameter(root) {
   function topoSort(node) {
     function dfs(node, stack) {
-      node.state = 'Visiting';
+      node.state = "Visiting";
 
       for (let edge of node.edges) {
-        if (edge.state !== 'Visiting' && edge.state !== 'Visited') {
+        if (edge.state !== "Visiting" && edge.state !== "Visited") {
           dfs(edge, stack);
         }
       }
 
-      node.state = 'Visited';
+      node.state = "Visited";
       stack.push(node);
     }
 
@@ -628,7 +632,7 @@ function findDiameter(root) {
   }
 
   let stack = topoSort(root);
-  console.log('stack is ', JSON.stringify(stack));
+  console.log("stack is ", JSON.stringify(stack));
 
   for (let node of stack) {
     node.longestPath = 0;
@@ -669,11 +673,11 @@ function findDiameter(root) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       let node = { val, edges: [] };
       this.nodes.push(node);
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -681,20 +685,29 @@ function Graph() {
           break;
         }
       }
-    }
+    },
   };
 }
 
 let g = new Graph();
-g.addNode('A'); 0
-g.addNode('B'); 1
-g.addNode('C'); 2
-g.addNode('D'); 3
-g.addNode('E'); 4
-g.addNode('F'); 5
-g.addNode('G'); 6
-g.addNode('H'); 7
-g.addNode('I'); 8
+g.addNode("A");
+0;
+g.addNode("B");
+1;
+g.addNode("C");
+2;
+g.addNode("D");
+3;
+g.addNode("E");
+4;
+g.addNode("F");
+5;
+g.addNode("G");
+6;
+g.addNode("H");
+7;
+g.addNode("I");
+8;
 g.addEdge(g.nodes[0], g.nodes[1]);
 g.addEdge(g.nodes[0], g.nodes[3]);
 g.addEdge(g.nodes[1], g.nodes[2]);
@@ -717,23 +730,23 @@ function detectCycle(graph) {
   }
 
   function dfs(node) {
-    node.state = 'Visiting';
+    node.state = "Visiting";
 
     let { edges } = node;
 
     for (let edge of edges) {
-      if (edge.state === 'Visiting' || dfs(edge)) {
+      if (edge.state === "Visiting" || dfs(edge)) {
         return true;
       }
     }
 
-    node.state = 'Visited';
+    node.state = "Visited";
     return false;
   }
 
   for (let node of nodes) {
-    console.log('on node: ', node);
-    if (node.state === 'Visiting' || dfs(node)) {
+    console.log("on node: ", node);
+    if (node.state === "Visiting" || dfs(node)) {
       return true;
     }
   }
@@ -759,10 +772,10 @@ function detectCycle(graph) {
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       this.nodes.push({ val, edges: [] });
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -770,7 +783,7 @@ function Graph() {
           break;
         }
       }
-    }
+    },
   };
 }
 
@@ -785,94 +798,94 @@ g.addEdge(g.nodes[1], g.nodes[2]);
 g.addEdge(g.nodes[2], g.nodes[3]);
 console.log(detectCycle(g));
 
- // Given a graph, color its nodes with 2 colors - red and blue - such that no 2 neighbors have the same color
+// Given a graph, color its nodes with 2 colors - red and blue - such that no 2 neighbors have the same color
 
- function colorGraph(graph) {
-   for (let node of graph.nodes) {
-     node.state = 'Unvisited';
-     node.level = -1;
-   }
+function colorGraph(graph) {
+  for (let node of graph.nodes) {
+    node.state = "Unvisited";
+    node.level = -1;
+  }
 
-   let red = [];
-   let blue = [];
+  let red = [];
+  let blue = [];
 
-   for (let node of graph.nodes) {
-     if (node.state === 'Unvisited') {
-       let groups = getBipartiteGroups(node);
+  for (let node of graph.nodes) {
+    if (node.state === "Unvisited") {
+      let groups = getBipartiteGroups(node);
 
-       if (groups === null) {
-         return null;
-       }
+      if (groups === null) {
+        return null;
+      }
 
-       red.push(groups[0]);
-       blue.push(groups[1]);
-     }
-   }
+      red.push(groups[0]);
+      blue.push(groups[1]);
+    }
+  }
 
-   return { red, blue };
+  return { red, blue };
 
-   function getBipartiteGroups(start) {
-     start.level = 0;
-     start.state = 'Visiting';
-     let queue = [start];
-     let odds = [];
-     let evens = [];
+  function getBipartiteGroups(start) {
+    start.level = 0;
+    start.state = "Visiting";
+    let queue = [start];
+    let odds = [];
+    let evens = [];
 
-     while (queue.length) {
-       let curr = queue.shift();
+    while (queue.length) {
+      let curr = queue.shift();
 
-       if (curr.level % 2 === 0) {
-         evens.push(curr);
-       } else {
-         odds.push(curr);
-       }
+      if (curr.level % 2 === 0) {
+        evens.push(curr);
+      } else {
+        odds.push(curr);
+      }
 
-       for (let edge of curr.edges) {
-         if (edge.state === 'Unvisited') {
-           edge.level = curr.level + 1;
-           queue.push(edge);
-           edge.state = 'Visiting';
-         } else if (edge.level === curr.level) {
-           return null;
-         }
-       }
+      for (let edge of curr.edges) {
+        if (edge.state === "Unvisited") {
+          edge.level = curr.level + 1;
+          queue.push(edge);
+          edge.state = "Visiting";
+        } else if (edge.level === curr.level) {
+          return null;
+        }
+      }
 
-       curr.state = 'Visited';
-     }
+      curr.state = "Visited";
+    }
 
-     return [odds, evens];
-   }
- }
+    return [odds, evens];
+  }
+}
 
- // Explanation:
- // -Map over nodes setting state to unvisited and level to -1
- // -Create red and blue arrays
- // -For each node in nodes:
- // -If state is unvisited:
- // -Set curr node level to 0 and push node to queue
- // -While queue has work:
- // -Dequeue curr node
- // -Add to odds or evens based on curr level
- // -For each edge in curr node's edges:
- // -If edge not visited:
- // -Set edge level to 1 + curr level, add edge to queue, and mark edge as visiting
- // -Else if edge level equals curr level, odd cycle found so we return null
- // -Once done iterating through edges, mark curr node as visited
- // -Once done iterating through queue, return odds and evens to curr node groups
- // -Push odds to red and evens to blue
- // -Once done iterating through nodes, return red and blue groups
+// Explanation:
+// -Map over nodes setting state to unvisited and level to -1
+// -Create red and blue arrays
+// -For each node in nodes:
+// -If state is unvisited:
+// -Set curr node level to 0 and push node to queue
+// -While queue has work:
+// -Dequeue curr node
+// -Add to odds or evens based on curr level
+// -For each edge in curr node's edges:
+// -If edge not visited:
+// -Set edge level to 1 + curr level, add edge to queue, and mark edge as visiting
+// -Else if edge level equals curr level, odd cycle found so we return null
+// -Once done iterating through edges, mark curr node as visited
+// -Once done iterating through queue, return odds and evens to curr node groups
+// -Push odds to red and evens to blue
+// -Once done iterating through nodes, return red and blue groups
 
- // Notes:
- // -Time complexity: O(n + e), where n is number of nodes and e is number of edges, if we can remove from queue in constant time. O(n^2 * e) if we use JS shift
- // -Space complexity: O(n), where n is number of nodes
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges, if we can remove from queue in constant time. O(n^2 * e) if we use JS shift
+// -Space complexity: O(n), where n is number of nodes
 
- function Graph() {
+function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       this.nodes.push({ val, edges: [] });
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -882,7 +895,7 @@ console.log(detectCycle(g));
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -920,16 +933,16 @@ function connectedColor(graph) {
         dfs(edge, color);
       }
     }
-  };
+  }
 }
 
 function Graph() {
   return {
     nodes: [],
-    addNode: function(val) {
+    addNode: function (val) {
       this.nodes.push({ val, edges: [] });
     },
-    addEdge: function(from, to) {
+    addEdge: function (from, to) {
       for (let i = 0; i < this.nodes.length; i++) {
         let curr = this.nodes[i];
         if (curr === from) {
@@ -939,7 +952,7 @@ function Graph() {
           this.nodes[i].edges.push(from);
         }
       }
-    }
+    },
   };
 }
 
@@ -975,7 +988,13 @@ function countIslands(matrix) {
   }
 
   function dfs(matrix, row, col) {
-    if (row < 0 || col < 0 || row >= matrix.length || col >= matrix[row].length || matrix[row][col] === 0) {
+    if (
+      row < 0 ||
+      col < 0 ||
+      row >= matrix.length ||
+      col >= matrix[row].length ||
+      matrix[row][col] === 0
+    ) {
       return;
     }
 
@@ -1006,8 +1025,10 @@ function countIslands(matrix) {
 // -Time complexity: O(r + c), where r is number of rows and c is number of columns
 // -Space complexity: O(r + c) on the recursion stack
 
-console.log(countIslands([
-  [1, 0, 1, 0, 1],
-  [1, 1, 0, 0, 0],
-  [0, 1, 0, 1, 1]
-]));
+console.log(
+  countIslands([
+    [1, 0, 1, 0, 1],
+    [1, 1, 0, 0, 0],
+    [0, 1, 0, 1, 1],
+  ])
+);

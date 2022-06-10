@@ -22,7 +22,7 @@ function queue(n) {
       this.front = (this.front + 1) % this.arr.length;
       this.length--;
       return result;
-    }
+    },
   };
 }
 
@@ -106,7 +106,7 @@ function getMaxStockPrice(prices, days) {
 // Explanation:
 // -Find start by subtracting days from length of prices
 // -For each price from start:
-  // -Check to see if curr > max price. If so, update max price to curr
+// -Check to see if curr > max price. If so, update max price to curr
 // -Once done iterating, return max price
 
 // Notes:
@@ -138,14 +138,14 @@ function queueWithMax() {
         this.max.pop();
       }
     },
-    findMax: function() {
+    findMax: function () {
       if (this.max.length === 0) {
         return false;
       }
       let first = this.max.length - 1;
       return this.max[first];
-    }
-  }
+    },
+  };
 }
 
 // Explanation:
@@ -206,4 +206,4 @@ function findMaxSlidingWindow(arr, n) {
 // -Time complexity: O(n)
 // -Space complexity: O(n), where n is the size of window, as the queue will store up to n elements
 
-console.log(findMaxSlidingWindow([2,7,3,1,5,2,6,2], 4));
+console.log(findMaxSlidingWindow([2, 7, 3, 1, 5, 2, 6, 2], 4));

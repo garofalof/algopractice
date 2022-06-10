@@ -3,22 +3,22 @@
 function MaxHeap() {
   return {
     heap: [null],
-    parent: function(i) {
+    parent: function (i) {
       return Math.floor(i / 2);
     },
-    left: function(i) {
+    left: function (i) {
       return 2 * i;
     },
-    right: function(i) {
-      return (2 * i) + 1;
+    right: function (i) {
+      return 2 * i + 1;
     },
-    swap: function(arr, index, target) {
+    swap: function (arr, index, target) {
       [arr[index], arr[target]] = [arr[target], arr[index]];
     },
-    getMax: function() {
+    getMax: function () {
       return this.heap[1];
     },
-    insert: function(val) {
+    insert: function (val) {
       this.heap.push(val);
       let size = this.heap.length;
       if (size > 2) {
@@ -37,7 +37,7 @@ function MaxHeap() {
         }
       }
     },
-    remove: function() {
+    remove: function () {
       let largest = this.heap[1];
       let size = this.heap.length;
       if (size > 2) {
@@ -52,7 +52,10 @@ function MaxHeap() {
         let index = 1;
         let left = this.left(index);
         let right = this.right(index);
-        while (this.heap[index] <= this.heap[left] || this.heap[index] <= this.heap[right]) {
+        while (
+          this.heap[index] <= this.heap[left] ||
+          this.heap[index] <= this.heap[right]
+        ) {
           if (this.heap[left] > this.heap[right]) {
             this.swap(this.heap, index, left);
             index = left;
@@ -72,7 +75,7 @@ function MaxHeap() {
         return null;
       }
       return largest;
-    }
+    },
   };
 }
 
@@ -135,22 +138,22 @@ console.log(heap);
 function MinHeap() {
   return {
     heap: [null],
-    parent: function(i) {
+    parent: function (i) {
       return Math.floor(i / 2);
     },
-    left: function(i) {
+    left: function (i) {
       return 2 * i;
     },
-    right: function(i) {
-      return (2 * i) + 1;
+    right: function (i) {
+      return 2 * i + 1;
     },
-    swap: function(arr, index, target) {
+    swap: function (arr, index, target) {
       [arr[index], arr[target]] = [arr[target], arr[index]];
     },
-    getMin: function() {
+    getMin: function () {
       return this.heap[1];
     },
-    insert: function(val) {
+    insert: function (val) {
       this.heap.push(val);
 
       if (this.heap.length > 2) {
@@ -168,7 +171,7 @@ function MinHeap() {
         }
       }
     },
-    remove: function() {
+    remove: function () {
       let smallest = this.heap[1];
       let size = this.heap.length;
 
@@ -187,7 +190,10 @@ function MinHeap() {
         let left = this.left(index);
         let right = this.right(index);
 
-        while (this.heap[index] >= this.heap[left] || this.heap[index] >= this.heap[right]) {
+        while (
+          this.heap[index] >= this.heap[left] ||
+          this.heap[index] >= this.heap[right]
+        ) {
           if (this.heap[left] < this.heap[right]) {
             this.swap(this.heap, index, left);
             index = left;
@@ -209,7 +215,7 @@ function MinHeap() {
         return null;
       }
       return smallest;
-    }
+    },
   };
 }
 
@@ -302,7 +308,7 @@ function medianStream() {
   return {
     low: new MaxHeap(),
     high: new MinHeap(),
-    getMedian: function() {
+    getMedian: function () {
       let low = this.low.heap;
       let high = this.high.heap;
 
@@ -316,7 +322,7 @@ function medianStream() {
 
       return this.high.getMin();
     },
-    insert: function(val) {
+    insert: function (val) {
       let low = this.low.heap;
       let high = this.high.heap;
 
@@ -340,7 +346,7 @@ function medianStream() {
           this.low.insert(val);
         }
       }
-    }
+    },
   };
 }
 

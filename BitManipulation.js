@@ -4,8 +4,8 @@
 
 // Parse a binary number
 
-parseInt('100001', 2); // 33
-BigInt('0b100001') // 33n, accommodates big integers
+parseInt("100001", 2); // 33
+BigInt("0b100001"); // 33n, accommodates big integers
 
 // Bitwise & Operator
 // Notes: When applied to a single binary digit, it returns 1 if both digits are 1. When applied to two binary numbers, it will return 1 whenever the corresponding bits of both are 1.
@@ -62,10 +62,10 @@ const leftmostOne = 0b11111111111111111111111111110000;
 const leftmostZero = 0b01111111111111111111111111110000;
 
 // This will fill-in 1's in the left
-leftmostOne >> 2 // 0b11111111111111111111111111111100
+leftmostOne >> 2; // 0b11111111111111111111111111111100
 
 // This will fill-in 0's in the left
-leftmostZero >> 2 // 0b00011111111111111111111111111100
+leftmostZero >> 2; // 0b00011111111111111111111111111100
 
 // Bitwise >>> Operator
 // Notes: This right-shift also shifts a binary representation to the right, but always adds in 0s to the left, no matter what the leftmost bit is
@@ -74,10 +74,10 @@ const leftmostOne = 0b11111111111111111111111111110000;
 const leftmostZero = 0b01111111111111111111111111110000;
 
 // This will fill-in 0's in the left
-leftmostOne >>> 2 // 0b00111111111111111111111111111100
+leftmostOne >>> 2; // 0b00111111111111111111111111111100
 
 // This will also fill-in 0's in the left
-leftmostZero >>> 2 // 0b00011111111111111111111111111100
+leftmostZero >>> 2; // 0b00011111111111111111111111111100
 
 // Given an integer, get the bit at a given index i
 
@@ -116,7 +116,7 @@ function getBit(int, i) {
 function swapBits(num, i, j) {
   if (getBit(num, i) !== getBit(num, j)) {
     let mask = (1 << i) | (1 << j);
-    return (num ^ mask);
+    return num ^ mask;
   }
   return num;
 }
@@ -134,11 +134,11 @@ function countBits(num) {
   let count = 0;
 
   while (num !== 0) {
-     count++;
-     num = num & (num - 1);
-   }
+    count++;
+    num = num & (num - 1);
+  }
 
-   return count;
+  return count;
 }
 
 // Explanation:
@@ -159,7 +159,7 @@ function findComplement(num) {
     mask = (mask << 1) | 1;
   }
 
-  return (num ^ mask);
+  return num ^ mask;
 }
 
 // Explanation:
@@ -171,7 +171,7 @@ console.log(findComplement(0b00010001).toString(2));
 // Given an array with all numbers in i through n except one number, find the missing number
 
 function findMissing(nums, n) {
-  if (nums === null || nums.length !== (n - 1)) {
+  if (nums === null || nums.length !== n - 1) {
     return false;
   }
 

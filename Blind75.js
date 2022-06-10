@@ -352,6 +352,7 @@ var lowestCommonAncestor = function (root, p, q) {
       break;
     }
   }
+
   return root;
 };
 
@@ -538,23 +539,23 @@ console.log(q.empty());
 
 // 278. First Bad Version
 
-var solution = function(isBadVersion) {
-  return function(n) {
+var solution = function (isBadVersion) {
+  return function (n) {
     let left = 0;
     let right = n;
 
     while (left < right) {
-        let mid = left + Math.floor((right - left) / 2);
-        if (isBadVersion(mid)) {
-            right = mid;
-        } else {
-            left = mid + 1;
-        }
+      let mid = left + Math.floor((right - left) / 2);
+      if (isBadVersion(mid)) {
+        right = mid;
+      } else {
+        left = mid + 1;
+      }
     }
 
     return left;
   };
-}
+};
 
 // Explanation:
 // -Set left to 0 and right to n
@@ -570,7 +571,7 @@ var solution = function(isBadVersion) {
 
 // 383. Ransom Note
 
-var canConstruct = function(ransomNote, magazine) {
+var canConstruct = function (ransomNote, magazine) {
   if (ransomeNote.length > magazine.length) {
     return false;
   }
@@ -605,11 +606,11 @@ var canConstruct = function(ransomNote, magazine) {
 // -Time complexity: O(n), where n is magazine length
 // -Space complexity: O(n), where n is number of chars in magazine
 
-console.log(canConstruct('aa', 'aab'));
+console.log(canConstruct("aa", "aab"));
 
 // 70. Climbing Stairs
 
-var climbStairs = function(n) {
+var climbStairs = function (n) {
   if (n === 1) {
     return 1;
   }
@@ -623,7 +624,7 @@ var climbStairs = function(n) {
   }
 
   return buffer[n];
-}
+};
 
 // Explanation:
 // -If n equals 1, return 1
@@ -641,7 +642,7 @@ console.log(climbStairs(8));
 
 // 409. Longest Palindrome
 
-var longestPalindrome = function(str) {
+var longestPalindrome = function (str) {
   let result = 0;
   let map = {};
 
@@ -653,7 +654,7 @@ var longestPalindrome = function(str) {
   }
 
   return str.length > result ? result + 1 : result;
-}
+};
 
 // Explanation:
 // -Set result count to 0 and map to empty object
@@ -667,14 +668,14 @@ var longestPalindrome = function(str) {
 // -Time complexity: O(n)
 // -Space complexity: O(n), given that map is, at worst, size of string length
 
-console.log(longestPalindrome('abccccdd'));
+console.log(longestPalindrome("abccccdd"));
 
 // 155. Min Stack
 
-var MinStack = function() {
+var MinStack = function () {
   return {
     stack: [],
-    push: function(val) {
+    push: function (val) {
       if (this.stack.length === 0) {
         this.stack.push([val, val]);
       } else {
@@ -683,18 +684,18 @@ var MinStack = function() {
         this.stack.push([val, newMin]);
       }
     },
-    pop: function() {
+    pop: function () {
       let curr = this.stack.pop();
       return curr[0];
     },
-    top: function() {
+    top: function () {
       return this.stack[this.stack.length - 1][0];
     },
-    getMin: function() {
+    getMin: function () {
       return this.stack[this.stack.length - 1][1];
-    }
+    },
   };
-}
+};
 
 // Explanation:
 // -Set stack to empty array
@@ -722,7 +723,7 @@ console.log(stack.getMin());
 
 // 206. Reverse Linked List
 
-var reverseList = function(head) {
+var reverseList = function (head) {
   let prev = null;
   let curr = head;
 
@@ -752,7 +753,7 @@ var reverseList = function(head) {
 function ListNode(val) {
   return {
     val,
-    next: null
+    next: null,
   };
 }
 
@@ -765,7 +766,7 @@ console.log(reverseList(list));
 
 // 169. Majority Element
 
-var majorityElement = function(nums) {
+var majorityElement = function (nums) {
   let map = {};
   for (let i = 0; i < nums.length; i++) {
     let curr = nums[i];
@@ -789,10 +790,10 @@ var majorityElement = function(nums) {
 
 // 543. Diameter of Binary Tree
 
-var diameterOfBinaryTree = function(root) {
+var diameterOfBinaryTree = function (root) {
   function dfs(node) {
     if (node === null) {
-        return 0;
+      return 0;
     }
 
     let left = dfs(node.left);
@@ -824,7 +825,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -838,13 +839,13 @@ console.log(diameterOfBinaryTree(t));
 
 // 876. Middle of the Linked List
 
-var middleNode = function(head) {
+var middleNode = function (head) {
   let slow = head;
   let fast = head;
 
   while (fast && fast.next) {
-      slow = slow.next;
-      fast = fast.next.next;
+    slow = slow.next;
+    fast = fast.next.next;
   }
 
   return slow;
@@ -863,7 +864,7 @@ var middleNode = function(head) {
 function ListNode(val) {
   return {
     val,
-    next: null
+    next: null,
   };
 }
 
@@ -876,17 +877,17 @@ console.log(middleNode(list));
 
 // 104. Maximum Depth of Binary Tree
 
-var maxDepth = function(root) {
+var maxDepth = function (root) {
   let stack = [[root, 1]];
   let maxDepth = 0;
 
   while (stack.length) {
-      let [curr, depth] = stack.pop();
-      if (curr) {
-          maxDepth = Math.max(maxDepth, depth);
-          stack.push([curr.left, depth + 1]);
-          stack.push([curr.right, depth + 1]);
-      }
+    let [curr, depth] = stack.pop();
+    if (curr) {
+      maxDepth = Math.max(maxDepth, depth);
+      stack.push([curr.left, depth + 1]);
+      stack.push([curr.right, depth + 1]);
+    }
   }
 
   return maxDepth;
@@ -910,7 +911,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -922,17 +923,16 @@ leftChild.left = new Node(1);
 leftChild.right = new Node(4);
 console.log(maxDepth(tree));
 
-
 // 217. Contains Duplicate
 
-var containsDuplicate = function(nums) {
+var containsDuplicate = function (nums) {
   let map = new Map();
 
   for (let num of nums) {
     if (map.has(num)) {
-        return true;
+      return true;
     }
-      map.set(num);
+    map.set(num);
   }
   return false;
 };
@@ -952,7 +952,7 @@ console.log([0, 1, 2, 1, 4]);
 
 // 57. Insert Interval
 
-var insert = function(intervals, newInterval) {
+var insert = function (intervals, newInterval) {
   let result = [];
   let i = 0;
 
@@ -995,12 +995,31 @@ var insert = function(intervals, newInterval) {
 // -Time complexity: O(n)
 // -Space complexity: O(n)
 
-console.log(insert([[1,3],[6,9]], [2, 5]));
-console.log(insert([[1,2],[3,5],[6,7],[8,10],[12,16]], [4, 8]));
+console.log(
+  insert(
+    [
+      [1, 3],
+      [6, 9],
+    ],
+    [2, 5]
+  )
+);
+console.log(
+  insert(
+    [
+      [1, 2],
+      [3, 5],
+      [6, 7],
+      [8, 10],
+      [12, 16],
+    ],
+    [4, 8]
+  )
+);
 
 // 542. 01 Matrix
 
-var updateMatrix = function(mat) {
+var updateMatrix = function (mat) {
   let direction = [0, 1, 0, -1, 0];
   let queue = [];
 
@@ -1021,7 +1040,13 @@ var updateMatrix = function(mat) {
       let newRow = row + direction[i];
       let newCol = col + direction[i + 1];
 
-      if (newRow < 0 || newRow >= mat.length || newCol < 0 || newCol >= mat[0].length || mat[newRow][newCol] !== -1) {
+      if (
+        newRow < 0 ||
+        newRow >= mat.length ||
+        newCol < 0 ||
+        newCol >= mat[0].length ||
+        mat[newRow][newCol] !== -1
+      ) {
         continue;
       }
 
@@ -1051,33 +1076,38 @@ var updateMatrix = function(mat) {
 // -Time complexity: O(r * c), where r is number of rows and c is number of columns
 // -Space complexity: O(r * c)
 
-console.log(updateMatrix([
-  [0, 0, 0],
-  [0, 1, 0],
-  [1, 1, 1]
-]));
+console.log(
+  updateMatrix([
+    [0, 0, 0],
+    [0, 1, 0],
+    [1, 1, 1],
+  ])
+);
 
 // 973. K Closest Points to Origin
 
 function MaxHeap() {
   return {
     heap: [null],
-    parent: function(i) {
+    parent: function (i) {
       return Math.floor(i / 2);
     },
-    left: function(i) {
+    left: function (i) {
       return 2 * i;
     },
-    right: function(i) {
-      return (2 * i) + 1;
+    right: function (i) {
+      return 2 * i + 1;
     },
-    swap: function(heap, index, target) {
-      [this.heap[index], this.heap[target]] = [this.heap[target], this.heap[index]];
+    swap: function (heap, index, target) {
+      [this.heap[index], this.heap[target]] = [
+        this.heap[target],
+        this.heap[index],
+      ];
     },
-    getMax: function() {
+    getMax: function () {
       return this.heap[1];
     },
-    insert: function(val) {
+    insert: function (val) {
       this.heap.push(val);
       let size = this.heap.length;
 
@@ -1098,7 +1128,7 @@ function MaxHeap() {
         }
       }
     },
-    remove: function() {
+    remove: function () {
       let largest = this.heap[1];
       let size = this.heap.length;
 
@@ -1121,7 +1151,10 @@ function MaxHeap() {
         let left = this.left(index);
         let right = this.right(index);
 
-        while (this.heap[index] <= this.heap[left] || this.heap[index] <= this.heap[right]) {
+        while (
+          this.heap[index] <= this.heap[left] ||
+          this.heap[index] <= this.heap[right]
+        ) {
           if (this.heap[left] > this.heap[right]) {
             this.swap(this.heap, index, left);
             index = left;
@@ -1140,11 +1173,11 @@ function MaxHeap() {
       }
 
       return largest;
-    }
+    },
   };
 }
 
-var kClosest = function(points, k) {
+var kClosest = function (points, k) {
   let heap = new MaxHeap();
   let map = {};
 
@@ -1174,7 +1207,7 @@ var kClosest = function(points, k) {
   }
 
   return result;
-}
+};
 
 // Explanation:
 // -Implement max heap
@@ -1191,11 +1224,20 @@ var kClosest = function(points, k) {
 // -Time complexity: O(n log k), as adding / removing from heap takes O(log k) time when capped at k elements
 // -Space complexity: O(k), as both our map and result array are limited to k elements
 
-console.log(kClosest([[3,3],[5,-1],[-2,4]], 2));
+console.log(
+  kClosest(
+    [
+      [3, 3],
+      [5, -1],
+      [-2, 4],
+    ],
+    2
+  )
+);
 
 // 3. Longest Substring Without Repeating Characters
 
-var lengthOfLongestSubstring = function(s) {
+var lengthOfLongestSubstring = function (s) {
   let seen = new Set();
   let longest = 0;
   let start = 0;
@@ -1230,4 +1272,4 @@ var lengthOfLongestSubstring = function(s) {
 // -Time complexity: O(n)
 // -Space complexity: O(min(m, n)), where m is the size of alphabet/charset and n is size of string
 
-console.log(lengthOfLongestSubstring('abcdabef'));
+console.log(lengthOfLongestSubstring("abcdabef"));
