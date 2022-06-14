@@ -1276,7 +1276,7 @@ console.log(lengthOfLongestSubstring("abcdabef"));
 
 // 15. 3Sum
 
-var threeSum = function(nums) {
+var threeSum = function (nums) {
   let result = [];
   nums.sort((a, b) => a - b);
 
@@ -1344,7 +1344,7 @@ console.log(threeSum([-1, 1, 0, 2, 3, -2, -5]));
 
 // 102. Binary Tree Level Order Traversal
 
-var levelOrder = function(root) {
+var levelOrder = function (root) {
   let stack = [[root, 0]];
   let result = [];
   let map = {};
@@ -1389,7 +1389,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -1405,27 +1405,27 @@ console.log(levelOrder(bt));
 function Node(val, neighbors = []) {
   return {
     val,
-    neighbors
+    neighbors,
   };
 }
 
-var cloneGraph = function(node, map = new Map()) {
-    if (!node) {
-      return null;
-    }
+var cloneGraph = function (node, map = new Map()) {
+  if (!node) {
+    return null;
+  }
 
-    if (map.has(node)) {
-      return map.get(node);
-    }
+  if (map.has(node)) {
+    return map.get(node);
+  }
 
-    let clone = new Node(node.val);
-    map.set(node, clone);
+  let clone = new Node(node.val);
+  map.set(node, clone);
 
-    for (let neighbor of node.neighbors) {
-      clone.neighbors.push(cloneGraph(neighbor, map));
-    }
+  for (let neighbor of node.neighbors) {
+    clone.neighbors.push(cloneGraph(neighbor, map));
+  }
 
-    return clone;
+  return clone;
 };
 
 // Explanation:
@@ -1474,13 +1474,13 @@ console.log(cloneGraph(g.nodes[0]));
 
 // 150. Evaluate Reverse Polish Notation
 
-var evalRPN = function(tokens) {
+var evalRPN = function (tokens) {
   let stack = [];
   let map = {
-    '+': (a, b) => a + b,
-    '-': (a, b) => a - b,
-    '*': (a, b) => a * b,
-    '/': (a, b) => Math.trunc(a / b)
+    "+": (a, b) => a + b,
+    "-": (a, b) => a - b,
+    "*": (a, b) => a * b,
+    "/": (a, b) => Math.trunc(a / b),
   };
 
   for (let token of tokens) {
@@ -1509,11 +1509,13 @@ var evalRPN = function(tokens) {
 // -Time complexity: O(n)
 // -Space complexity: O(n), as we'll have all numbers in stack in worst case. This is never more than half the length of the input array.
 
-console.log(evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"]));
+console.log(
+  evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"])
+);
 
 // 207. Course Schedule
 
-var canFinish = function(numCourses, prerequisites) {
+var canFinish = function (numCourses, prerequisites) {
   let graph = new Map();
   let visiting = new Set();
   let visited = new Set();
@@ -1578,4 +1580,9 @@ var canFinish = function(numCourses, prerequisites) {
 // -Time complexity: O(n + e), where n is number of nodes and e is number of edges
 // -Space complexity: O(n + e), as we store all nodes and edges in graph map
 
-console.log(canFinish(2, [[1,0],[0,1]]));
+console.log(
+  canFinish(2, [
+    [1, 0],
+    [0, 1],
+  ])
+);
