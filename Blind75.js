@@ -1273,3 +1273,201 @@ var lengthOfLongestSubstring = function (s) {
 // -Space complexity: O(min(m, n)), where m is the size of alphabet/charset and n is size of string
 
 console.log(lengthOfLongestSubstring("abcdabef"));
+
+// 15. 3Sum
+
+var threeSum = function(nums) {
+  let result = [];
+  nums.sort((a, b) => a - b);
+
+  if (nums.length < 3) {
+    return result;
+  }
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] > 0) {
+      break;
+    }
+    if (i === 0 || nums[i] !== nums[i - 1]) {
+      twoPointers(nums, i);
+    }
+  }
+
+  return result;
+
+  function twoPointers(nums, index) {
+    let start = index + 1;
+    let end = nums.length - 1;
+
+    while (start < end) {
+      let sum = nums[index] + nums[start] + nums[end];
+
+      if (sum < 0) {
+        start++;
+      } else if (sum > 0) {
+        end--;
+      } else {
+        result.push([nums[index], nums[start], nums[end]]);
+        start++;
+        end--;
+
+        while (start < end && nums[start] === nums[start - 1]) {
+          start++;
+        }
+      }
+    }
+  }
+};
+
+// Explanation:
+// -Set result to empty array
+// -Sort nums
+// -If nums length < 3, return empty array
+// -For each num in nums:
+// -If curr num > 0, break as it's impossible to reach target given sorted nums
+// -If index is 0 or curr num not equal to prev num, run two pointers on curr  index
+// -For two pointers:
+// -Set start to curr index + 1 and end to last index in nums
+// -While start < end:
+// -Sum equals num at curr index + num at start + num at end
+// -If sum < 0, increase start by 1
+// -Else if sum > 0, decrease end pointer by 1
+// -Else if sum equals target:
+// -Push three nums to result and move start and end inward by 1. If duplicates exist at start, keep incrementing until start not equal to prev
+// -Once done iterating through nums, return result
+
+// Notes:
+// -Time complexity: O(n^2)
+// -Space complexity: From O(log n) to O(n) depending on the implementation of the sorting algorithm
+
+console.log(threeSum([-1, 1, 0, 2, 3, -2, -5]));
+
+// 102. Binary Tree Level Order Traversal
+
+var levelOrder = function(root) {
+  let stack = [[root, 0]];
+  let result = [];
+  let map = {};
+
+  while (stack.length) {
+    let [curr, depth] = stack.pop();
+
+    if (curr) {
+      if (map[depth]) {
+        map[depth].push(curr.val);
+      } else {
+        map[depth] = [curr.val];
+      }
+
+      stack.push([curr.right, depth + 1], [curr.left, depth + 1]);
+    }
+  }
+
+  for (let depth in map) {
+    result.push(map[depth]);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Push root w/ depth to stack
+// -Set result to empty array and map to empty object
+// -While stack has work:
+// -Pop last item from stack
+// -If curr item not null:
+// -If depth exists in map, push curr val to depth
+// -Else create depth in map w/ curr val
+// -Push left and right nodes w/ respective depths to stack
+// -Once done mapping vals, iterate through depths and push to result. Then return result.
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n) to keep the output structure and map that contain n node values
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(3);
+bt.left = new Node(9);
+bt.right = new Node(20);
+bt.right.left = new Node(15);
+bt.right.right = new Node(7);
+console.log(levelOrder(bt));
+
+// 133. Clone Graph
+
+function Node(val, neighbors = []) {
+  return {
+    val,
+    neighbors
+  };
+}
+
+var cloneGraph = function(node, map = new Map()) {
+    if (!node) {
+      return null;
+    }
+
+    if (map.has(node)) {
+      return map.get(node);
+    }
+
+    let clone = new Node(node.val);
+    map.set(node, clone);
+
+    for (let neighbor of node.neighbors) {
+      clone.neighbors.push(cloneGraph(neighbor, map));
+    }
+
+    return clone;
+};
+
+// Explanation:
+// -If node null, return null
+// -If map has node, return node clone
+// -Set clone to new node w/ curr node val
+// -Set node and clone in map
+// -For each of curr node's neighbors:
+// -Push cloned neighbors to clone.neighbors
+// -Return clone
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n), where n is the space occupied by the hash map
+
+function Graph() {
+  return {
+    nodes: [],
+    addNode: function (val) {
+      this.nodes.push({ val, neighbors: [] });
+    },
+    addEdge: function (from, to) {
+      for (let i = 0; i < this.nodes.length; i++) {
+        let curr = this.nodes[i];
+        if (curr === from) {
+          this.nodes[i].neighbors.push(to);
+        }
+        if (curr === to) {
+          this.nodes[i].neighbors.push(from);
+        }
+      }
+    },
+  };
+}
+
+let g = new Graph();
+g.addNode(1);
+g.addNode(2);
+g.addNode(3);
+g.addNode(4);
+g.addEdge(g.nodes[0], g.nodes[1]);
+g.addEdge(g.nodes[1], g.nodes[2]);
+g.addEdge(g.nodes[2], g.nodes[3]);
+g.addEdge(g.nodes[3], g.nodes[0]);
+console.log(cloneGraph(g.nodes[0]));
