@@ -1473,3 +1473,42 @@ g.addEdge(g.nodes[3], g.nodes[0]);
 console.log(cloneGraph(g.nodes[0]));
 
 // 150. Evaluate Reverse Polish Notation
+
+var evalRPN = function(tokens) {
+  let stack = [];
+  let map = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => Math.trunc(a / b)
+  };
+
+  for (let token of tokens) {
+    if (map[token]) {
+      let first = stack.pop();
+      let second = stack.pop();
+      stack.push(map[token](second, first));
+    } else {
+      stack.push(Number(token));
+    }
+  }
+
+  return stack.pop();
+};
+
+// Explanation:
+// -Create empty stack
+// -Create map w/ operations
+// -For each token in tokens:
+// -If operator:
+// -Pop top 2 elements from stack and push their result to stack
+// -Else push number to stack
+// -Once done, return last item off stack
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n), as we'll have all numbers in stack in worst case. This is never more than half the length of the input array.
+
+console.log(evalRPN(["2","1","+","3","*"]));
+console.log(evalRPN(["4","13","5","/","+"]));
+console.log(evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"]));
