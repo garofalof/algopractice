@@ -1509,6 +1509,73 @@ var evalRPN = function(tokens) {
 // -Time complexity: O(n)
 // -Space complexity: O(n), as we'll have all numbers in stack in worst case. This is never more than half the length of the input array.
 
-console.log(evalRPN(["2","1","+","3","*"]));
-console.log(evalRPN(["4","13","5","/","+"]));
 console.log(evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"]));
+
+// 207. Course Schedule
+
+var canFinish = function(numCourses, prerequisites) {
+  let graph = new Map();
+  let visiting = new Set();
+  let visited = new Set();
+
+  for (let [course, prereq] of prerequisites) {
+    if (graph.has(course)) {
+      graph.get(course).push(prereq);
+    } else {
+      graph.set(course, [prereq]);
+    }
+  }
+
+  for (let [course, prereq] of graph) {
+    if (dfs(course)) {
+      return false;
+    }
+  }
+
+  return true;
+
+  function dfs(course) {
+    visiting.add(course);
+
+    let prereqs = graph.get(course);
+
+    if (prereqs) {
+      for (let prereq of prereqs) {
+        if (visited.has(prereq)) {
+          continue;
+        }
+        if (visiting.has(prereq) || dfs(prereq)) {
+          return true;
+        }
+      }
+    }
+
+    visiting.delete(course);
+    visited.add(course);
+    return false;
+  }
+};
+
+// Explanation:
+// -Set graph to empty map
+// -Set visiting and visited to empty sets
+// -For each course / prereq of prerequisites:
+// -If graph has course, push prereq to course
+// -Else set course / prereq in graph
+// -For each course / prereq in preqrequisites:
+// -If dfs on course returns true, cycle detected so we return false
+// -For dfs:
+// -Add course to visiting
+// -Get courses prereqs
+// -If prereqs exist:
+// -For each prereq in prereqs:
+// -Skip prereq if already visited
+// -Return true and exit if prereq is in visiting or cycle found
+// -Once done iterating through prereqs, remove course from visiting and add to visited. Then return false and exit;
+// -If we iterate through courses without returning false, we return true
+
+// Notes:
+// -Time complexity: O(n + e), where n is number of nodes and e is number of edges
+// -Space complexity: O(n + e), as we store all nodes and edges in graph map
+
+console.log(canFinish(2, [[1,0],[0,1]]));
