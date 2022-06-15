@@ -1942,3 +1942,53 @@ console.log(
     [1, 0, 1],
   ])
 );
+
+// 33. Search in Rotated Sorted Array
+
+var search = function (nums, target) {
+  let start = 0;
+  let end = nums.length - 1;
+
+  while (start <= end) {
+    let mid = Math.floor((end - start) / 2 + start);
+
+    if (nums[mid] === target) {
+      return mid;
+    }
+
+    if (nums[start] <= nums[mid]) {
+      if (nums[start] <= target && target <= nums[mid]) {
+        end = mid - 1;
+      } else {
+        start = mid + 1;
+      }
+    } else {
+      if (nums[mid] <= target && target <= nums[end]) {
+        start = mid + 1;
+      } else {
+        end = mid - 1;
+      }
+    }
+  }
+
+  return -1;
+};
+
+// Explanation:
+// -Set start and end pointers to leftmost and rightmost indices of nums
+// -While start <= end:
+// -Get mid num
+// -If mid num is target, return mid index
+// -If left side is sorted:
+// -If start num <= target and target <= mid, set end to mid - 1
+// -Else set start to mid + 1
+// -If right side is sorted:
+// -If mid num <= target && target <= end num, set start to mid + 1
+// -Else set end to mid - 1
+// -If we iterate through nums without returning index, return -1 as target not in nums
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(search([4, 5, 6, 0, 1, 2], 1));
