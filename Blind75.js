@@ -1992,3 +1992,93 @@ var search = function (nums, target) {
 // -Space complexity: O(1)
 
 console.log(search([4, 5, 6, 0, 1, 2], 1));
+
+// 39. Combination Sum
+
+var combinationSum = function (candidates, target) {
+  let results = [];
+  let memo = [];
+
+  function backtrack(total, memo, start) {
+    if (total === 0) {
+      results.push(memo.slice());
+      return;
+    } else if (total < 0) {
+      return;
+    }
+
+    for (let i = start; i < candidates.length; i++) {
+      memo.push(candidates[i]);
+      backtrack(total - candidates[i], memo, i);
+      memo.pop();
+    }
+  }
+
+  backtrack(target, memo, 0);
+
+  return results;
+};
+
+// Explanation:
+// -Set results and memo to empty array
+// -Backtrack with start index of 0
+// -In backtrack:
+// -If total equals 0, valid path found so we push copy of array to results and return to exit
+// -Else if total < 0, path not found so we return to exit
+// -For each num in candidates starting from start index:
+// -Push candidate to memo
+// -Recurse on candidates w/ updated total, memo, and index
+// -If we exit backtrack, pop last item off memo as either valid combo found or no path found w/ last item
+// -Once done recursing, return results
+
+// Notes:
+// -Time complexity: O(n ^ ((t /m) + 1)), where n is number of nodes, t is target value, and m is the min value amongst candidates. Fan out of each node is bounded by n, the total number of nodes. The maximum depth would be t / m, where we keep on adding the smallest element to the combination. Finally, the maximum number of nodes in a N-ary tree of t / m height would be N ^ ((t / m) + 1).
+// -Space complexity: O(t / m), as the number of recursive calls can pile up to t / m, where we keep on adding the smallest element to the combination. We also keep a combination of numbers in our memo, which requires at most t / m space as well.
+
+console.log(combinationSum([2, 3, 5, 7], 7));
+
+// 46. Permutations
+
+var permute = function (nums) {
+  let result = [];
+
+  function dfs(nums, memo) {
+    if (memo.size === nums.length) {
+      result.push(Array.from(memo));
+      return;
+    }
+
+    for (let i = 0; i < nums.length; i++) {
+      let curr = nums[i];
+
+      if (memo.has(curr)) {
+        continue;
+      }
+
+      memo.add(curr);
+      dfs(nums, memo);
+      memo.delete(curr);
+    }
+  }
+
+  dfs(nums, new Set());
+
+  return result;
+};
+
+// Explanation:
+// -Set result to empty array
+// -Perform dfs on nums w/ empty set as memo
+// -In dfs:
+// -If memo size equals nums size, push deep copy of memo to result and return to exit search
+// -For each num in nums:
+// -If memo has curr num, continue
+// -Else add curr num to memo and continue search
+// -Once memo full and added to result, delete curr item from memo
+// -Once done searching, return result w/ all permutations
+
+// Notes:
+// -Time complexity: O(n!)
+// -Space complexity: O(n!)
+
+console.log(permute([1, 2, 3]));
