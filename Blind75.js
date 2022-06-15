@@ -1591,69 +1591,67 @@ console.log(
 
 class Node {
   constructor() {
-      this.keys = new Map();
-      this.end = false;
+    this.keys = new Map();
+    this.end = false;
   }
   setEnd(bool) {
-      this.end = bool;
+    this.end = bool;
   }
   isEnd() {
-      return this.end;
+    return this.end;
   }
 }
 
-
 class Trie {
   constructor() {
-      this.root = new Node();
+    this.root = new Node();
   }
   insert(string) {
-      let node = this.root;
+    let node = this.root;
 
-      for (let i = 0; i < string.length; i++) {
-          let char = string[i];
+    for (let i = 0; i < string.length; i++) {
+      let char = string[i];
 
-
-          if (!node.keys.has(char)) {
-              let temp = new Node();
-              node.keys.set(char, temp);
-              node = temp;
-          } else {
-              node = node.keys.get(char);
-          }
+      if (!node.keys.has(char)) {
+        let temp = new Node();
+        node.keys.set(char, temp);
+        node = temp;
+      } else {
+        node = node.keys.get(char);
       }
+    }
 
-      node.setEnd(true);
+    node.setEnd(true);
   }
   search(string) {
-      let node = this.root;
+    let node = this.root;
 
-      for (let i = 0; i < string.length; i++) {
-          let char = string[i];
+    for (let i = 0; i < string.length; i++) {
+      let char = string[i];
 
-          if (node.keys.has(char)) {
-              node = node.keys.get(char);
-          } else {
-              return false;
-          }
+      if (node.keys.has(char)) {
+        node = node.keys.get(char);
+      } else {
+        return false;
       }
+    }
 
-      return node.isEnd();
+    return node.isEnd();
   }
   startsWith(prefix) {
-      let node = this.root;
+    let node = this.root;
 
-      for (let i = 0; i < prefix.length; i++) {
-          let char = prefix[i];
+    for (let i = 0; i < prefix.length; i++) {
+      let char = prefix[i];
 
-          if (node.keys.has(char)) {
-              node = node.keys.get(char);
-          } else {
-              return false;
-          }
+      if (node.keys.has(char)) {
+        node = node.keys.get(char);
+      } else {
+        return false;
       }
+    }
 
-      return true;
+    return true;
   }
 }
 
@@ -1681,12 +1679,12 @@ class Trie {
 // -Space complexity: O(n) for insert, O(1) for other methods
 
 let t = new Trie();
-t.insert('hello');
-t.insert('hell');
-t.insert('hellen');
-console.log(t.search('hel'));
-console.log(t.search('hello'));
-console.log(t.startsWith('hel'));
+t.insert("hello");
+t.insert("hell");
+t.insert("hellen");
+console.log(t.search("hel"));
+console.log(t.search("hello"));
+console.log(t.startsWith("hel"));
 
 // 322. Coin Change
 
@@ -1701,7 +1699,7 @@ var coinChange = function (coins, amount) {
   }
 
   return buffer[amount] === Infinity ? -1 : buffer[amount];
-}
+};
 
 // Explanation:
 // -Create buffer array of size amount + 1 and fill each index w/ infinity value
@@ -1719,19 +1717,19 @@ console.log(coinChange([1, 2, 5], 6));
 
 // 238. Product of Array Except Self
 
-var productExceptSelf = function(nums) {
+var productExceptSelf = function (nums) {
   let answer = [];
   let rightMult = 1;
   let leftMult = 1;
 
   for (let i = nums.length - 1; i >= 0; i--) {
-      answer[i] = rightMult;
-      rightMult *= nums[i];
+    answer[i] = rightMult;
+    rightMult *= nums[i];
   }
 
   for (let i = 0; i < nums.length; i++) {
-      answer[i] *= leftMult;
-      leftMult *= nums[i];
+    answer[i] *= leftMult;
+    leftMult *= nums[i];
   }
 
   return answer;
@@ -1754,27 +1752,27 @@ console.log(productExceptSelf([1, 2, 3, 4]));
 
 // 98. Validate Binary Search Tree
 
-var isValidBST = function(root) {
+var isValidBST = function (root) {
   if (root === null) {
-      return true;
+    return true;
   }
 
   let stack = [[root, -Infinity, Infinity]];
 
   while (stack.length) {
-      let [curr, low, high] = stack.pop();
+    let [curr, low, high] = stack.pop();
 
-      if (curr) {
-          let val = curr.val;
+    if (curr) {
+      let val = curr.val;
 
-          if (val <= low || val >= high) {
-              console.log('val is not valid ', val);
-              return false;
-          }
-
-          stack.push([curr.right, val, high]);
-          stack.push([curr.left, low, val]);
+      if (val <= low || val >= high) {
+        console.log("val is not valid ", val);
+        return false;
       }
+
+      stack.push([curr.right, val, high]);
+      stack.push([curr.left, low, val]);
+    }
   }
 
   return true;
@@ -1799,7 +1797,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -1813,37 +1811,37 @@ console.log(isValidBST(bst));
 
 // 200. Number of Islands
 
-var numIslands = function(grid) {
+var numIslands = function (grid) {
   let count = 0;
 
   for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid[row].length; col++) {
-          let node = grid[row][col];
+    for (let col = 0; col < grid[row].length; col++) {
+      let node = grid[row][col];
 
-          if (node === '1') {
-              count++;
-              dfs(grid, row, col);
-          }
+      if (node === "1") {
+        count++;
+        dfs(grid, row, col);
       }
+    }
   }
 
   function dfs(grid, row, col) {
-      if (
-          row < 0 ||
-          col < 0 ||
-          row >= grid.length ||
-          col >= grid[row].length ||
-          grid[row][col] === '0'
-      ) {
-          return;
-      }
+    if (
+      row < 0 ||
+      col < 0 ||
+      row >= grid.length ||
+      col >= grid[row].length ||
+      grid[row][col] === "0"
+    ) {
+      return;
+    }
 
-      grid[row][col] = '0';
-      let directions = [0, 1, 0, -1, 0];
+    grid[row][col] = "0";
+    let directions = [0, 1, 0, -1, 0];
 
-      for (let i = 0; i < directions.length - 1; i++) {
-          dfs(grid, row + directions[i], col + directions[i + 1]);
-      }
+    for (let i = 0; i < directions.length - 1; i++) {
+      dfs(grid, row + directions[i], col + directions[i + 1]);
+    }
   }
 
   return count;
@@ -1863,9 +1861,11 @@ var numIslands = function(grid) {
 // -Time complexity: O(rows * columns)
 // -Space complexity: O(rows * columns)
 
-console.log(numIslands([
-  ["1","1","0","0","0"],
-  ["1","1","0","0","0"],
-  ["0","0","1","0","0"],
-  ["0","0","0","1","1"]
-]));
+console.log(
+  numIslands([
+    ["1", "1", "0", "0", "0"],
+    ["1", "1", "0", "0", "0"],
+    ["0", "0", "1", "0", "0"],
+    ["0", "0", "0", "1", "1"],
+  ])
+);
