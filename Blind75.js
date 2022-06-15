@@ -1869,3 +1869,76 @@ console.log(
     ["0", "0", "0", "1", "1"],
   ])
 );
+
+// 994. Rotting Oranges
+
+var orangesRotting = function (grid) {
+  let queue = [];
+  let oranges = 0;
+  let time = 0;
+  let endRow = grid.length - 1;
+  let endCol = grid[0].length - 1;
+  let directions = [0, 1, 0, -1, 0];
+
+  for (let row = 0; row <= endRow; row++) {
+    for (let col = 0; col <= endCol; col++) {
+      if (grid[row][col] === 1) {
+        oranges++;
+      }
+      if (grid[row][col] === 2) {
+        queue.push([row, col, 0]);
+      }
+    }
+  }
+
+  while (queue.length && oranges) {
+    let [row, col, mins] = queue.shift();
+
+    if (grid[row][col] === 1) {
+      grid[row][col] = 2;
+      oranges--;
+      time = mins;
+    }
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newRow = row + directions[i];
+      let newCol = col + directions[i + 1];
+
+      if (newRow < 0 || newCol < 0 || newRow > endRow || newCol > endCol) {
+        continue;
+      }
+
+      if (grid[newRow][newCol] === 1) {
+        queue.push([newRow, newCol, mins + 1]);
+      }
+    }
+  }
+
+  return oranges ? -1 : time;
+};
+
+// Explanation:
+// -Set queue to empty array
+// -Set fresh orange count and time elapsed to 0
+// -Set end row and end col boundaries
+// -Set directions to direction array
+// -For each node in grid:
+// -If node equals 1, add 1 to orange count
+// -If node equas 2, add coordinates and time to queue
+// -While queue has work and fresh oranges exist:
+// -Pop node off front of queue
+// -If node equals 1, update to 2 to mark as rotten, subtract from orange count, and update time to curr node's elapsed time
+// -For each direction up, down, left, right, if new node has fresh orange, push to queue
+// -Once done, return -1 if we have fresh oranges left, else return elapsed time
+
+// Notes:
+// -Time complexity: O(n^2) if we use array as queue, O(n) if we use queue data structure
+// -Space complexity: O(n), where n is the size of the grid
+
+console.log(
+  orangesRotting([
+    [2, 1, 1],
+    [0, 1, 1],
+    [1, 0, 1],
+  ])
+);
