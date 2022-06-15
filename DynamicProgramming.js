@@ -319,7 +319,7 @@ function addDigits(num1, num2) {
 // -Time complexity: O(n), where n is the length of the larger array
 // -Space complexity: O(n), because we allocate an array to store the result
 
-// console.log(addDigits([1, 2, 3], [3, 2]));
+console.log(addDigits([1, 2, 3], [3, 2]));
 
 // You are given a number in the form of an array. Each digit in the array represents a digit in the number. For example, 100 -> [1,0,0]. Perform multiplication of 2 such number arrays.
 
