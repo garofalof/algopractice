@@ -1751,3 +1751,121 @@ var productExceptSelf = function(nums) {
 // -Space complexity: O(1), since we are asked to return an answer array, we do not take up extra space
 
 console.log(productExceptSelf([1, 2, 3, 4]));
+
+// 98. Validate Binary Search Tree
+
+var isValidBST = function(root) {
+  if (root === null) {
+      return true;
+  }
+
+  let stack = [[root, -Infinity, Infinity]];
+
+  while (stack.length) {
+      let [curr, low, high] = stack.pop();
+
+      if (curr) {
+          let val = curr.val;
+
+          if (val <= low || val >= high) {
+              console.log('val is not valid ', val);
+              return false;
+          }
+
+          stack.push([curr.right, val, high]);
+          stack.push([curr.left, low, val]);
+      }
+  }
+
+  return true;
+};
+
+// Explanation:
+// -If root is null, return true
+// -Push root with low val of -Infinity and high val of Infinity to stack
+// -While stack has work:
+// -Pop last node off stack
+// -If node not null:
+// -If curr node val <= low or >= high, return false
+// -Push right node to stack with low val of curr node val and prev high val
+// -Push left node to stack with prev low val and high of curr node val
+// -Once done iterating through tree, return true
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bst = new Node(5);
+bst.left = new Node(4);
+bst.right = new Node(7);
+bst.left.left = new Node(2);
+bst.right.left = new Node(6);
+bst.right.right = new Node(8);
+console.log(isValidBST(bst));
+
+// 200. Number of Islands
+
+var numIslands = function(grid) {
+  let count = 0;
+
+  for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+          let node = grid[row][col];
+
+          if (node === '1') {
+              count++;
+              dfs(grid, row, col);
+          }
+      }
+  }
+
+  function dfs(grid, row, col) {
+      if (
+          row < 0 ||
+          col < 0 ||
+          row >= grid.length ||
+          col >= grid[row].length ||
+          grid[row][col] === '0'
+      ) {
+          return;
+      }
+
+      grid[row][col] = '0';
+      let directions = [0, 1, 0, -1, 0];
+
+      for (let i = 0; i < directions.length - 1; i++) {
+          dfs(grid, row + directions[i], col + directions[i + 1]);
+      }
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Set count to 0
+// -For each node in grid:
+// -If node equals 1, increase count by 1 and perform dfs on node
+// -In dfs:
+// -If node out of bounds or equal to 0, return and exit dfs
+// -Set curr node to 0
+// -Traverse up, down, left, and right w/ dfs
+// -Once done visiting islands, return count
+
+// Notes:
+// -Time complexity: O(rows * columns)
+// -Space complexity: O(rows * columns)
+
+console.log(numIslands([
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]));
