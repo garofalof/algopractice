@@ -2082,3 +2082,48 @@ var permute = function (nums) {
 // -Space complexity: O(n!)
 
 console.log(permute([1, 2, 3]));
+
+// 56. Merge Intervals
+
+var merge = function (intervals) {
+  if (!intervals.length) {
+    return intervals;
+  }
+
+  intervals.sort((a, b) => a[0] - b[0]);
+  let result = [intervals[0]];
+
+  for (let [start, end] of intervals) {
+    let last = result.length - 1;
+
+    if (start <= result[last][1]) {
+      result[last][1] = Math.max(result[last][1], end);
+    } else {
+      result.push([start, end]);
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -If intervals is empty, return empty array
+// -Sort by start num in ascending order
+// -Push first interval to result
+// -For each interval in intervals:
+// -If start <= last result end, update last result end to be greater of last result end or curr end
+// -Else push interval to result
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(log n) for sorting if we do not count output array as extra space, else O(n) if we do
+
+console.log(
+  merge([
+    [1, 3],
+    [2, 6],
+    [8, 10],
+    [15, 18],
+  ])
+);
