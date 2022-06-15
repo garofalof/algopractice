@@ -1024,7 +1024,7 @@ var updateMatrix = function (mat) {
   let queue = [];
 
   for (let row = 0; row < mat.length; row++) {
-    for (let col = 0; col < mat[0].length; col++) {
+    for (let col = 0; col < mat[row].length; col++) {
       if (mat[row][col] === 0) {
         queue.push([row, col]);
       } else {
@@ -1044,7 +1044,7 @@ var updateMatrix = function (mat) {
         newRow < 0 ||
         newRow >= mat.length ||
         newCol < 0 ||
-        newCol >= mat[0].length ||
+        newCol >= mat[newRow].length ||
         mat[newRow][newCol] !== -1
       ) {
         continue;
@@ -1586,3 +1586,168 @@ console.log(
     [0, 1],
   ])
 );
+
+// 208. Implement Trie (Prefix Tree)
+
+class Node {
+  constructor() {
+      this.keys = new Map();
+      this.end = false;
+  }
+  setEnd(bool) {
+      this.end = bool;
+  }
+  isEnd() {
+      return this.end;
+  }
+}
+
+
+class Trie {
+  constructor() {
+      this.root = new Node();
+  }
+  insert(string) {
+      let node = this.root;
+
+      for (let i = 0; i < string.length; i++) {
+          let char = string[i];
+
+
+          if (!node.keys.has(char)) {
+              let temp = new Node();
+              node.keys.set(char, temp);
+              node = temp;
+          } else {
+              node = node.keys.get(char);
+          }
+      }
+
+      node.setEnd(true);
+  }
+  search(string) {
+      let node = this.root;
+
+      for (let i = 0; i < string.length; i++) {
+          let char = string[i];
+
+          if (node.keys.has(char)) {
+              node = node.keys.get(char);
+          } else {
+              return false;
+          }
+      }
+
+      return node.isEnd();
+  }
+  startsWith(prefix) {
+      let node = this.root;
+
+      for (let i = 0; i < prefix.length; i++) {
+          let char = prefix[i];
+
+          if (node.keys.has(char)) {
+              node = node.keys.get(char);
+          } else {
+              return false;
+          }
+      }
+
+      return true;
+  }
+}
+
+// Explanation:
+// -Create node class with keys equal to empty hashmap and isEnd property set to false
+// -Each node should have set end and is end methods
+// -Create tree class with root set to new node
+// -For insert method:
+// -Set node to root
+// -For each char in insert string:
+// -If char not in node, create new temp node, set char / temp to curr node keys, then set node to temp
+// -Else set node to next node
+// -Once done iterating, set end to true
+// -For search method:
+// -Set node to root
+// -For each char in search string:
+// -If node has char, set node to next node
+// -Else return false
+// -Once done iterating, return last node's is end method, which should return true if valid search string
+// -For starts with method:
+// -Same as search method, except we return true if we iterate through nodes without returning false
+
+// Notes:
+// -Time complexity: O(n) for all operations
+// -Space complexity: O(n) for insert, O(1) for other methods
+
+let t = new Trie();
+t.insert('hello');
+t.insert('hell');
+t.insert('hellen');
+console.log(t.search('hel'));
+console.log(t.search('hello'));
+console.log(t.startsWith('hel'));
+
+// 322. Coin Change
+
+var coinChange = function (coins, amount) {
+  let buffer = new Array(amount + 1).fill(Infinity);
+  buffer[0] = 0;
+
+  for (let coin of coins) {
+    for (let i = coin; i <= amount; i++) {
+      buffer[i] = Math.min(buffer[i], buffer[i - coin] + 1);
+    }
+  }
+
+  return buffer[amount] === Infinity ? -1 : buffer[amount];
+}
+
+// Explanation:
+// -Create buffer array of size amount + 1 and fill each index w/ infinity value
+// -Set index 0 in buffer to 0
+// -For each coin in coins:
+// -For each index starting at coin value leading up to amount:
+// -Set buffer index to min of curr value or value of buffer[index - coin] + 1
+// -Once done iterating through coins, if buffer amount equals infinity return -1 as no change can be made, else return buffer amount
+
+// Notes:
+// -Time complexity: O(coins * amount)
+// -Space complexity: O(amount)
+
+console.log(coinChange([1, 2, 5], 6));
+
+// 238. Product of Array Except Self
+
+var productExceptSelf = function(nums) {
+  let answer = [];
+  let rightMult = 1;
+  let leftMult = 1;
+
+  for (let i = nums.length - 1; i >= 0; i--) {
+      answer[i] = rightMult;
+      rightMult *= nums[i];
+  }
+
+  for (let i = 0; i < nums.length; i++) {
+      answer[i] *= leftMult;
+      leftMult *= nums[i];
+  }
+
+  return answer;
+};
+
+// Explanation:
+// -Set answer to empty array
+// -Set right and left multipliers to 1
+// -For each num in nums from back to front:
+// -Set each answer index to product of previous nums
+// -For each num in nums from front to back:
+// -Multiply each answer index by product of prev nums
+// -Once done, return answer
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1), since we are asked to return an answer array, we do not take up extra space
+
+console.log(productExceptSelf([1, 2, 3, 4]));
