@@ -2203,3 +2203,54 @@ bt.left.right = new Node(2);
 bt.right.left = new Node(0);
 bt.right.right = new Node(8);
 console.log(lowestCommonAncestor(bt, bt.left.left, bt.right));
+
+// 981. Time Based Key-Value Store
+
+class TimeMap {
+  constructor() {
+      this.root = {};
+  }
+  set(key, value, time) {
+      if (!this.root[key]) {
+          this.root[key] = [];
+      }
+      this.root[key][time] = value;
+  }
+  get(key, time) {
+      if (!this.root[key]) {
+          return '';
+      }
+      if (this.root[key][time]) {
+          return this.root[key][time];
+      }
+      while (!this.root[key][time] && time-- > 0) {
+          if (this.root[key][time]) {
+              return this.root[key][time];
+          }
+      }
+      return '';
+  }
+}
+
+// Explanation:
+// -Initialize root as empty object
+// -For set method:
+// -If root doesn't have key, set key to empty array
+// -Set value at time index in array
+// -For get method:
+// -If root doesn't have key, return empty string
+// -If root has key and time, return corresponding value
+// -Else decrease time until timestamp found and return that time's value
+// -Else if we reach 0 time, return empty string
+
+// Notes:
+// -Time complexity: O(1) for insertion and O(n) for get
+// -Space complexity: O(n)
+
+let storage = new TimeMap();
+storage.set('foo', 'bar', 1);
+console.log(storage.get('foo', 1));
+console.log(storage.get('foo', 3));
+storage.set('foo', 'bar2', 4);
+console.log(storage.get('foo', 4));
+console.log(storage.get('foo', 5));
