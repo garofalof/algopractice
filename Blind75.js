@@ -2127,3 +2127,79 @@ console.log(
     [15, 18],
   ])
 );
+
+// 236. Lowest Common Ancestor of a Binary Tree
+
+var lowestCommonAncestor = function (root, p, q) {
+  let stack = [[root, null, 0]];
+  let parents = new Map();
+  let depthP = -1;
+  let depthQ = -1;
+
+  while (stack.length) {
+    let [curr, parent, depth] = stack.pop();
+
+    if (curr) {
+      if (curr === p) {
+        depthP = depth;
+      }
+      if (curr === q) {
+        depthQ = depth;
+      }
+
+      parents.set(curr, parent);
+      stack.push([curr.left, curr, depth + 1]);
+      stack.push([curr.right, curr, depth + 1]);
+    }
+  }
+
+  let lowNode = depthQ > depthP ? q : p;
+  let highNode = depthQ > depthP ? p : q;
+
+  for (let i = 0; i < Math.abs(depthQ - depthP); i++) {
+    lowNode = parents.get(lowNode);
+  }
+  while (lowNode !== highNode) {
+    lowNode = parents.get(lowNode);
+    highNode = parents.get(highNode);
+  }
+
+  return lowNode;
+};
+
+// Explanation:
+// -Push root to stack w/ null parent and depth of 0
+// -Create a new hashmap to track parents
+// -Set p and q node depths to -1
+// -While stack has work:
+// -Pop last item off stack
+// -If node not null:
+// -Check to see if curr node is p or q. If so, update pointer depths.
+// -Set curr node and parent in parents
+// -Push left and ride node to stack w/ curr as parent and depth of curr node depth + 1
+// -Set low node and high node based on depth
+// -Bring low node up to high node depth
+// -While low node not equal to high node:
+// -Bring both nodes up until they intersect
+// -Once done, return either low or high node
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let bt = new Node(3);
+bt.left = new Node(5);
+bt.right = new Node(1);
+bt.left.left = new Node(6);
+bt.left.right = new Node(2);
+bt.right.left = new Node(0);
+bt.right.right = new Node(8);
+console.log(lowestCommonAncestor(bt, bt.left.left, bt.right));

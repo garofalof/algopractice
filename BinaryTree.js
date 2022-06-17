@@ -650,14 +650,13 @@ console.log(lowestCommonAncestor(bt.left.left, bt.right));
 
 // Given 2 nodes of a tree A and B, find their lowest common ancestor
 
-function lowestCommonAncestor(root, a, b, message = "root") {
-  console.log(`recursive call, ${root} is being called from ${message}`);
+function lowestCommonAncestor(root, a, b) {
   if (root === null || root === a || root === b) {
     return root;
   }
 
-  let leftAncestor = lowestCommonAncestor(root.left, a, b, "left");
-  let rightAncestor = lowestCommonAncestor(root.right, a, b, "right");
+  let leftAncestor = lowestCommonAncestor(root.left, a, b);
+  let rightAncestor = lowestCommonAncestor(root.right, a, b);
 
   if (leftAncestor !== null && rightAncestor !== null) {
     return root;
