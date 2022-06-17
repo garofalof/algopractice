@@ -2254,3 +2254,9 @@ console.log(storage.get('foo', 3));
 storage.set('foo', 'bar2', 4);
 console.log(storage.get('foo', 4));
 console.log(storage.get('foo', 5));
+
+// 721. Accounts Merge
+
+var accountsMerge = function(accounts) {
+
+};
