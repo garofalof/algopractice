@@ -2258,5 +2258,173 @@ console.log(storage.get('foo', 5));
 // 721. Accounts Merge
 
 var accountsMerge = function(accounts) {
+  let emails = {};
+  let names = {};
 
+  for (let account of accounts) {
+    let name = account[0];
+
+    for (let i = 1; i < account.length; i++) {
+      let email = account[i];
+      names[email] = name;
+
+      if (!emails[email]) {
+        emails[email] = new Set();
+      }
+      if (i !== 1) {
+        emails[account[1]].add(email);
+        emails[email].add(account[1]);
+      }
+    }
+  }
+
+  let result = [];
+  let stack = [];
+  let visited = new Set();
+  let temp;
+
+  for (let email in emails) {
+    if (!visited.has(email)) {
+      visited.add(email);
+      stack.push(email);
+      temp = [];
+
+      while (stack.length) {
+        let curr = stack.pop();
+        temp.push(curr);
+
+        for (let neighbor of emails[curr]) {
+          if (!visited.has(neighbor)) {
+            visited.add(neighbor);
+            stack.push(neighbor);
+          }
+        }
+      }
+
+      temp.sort();
+      temp.unshift(names[temp[0]]);
+      result.push(temp);
+    }
+  }
+
+  return result;
 };
+
+// Explanation:
+// -Create graph of emails and map of names
+// -Set result and stack to empty array
+// -Set visited to empty set
+// -For each email in graph:
+// -If email not in visited:
+// -Add email to visited
+// -Add email to stack
+// -Set temp to empty array
+// -While stack has work:
+// -Pop last email off stack
+// -Push to email to temp
+// -For each neighbor of curr email:
+// -If not in visited, add to visited and push to stack
+// -Once done iterating through neighbors, sort emails and add name to front. Then push to result.
+// -After we're done visiting all emails, return result
+
+// Notes:
+// -Time complexity: O((n * k) * (log n * k)), as worst case is that all emails belong to a single person. The total number of emails will be n * k, and we need to sort these emails. DFS traversal will take n * k operations as no email will be traversed more than once.
+// -Space complexity: O(n * k) for the graph, visited set, and stack
+
+let accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John","johnsmith@mail.com","john00@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]];
+console.log(accountsMerge(accounts));
+
+// 75. Sort Colors
+
+var sortColors = function(nums) {
+  let low = 0;
+  let mid = 0;
+  let high = nums.length - 1;
+
+  while (mid <= high) {
+    if (nums[mid] === 0) {
+      swap(nums, low, mid);
+      low++;
+      mid++;
+    } else if (nums[mid] === 2) {
+      swap(nums, mid, high);
+      high--;
+    } else {
+      mid++;
+    }
+  }
+
+  return nums;
+
+  function swap(arr, start, end) {
+    [arr[start], arr[end]] = [arr[end], arr[start]];
+  }
+};
+
+// Explanation:
+// -Set low and mid pointers to first index in nums
+// -Set high pointer to last index in nums
+// -While mid <= high:
+// -If curr num equals 0, swap low and mid and increase both low and mid pointers by 1
+// -Else if curr equals 2, swap mid and high and decrease high pointer by 1
+// -Else increase mid pointer by 1
+// -Once done iterating through nums, return nums
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(sortColors([1, 0, 1, 2, 0, 1]));
+
+// 139. Word Break
+
+var wordBreak = function(s, wordDict) {
+  if (wordDict.length === 0 || wordDict === null) {
+    return false;
+  }
+
+  let words = new Set(wordDict);
+  let visited = new Set();
+  let queue = [0];
+
+  while (queue.length) {
+    let start = queue.shift();
+
+    if (!visited.has(start)) {
+      for (let end = start + 1; end <= s.length; end++) {
+        let curr = s.substring(start, end);
+
+        if (words.has(curr)) {
+          if (end === s.length) {
+            return true;
+          }
+          queue.push(end);
+        }
+      }
+      visited.add(start);
+    }
+  }
+
+  return false;
+};
+
+// Explanation:
+// -If dictionary is not valid or empty, return false
+// -Create set from dictionary
+// -Create new set to track visited characters
+// -Put first index in queue
+// -While queue has work:
+// -Remove first index from queue
+// -If index not visited:
+// -For each character after curr index:
+// -If substring in dictionary:
+// -Return true if we've reached end of string
+// -Else add substring end index to queue
+// -Once done iterating through string, mark curr index as visited
+// -If we iterate through string without returning true, return false
+
+// Notes:
+// -Time complexity: O(n^3), as for every starting index the search can continue until the end of the string
+// -Space complexity: O(n) space for the queue
+
+console.log(wordBreak('leetcode', ['leet', 'code']));
