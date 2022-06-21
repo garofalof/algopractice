@@ -173,7 +173,6 @@ var invertTree = function (root) {
 
   while (work.length) {
     let curr = work.pop();
-    console.log(curr);
     if (curr !== null) {
       [curr.left, curr.right] = [curr.right, curr.left];
       work.push(curr.left, curr.right);
@@ -1067,7 +1066,7 @@ var updateMatrix = function (mat) {
 // -While queue has work:
 // -Pop element from front of queue
 // -For each direction right, down, left, up:
-// -If node out of bounds or equal to 0, continue
+// -If node out of bounds or already visited or 0, continue
 // -Else set new direction node to curr node val plus 1
 // -Then push new node to queue
 // -Once queue is done, return updated matrix
@@ -1766,7 +1765,6 @@ var isValidBST = function (root) {
       let val = curr.val;
 
       if (val <= low || val >= high) {
-        console.log("val is not valid ", val);
         return false;
       }
 
@@ -2208,27 +2206,27 @@ console.log(lowestCommonAncestor(bt, bt.left.left, bt.right));
 
 class TimeMap {
   constructor() {
-      this.root = {};
+    this.root = {};
   }
   set(key, value, time) {
-      if (!this.root[key]) {
-          this.root[key] = [];
-      }
-      this.root[key][time] = value;
+    if (!this.root[key]) {
+      this.root[key] = [];
+    }
+    this.root[key][time] = value;
   }
   get(key, time) {
-      if (!this.root[key]) {
-          return '';
-      }
+    if (!this.root[key]) {
+      return "";
+    }
+    if (this.root[key][time]) {
+      return this.root[key][time];
+    }
+    while (!this.root[key][time] && time-- > 0) {
       if (this.root[key][time]) {
-          return this.root[key][time];
+        return this.root[key][time];
       }
-      while (!this.root[key][time] && time-- > 0) {
-          if (this.root[key][time]) {
-              return this.root[key][time];
-          }
-      }
-      return '';
+    }
+    return "";
   }
 }
 
@@ -2248,16 +2246,16 @@ class TimeMap {
 // -Space complexity: O(n)
 
 let storage = new TimeMap();
-storage.set('foo', 'bar', 1);
-console.log(storage.get('foo', 1));
-console.log(storage.get('foo', 3));
-storage.set('foo', 'bar2', 4);
-console.log(storage.get('foo', 4));
-console.log(storage.get('foo', 5));
+storage.set("foo", "bar", 1);
+console.log(storage.get("foo", 1));
+console.log(storage.get("foo", 3));
+storage.set("foo", "bar2", 4);
+console.log(storage.get("foo", 4));
+console.log(storage.get("foo", 5));
 
 // 721. Accounts Merge
 
-var accountsMerge = function(accounts) {
+var accountsMerge = function (accounts) {
   let emails = {};
   let names = {};
 
@@ -2331,12 +2329,17 @@ var accountsMerge = function(accounts) {
 // -Time complexity: O((n * k) * (log n * k)), as worst case is that all emails belong to a single person. The total number of emails will be n * k, and we need to sort these emails. DFS traversal will take n * k operations as no email will be traversed more than once.
 // -Space complexity: O(n * k) for the graph, visited set, and stack
 
-let accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],["John","johnsmith@mail.com","john00@mail.com"],["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]];
+let accounts = [
+  ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
+  ["John", "johnsmith@mail.com", "john00@mail.com"],
+  ["Mary", "mary@mail.com"],
+  ["John", "johnnybravo@mail.com"],
+];
 console.log(accountsMerge(accounts));
 
 // 75. Sort Colors
 
-var sortColors = function(nums) {
+var sortColors = function (nums) {
   let low = 0;
   let mid = 0;
   let high = nums.length - 1;
@@ -2378,7 +2381,7 @@ console.log(sortColors([1, 0, 1, 2, 0, 1]));
 
 // 139. Word Break
 
-var wordBreak = function(s, wordDict) {
+var wordBreak = function (s, wordDict) {
   if (wordDict.length === 0 || wordDict === null) {
     return false;
   }
@@ -2427,4 +2430,4 @@ var wordBreak = function(s, wordDict) {
 // -Time complexity: O(n^3), as for every starting index the search can continue until the end of the string
 // -Space complexity: O(n) space for the queue
 
-console.log(wordBreak('leetcode', ['leet', 'code']));
+console.log(wordBreak("leetcode", ["leet", "code"]));
