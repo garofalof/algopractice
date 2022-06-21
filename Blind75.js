@@ -2775,3 +2775,45 @@ bt.right = new Node(3);
 bt.right.left = new Node(4);
 bt.right.right = new Node(5);
 console.log(rightSideView(bt));
+
+// 5. Longest Palindromic Substring
+
+var longestPalindrome = function (s) {
+  let start = 0;
+  let end = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    for (let j of [i, i + 1]) {
+      let l = i;
+      let r = j;
+
+      while (s[l] && s[l] === s[r]) {
+        let palLen = r - l + 1;
+        let longest = end - start + 1;
+
+        if (palLen > longest) {
+          [start, end] = [l, r];
+        }
+        l--;
+        r++;
+      }
+    }
+  }
+
+  return s.substring(start, end + 1);
+};
+
+// Explanation:
+// -Set start and end pointers to 0
+// -For each char in string:
+// -Check left with right pointer at index and index + 1
+// -While left char is valid and palindrome exists:
+// -If curr palindrome is longer than longest palindrome, update start and left pointers to match left and right
+// -Decrease left by 1 and increase right by 1
+// -Once done iterating through chars in string, return palindrome based on left and right pointers
+
+// Notes:
+// -Time complexity: O(n ^ 2), as expanding a palindrome around its center could take O(n) time
+// -Space complexity: O(1)
+
+console.log(longestPalindrome("babad"));
