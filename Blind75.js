@@ -2685,7 +2685,7 @@ console.log(
 
 // 78. Subsets
 
-var subsets = function(nums) {
+var subsets = function (nums) {
   let result = [];
 
   backtrack([], 0);
@@ -2716,3 +2716,62 @@ var subsets = function(nums) {
 console.log(subsets([1, 2, 3]));
 
 // 199. Binary Tree Right Side View
+
+var rightSideView = function (root) {
+  let q = [root];
+  let result = [];
+
+  if (!root) {
+    return result;
+  }
+
+  while (q.length) {
+    let size = q.length;
+
+    for (let i = 0; i < size; i++) {
+      let curr = q.shift();
+
+      if (i === size - 1) {
+        result.push(curr.val);
+      }
+      if (curr.left) {
+        q.push(curr.left);
+      }
+      if (curr.right) {
+        q.push(curr.right);
+      }
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Add root to queue
+// -If root is null, return empty array
+// -While queue has work:
+// -Get size of queue
+// -For each element in queue:
+// -Remove element from front
+// -If last element in queue, push to result as we've found last element at its level
+// -If left or right node are valid, push to queue
+// -Once done iterating through queue, return result
+
+// Notes:
+// -Time complexity: O(n * d), where d is the diameter of the tree since we have to use shift operation on queue
+// -Space complexity: O(d), where d is the diameter of the tree, which is the max number of nodes we keep in queue
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let bt = new Node(1);
+bt.left = new Node(2);
+bt.right = new Node(3);
+bt.right.left = new Node(4);
+bt.right.right = new Node(5);
+console.log(rightSideView(bt));
