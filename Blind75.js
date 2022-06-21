@@ -2551,3 +2551,65 @@ var canPartition = function (nums) {
 // -Space complexity: O(m), as we use an array of size m to store the result of each subproblem
 
 console.log(canPartition([1, 5, 11, 5]));
+
+// 8. String to Integer (atoi)
+
+var myAtoi = function (s) {
+  let nums = {};
+
+  for (let i = 0; i < 10; i++) {
+    nums[i] = true;
+  }
+
+  let index = 0;
+  let sign = 1;
+  let result = 0;
+
+  while (index < s.length && s[index] === " ") {
+    index++;
+  }
+
+  if (index < s.length && (s[index] === "+" || s[index] === "-")) {
+    sign = s[index] === "-" ? -1 : 1;
+    index++;
+  }
+
+  let maxSafe = Math.pow(2, 31) - 1;
+  let minSafe = -Math.pow(2, 31);
+
+  while (index < s.length && nums[s[index]]) {
+    let num = Number(s[index]);
+
+    if (
+      result > Math.floor(maxSafe / 10) ||
+      (result === Math.floor(maxSafe / 10) && num > maxSafe % 10)
+    ) {
+      return sign === 1 ? maxSafe : minSafe;
+    }
+
+    result = result * 10 + num;
+    index++;
+  }
+
+  return result * sign;
+};
+
+// Explanation:
+// -Map out valid nums
+// -Set index to 0, result to 0, and sign to positive 1
+// -Skip over whitespace
+// -Check if sign exists before num and update sign to reflect sign
+// -Max safe integer is 2^31 - 1 and min safe integer is 2^31
+// -While index < string length and curr char is valid num:
+// -Get number of current char
+// -Check overflow and underflow conditions
+// -If integer overflowed return max safe integer, else return min safe integer if underflowed
+// -Append current num to result by multiplying result by 10 and adding num
+// -Increase index by 1
+// -Once done looping through valid characters, return result * sign
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(myAtoi("-4193 with words"));
