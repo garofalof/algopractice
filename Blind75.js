@@ -2613,3 +2613,72 @@ var myAtoi = function (s) {
 // -Space complexity: O(1)
 
 console.log(myAtoi("-4193 with words"));
+
+// 54. Spiral Matrix
+
+var spiralOrder = function (matrix) {
+  let [left, right, top, bottom] = [
+    0,
+    matrix[0].length - 1,
+    0,
+    matrix.length - 1,
+  ];
+
+  let result = [];
+
+  while (left <= right && top <= bottom) {
+    for (let i = left; i <= right; i++) {
+      result.push(matrix[top][i]);
+    }
+    top++;
+
+    for (let i = top; i <= bottom; i++) {
+      result.push(matrix[i][right]);
+    }
+    right--;
+
+    if (top <= bottom) {
+      for (let i = right; i >= left; i--) {
+        result.push(matrix[bottom][i]);
+      }
+      bottom--;
+    }
+
+    if (left <= right) {
+      for (let i = bottom; i >= top; i--) {
+        result.push(matrix[i][left]);
+      }
+      left++;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set left, right, top, and bottom pointers
+// -Set result to empty array
+// -While left <= right and top <= bottom:
+// -Push top row left to right to result
+// -Bring top row down by 1
+// -Push right col top to bottom to result
+// -Bring right col in by 1
+// -If top <= bottom:
+// -Push bottom row right to left to result
+// -Bring bottom row up by one
+// -If left <= right:
+// -Push left col bottom to top to result
+// -Bring left col in by 1
+// -Once all nodes push to result, return result
+
+// Notes
+// -Time complexity: O(r * c), where r is the number of rows and c is the number of columns
+// -Space complexity: O(1), as the output array does not count as extra space
+
+console.log(
+  spiralOrder([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+  ])
+);
