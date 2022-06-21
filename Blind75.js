@@ -2682,3 +2682,37 @@ console.log(
     [7, 8, 9],
   ])
 );
+
+// 78. Subsets
+
+var subsets = function(nums) {
+  let result = [];
+
+  backtrack([], 0);
+
+  return result;
+
+  function backtrack(path, index) {
+    result.push(path);
+
+    for (let i = index; i < nums.length; i++) {
+      backtrack([...path, nums[i]], i + 1);
+    }
+  }
+};
+
+// Explanation:
+// -Start backtrack with empty path and index 0
+// -In backtrack:
+// -Push path to result
+// -For each num in nums starting at provided index:
+// -Add num to path and backtrack with new path and index + 1
+// -Once we exhaust all options, return result
+
+// Notes:
+// -Time complexity: O(n * (2 ^ n)) to generate all subsets and copy them to an output list
+// -Space complexity: O(n), as we use O(n) space to maintain path. We do not count space used for the purpose of returning output array.
+
+console.log(subsets([1, 2, 3]));
+
+// 199. Binary Tree Right Side View
