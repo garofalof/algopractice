@@ -2510,3 +2510,44 @@ console.log(
     "ABCCED"
   )
 );
+
+// 416. Partition Equal Subset Sum
+
+var canPartition = function (nums) {
+  let sum = nums.reduce((a, b) => a + b, 0);
+
+  if (sum % 2 !== 0) {
+    return false;
+  }
+
+  let subsetSum = sum / 2;
+  let dp = new Array(subsetSum + 1).fill(false);
+  dp[0] = true;
+
+  for (let num of nums) {
+    for (let i = subsetSum; i >= num; i--) {
+      if (dp[subsetSum]) {
+        return dp[subsetSum];
+      }
+      dp[i] = dp[i] || dp[i - num];
+    }
+  }
+
+  return dp[subsetSum];
+};
+
+// Explanation:
+// -If sum of nums not divisible by 2, return false
+// -Set subset sum to half of sum
+// -Fill dp array with false up to subset sum index
+// -Set dp[0] true, as sum of empty subset is 0
+// -For each num in nums:
+// -Go through dp and mark valid subset sums as true
+// -If dp at subset sum index is true, exit early and return true
+// -Once done iterating through nums, return boolean value at subset sum index in dp array
+
+// Notes:
+// -Time complexity: O(m * n), where m is the subset sum and n is the number of elements in nums array
+// -Space complexity: O(m), as we use an array of size m to store the result of each subproblem
+
+console.log(canPartition([1, 5, 11, 5]));
