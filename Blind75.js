@@ -2433,3 +2433,80 @@ var wordBreak = function (s, wordDict) {
 console.log(wordBreak("leetcode", ["leet", "code"]));
 
 // 79. Word Search
+
+var exist = function (board, word) {
+  if (
+    board.length === 0 ||
+    board === null ||
+    word.length === 0 ||
+    word === null
+  ) {
+    return false;
+  }
+
+  let maxRow = board.length - 1;
+  let maxCol = board[0].length - 1;
+  let directions = [0, 1, 0, -1, 0];
+
+  for (let row = 0; row <= maxRow; row++) {
+    for (let col = 0; col <= maxCol; col++) {
+      if (dfs(row, col, 0)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+
+  function dfs(row, col, start) {
+    if (board[row][col] !== word[start]) {
+      return false;
+    }
+    if (start === word.length - 1) {
+      return true;
+    }
+
+    board[row][col] = "*";
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newRow = row + directions[i];
+      let newCol = col + directions[i + 1];
+
+      if (newRow >= 0 && newRow <= maxRow && newCol >= 0 && newCol <= maxCol) {
+        if (dfs(newRow, newCol, start + 1)) {
+          return true;
+        }
+      }
+    }
+
+    board[row][col] = word[start];
+    return false;
+  }
+};
+
+// Explanation:
+// -If board or word not valid, return false
+// -Perform search on each node in board and return true if dfs returns true
+// -In dfs:
+// -If node char not equal to curr word char, return false and exit dfs
+// -If we've reached end of word, return true and exit dfs
+// -Mark current node as visiting
+// -For each neighbor:
+// -If neigbor within board boundary, perform search
+// -If search is successful, return true and exit dfs
+// -If we visit paths from valid char without returning true, reset node to its character and return false
+
+// Notes:
+// -Time complexity: O(n * (3 ^ l)), where n is number of nodes in board and l is length of word. For the backtracking function, initially we could have at most 4 directions to explore, but further the choices are reduced into 3. As a result, the execution trace after the first step could be visualized as a 3-ary tree, where each of the branches represent a potential exploration in the corresponding direction. Therefore, in the worst case, the total number of invocation would be the number of nodes in a full 3-nary tree.
+// -Space complexity: O(l), where l is the length of the word. The main consumption of the memory lies in the recursion call of the backtracking function. The maximum length of the call stack would be the length of the word.
+
+console.log(
+  exist(
+    [
+      ["A", "B", "C", "E"],
+      ["S", "F", "C", "S"],
+      ["A", "D", "E", "E"],
+    ],
+    "ABCCED"
+  )
+);
