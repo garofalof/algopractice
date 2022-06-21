@@ -2817,3 +2817,30 @@ var longestPalindrome = function (s) {
 // -Space complexity: O(1)
 
 console.log(longestPalindrome("babad"));
+
+// 62. Unique Paths
+
+var uniquePaths = (m, n) => {
+  let dp = new Array(n + 1).fill(1);
+
+  for (let row = m - 1; row > 0; row--) {
+    for (let col = n - 1; col > 0; col--) {
+      dp[col] = dp[col] + dp[col + 1];
+    }
+  }
+
+  return dp[1];
+};
+
+// Explanation:
+// -Fill array of length columns + 1 with ones
+// -For each row bottom to top:
+// -For each column right to left:
+// -Curr node is equal to sum of count in prev row and count in prev col
+// -Once done iterating through grid, return dp[1]
+
+// Notes:
+// -Time complexity: O(m * n), where m is the number of rows and n is the number of columns
+// -Space complexity: O(n), where n is the number of columns
+
+console.log(uniquePaths(7, 3));
