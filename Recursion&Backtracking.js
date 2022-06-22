@@ -67,40 +67,18 @@ function printCombinations(array, size) {
   let buffer = [];
 
   function helper(start, length, size) {
-    console.log(
-      `Inside helper, start is ${start}, len is ${length}, and size is ${size}. Result is ${result} and buffer is ${buffer}`
-    );
     if (buffer.length === size) {
-      console.log(`Buffer length (${buffer.length}) equals max size (${size})`);
       result.push([...buffer]);
-      console.log(
-        `Pushed buffer ${[...buffer]} to result. Result updated to ${result}`
-      );
       return;
     }
     for (let i = start; i < length; i++) {
-      console.log(
-        `Iterating through array, curr index is ${i} and curr val is ${array[i]}`
-      );
       buffer.push(array[i]);
-      console.log(
-        `Pushed curr val (${
-          array[i]
-        }) to buffer. Buffer updated to: ${buffer}. About to recurse with start increased to ${
-          i + 1
-        }`
-      );
       helper(i + 1, length, size);
-      console.log(
-        `Finished recursing through buffer, about to remove last item from buffer ${buffer}`
-      );
       buffer.pop();
-      console.log(`Emptied buffer to ${buffer}`);
     }
   }
 
   helper(0, array.length, size);
-  console.log(`Done recursing, about to return result`);
   return result;
 }
 
@@ -140,31 +118,17 @@ function letterCombinations(digits) {
   const result = [];
 
   function helper(index, buffer) {
-    console.log(
-      `Inside helper, digits are ${digits}, index is ${index} and buffer is ${buffer}`
-    );
     if (index === digits.length) {
-      console.log(`Index (${index}) equals digits length (${digits.length})`);
       result.push(buffer);
-      console.log(`Pushed ${buffer} to result: ${result}`);
       return;
     }
 
     for (let letter of map[digits[index]]) {
-      console.log(
-        `Iterating through digit letters, current digit is ${digits[index]} and current letter is ${letter}`
-      );
-      console.log(
-        `Recursing through helper with index increased to ${
-          index + 1
-        } and ammended buffer of ${buffer + letter}`
-      );
       helper(index + 1, buffer + letter);
     }
   }
 
   helper(0, "");
-  console.log("Done recursing, about to return result");
   return result;
 }
 
@@ -196,30 +160,15 @@ function subsets(nums) {
   let result = [[]];
 
   function helper(index, buffer) {
-    console.log(`Inside helper, index is ${index} and buffer is ${buffer}`);
     for (let i = index; i < nums.length; i++) {
-      console.log(`Iterating through nums, i is ${i}`);
       buffer.push(nums[i]);
-      console.log(`Pushed ${nums[i]} to buffer: ${buffer}`);
       result.push([...buffer]);
-      console.log(
-        `Pushed ${[
-          ...buffer,
-        ]} to result: ${result}. About to iterate through helper with index increased to ${
-          i + 1
-        }`
-      );
       helper(i + 1, buffer);
-      console.log(
-        `Done recursing, about to pop last item off of buffer: ${buffer}`
-      );
       buffer.pop();
-      console.log(`Buffer updated to ${buffer}`);
     }
   }
 
   helper(0, []);
-  console.log("Done iterating, about to return result");
   return result;
 }
 
