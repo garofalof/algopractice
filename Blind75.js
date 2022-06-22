@@ -2987,7 +2987,7 @@ console.log(letterCombinations("23"));
 
 // 438. Find All Anagrams in a String
 
-var findAnagrams = function(s, p) {
+var findAnagrams = function (s, p) {
   let result = [];
   let needed = {};
 
@@ -3046,4 +3046,4 @@ var findAnagrams = function(s, p) {
 // -Time complexity: O(n), where n is the length of string s
 // -Space complexity: O(1), as our needed map is constrained by size of the alphabet
 
-console.log(findAnagrams('cbaebabacd', 'abc'));
+console.log(findAnagrams("cbaebabacd", "abc"));
