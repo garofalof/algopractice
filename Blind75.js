@@ -2902,7 +2902,7 @@ console.log(buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]));
 
 // 11. Container With Most Water
 
-var maxArea = function(height) {
+var maxArea = function (height) {
   let result = 0;
   let start = 0;
   let end = height.length - 1;
@@ -2915,7 +2915,7 @@ var maxArea = function(height) {
   }
 
   return result;
-}
+};
 
 // Explanation:
 // -Set result to 0
@@ -2930,4 +2930,57 @@ var maxArea = function(height) {
 // -Time complexity: O(n)
 // -Space complexity: O(1)
 
-console.log(maxArea([1,8,6,2,5,4,8,3,7]));
+console.log(maxArea([1, 8, 6, 2, 5, 4, 8, 3, 7]));
+
+// 17. Letter Combinations of a Phone Number
+
+var letterCombinations = function (digits) {
+  let map = {
+    2: "abc",
+    3: "def",
+    4: "ghi",
+    5: "jkl",
+    6: "mno",
+    7: "pqrs",
+    8: "tuv",
+    9: "wxyz",
+  };
+
+  let result = [];
+
+  if (digits.length === 0 || digits === null) {
+    return result;
+  }
+
+  helper(0, "");
+
+  return result;
+
+  function helper(start, buffer) {
+    if (buffer.length === digits.length) {
+      result.push(buffer);
+      return;
+    }
+
+    for (let letter of map[digits[start]]) {
+      helper(start + 1, buffer + letter);
+    }
+  }
+};
+
+// Explanation:
+// -Create map of digits to letters
+// -Set result to empty array
+// -If digits has length 0 or is null, return result, which is empty array
+// -Backtrack starting at index 0 and an empty buffer
+// -In backtrack:
+// -Base case: if buffer length equals digits length, push buffer to result and return to exit
+// -For each letter at curr index in digits:
+// -Recurse by increasing index by 1 and buffer string by curr letter
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(4 ^ n), as we make up to 4 function calls at each digit in the worst case where all digits are 7 and 9
+// -Space complexity: O(n) on the recursion call stack
+
+console.log(letterCombinations("23"));
