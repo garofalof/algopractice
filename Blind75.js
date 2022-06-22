@@ -2899,3 +2899,35 @@ var buildTree = function (preorder, inorder) {
 // -Space complexity: O(n) for both storing the map and storing the tree
 
 console.log(buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]));
+
+// 11. Container With Most Water
+
+var maxArea = function(height) {
+  let result = 0;
+  let start = 0;
+  let end = height.length - 1;
+
+  while (start < end) {
+    let area = Math.min(height[start], height[end]) * (end - start);
+    result = Math.max(result, area);
+
+    height[start] < height[end] ? start++ : end--;
+  }
+
+  return result;
+}
+
+// Explanation:
+// -Set result to 0
+// -Set start and end pointers to beginning and end of heigh array
+// -While start < end:
+// -Set area to min of start or end height times width (end - start)
+// -Set result to greater of result or curr area
+// -If start height < end height, increase start by 1, else decrease end by 1
+// -Once done iterating, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(maxArea([1,8,6,2,5,4,8,3,7]));
