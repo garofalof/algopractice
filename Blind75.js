@@ -3047,3 +3047,111 @@ var findAnagrams = function (s, p) {
 // -Space complexity: O(1), as our needed map is constrained by size of the alphabet
 
 console.log(findAnagrams("cbaebabacd", "abc"));
+
+// 230. Kth Smallest Element in a BST
+
+var kthSmallest = function (root, k) {
+  let stack = [];
+  let node = root;
+
+  while (node || stack.length) {
+    while (node) {
+      stack.push(node);
+      node = node.left;
+    }
+
+    node = stack.pop();
+    k--;
+
+    if (!k) {
+      return node.val;
+    }
+
+    node = node.right;
+  }
+};
+
+// Explanation:
+// -Initialize empty stack
+// -Set node pointer to root node
+// -While node or stack has work:
+// -While node not null, push node to stack and set node to left child
+// -Once we traverse all the way left, pop last node off stack
+// -Decrease k count by 1
+// -If k equals 0, return node val
+// -Set node to node right to check left most nodes right subtree if exists
+
+// Notes:
+// -Time complexity: O(h + k), where h is the tree height and k is kth smallest element. This complexity is defined by the stack, which contains at least h + k elements, since before starting to pop out one has to go down to a leaf
+// -Space complexity: O(h) to keep the stack, where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let bst = new Node(5);
+bst.left = new Node(3);
+bst.right = new Node(6);
+bst.left.left = new Node(2);
+bst.left.right = new Node(4);
+bst.right.right = new Node(7);
+console.log(kthSmallest(bst, 3));
+
+// 146. LRU Cache
+
+class LRUCache {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.cache = new Map();
+  }
+  get(key) {
+    if (!this.cache.has(key)) {
+      return -1;
+    }
+    let value = this.cache.get(key);
+    this.cache.delete(key);
+    this.cache.set(key, value);
+    return value;
+  }
+  put(key, value) {
+    this.cache.delete(key);
+    this.cache.set(key, value);
+
+    if (this.cache.size > this.capacity) {
+      let first = this.cache.keys().next().value;
+      this.cache.delete(first);
+    }
+  }
+}
+
+// Explanation:
+// -Set capacity to input capacity and set cache equal to empty map
+// -For get method:
+// -If cache doesn't have key, return -1
+// -Else get curr key value and set to temp value
+// -Delete key from cache
+// -Set key value in cache
+// -Return value
+// -For put method:
+// -Delete key from cache
+// -Set key value in cache
+// -If cache size exceeds capacity, remove first key from cache
+
+// Notes:
+// -Time complexity: O(1) for all operations
+// -Space complexity: O(n), where n is the specified capacity
+
+let cache = new LRUCache(2);
+cache.put(1, 1);
+cache.put(2, 2);
+console.log(cache.get(1));
+cache.put(3, 3);
+console.log(cache.get(2));
+cache.put(4, 4);
+console.log(cache.get(1));
+console.log(cache.get(3));
+console.log(cache.get(4));
