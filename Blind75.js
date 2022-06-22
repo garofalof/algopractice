@@ -2844,3 +2844,58 @@ var uniquePaths = (m, n) => {
 // -Space complexity: O(n), where n is the number of columns
 
 console.log(uniquePaths(7, 3));
+
+// 105. Construct Binary Tree from Preorder and Inorder Traversal
+
+var Node = function (val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+};
+
+var buildTree = function (preorder, inorder) {
+  let map = new Map();
+
+  for (let i = 0; i < inorder.length; i++) {
+    map.set(inorder[i], i);
+  }
+
+  let preorderIdx = 0;
+  return arrayToTree(preorder, 0, preorder.length - 1);
+
+  function arrayToTree(arr, start, end) {
+    if (start > end) {
+      return null;
+    }
+
+    let rootVal = preorder[preorderIdx];
+    let root = new Node(rootVal);
+    preorderIdx++;
+
+    root.left = arrayToTree(preorder, start, map.get(rootVal) - 1);
+    root.right = arrayToTree(preorder, map.get(rootVal) + 1, end);
+
+    return root;
+  }
+};
+
+// Explanation:
+// -Map inorder values and indices
+// -Set preorder index to 0
+// -Recurse on full preorder array to build tree
+// -Inside recursion:
+// -If start > end, return null
+// -Set root val to val at curr preorder index in preorder array
+// -Set root equal to new node from root val
+// -Increase preorder index by 1
+// -Recurse on left and right subtrees
+// -When we return null from building left and right subtrees, we return leaf nodes to parents' left and right
+// -Finally, we'll return root once our tree is fully built
+
+// Notes:
+// -Time complexity: O(n) for both building the hashmap and building the tree
+// -Space complexity: O(n) for both storing the map and storing the tree
+
+console.log(buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]));
