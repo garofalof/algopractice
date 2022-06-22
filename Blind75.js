@@ -2984,3 +2984,66 @@ var letterCombinations = function (digits) {
 // -Space complexity: O(n) on the recursion call stack
 
 console.log(letterCombinations("23"));
+
+// 438. Find All Anagrams in a String
+
+var findAnagrams = function(s, p) {
+  let result = [];
+  let needed = {};
+
+  for (let char of p) {
+    needed[char] = needed[char] + 1 || 1;
+  }
+
+  let left = 0;
+  let right = 0;
+  let count = p.length;
+
+  while (right < s.length) {
+    let rightChar = s[right];
+
+    if (needed[rightChar] > 0) {
+      count--;
+    }
+
+    needed[rightChar]--;
+    right++;
+
+    if (count === 0) {
+      result.push(left);
+    }
+
+    if (right - left === p.length) {
+      let leftChar = s[left];
+
+      if (needed[leftChar] >= 0) {
+        count++;
+      }
+
+      needed[leftChar]++;
+      left++;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Map out characters in string p with their respective counts
+// -Set left and right pointers to 0 and count to length of string p
+// -While right < string s length:
+// -If value of right char in p string map > 0, decrease count by 1
+// -Subtract 1 from value of right char in p string map
+// -Increase right pointer index by 1
+// -If count equals 0, anagram found at left index so we push left pointer index to result
+// -If window is size of string p:
+// -If left char is a needed char, increase count by 1
+// -Increase left char's count in needed, as we need to remove left char's reference in needed
+// -Increase left pointer index by 1
+// -Once done iterating through s, return result
+
+// Notes:
+// -Time complexity: O(n), where n is the length of string s
+// -Space complexity: O(1), as our needed map is constrained by size of the alphabet
+
+console.log(findAnagrams('cbaebabacd', 'abc'));
