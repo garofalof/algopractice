@@ -3155,3 +3155,34 @@ cache.put(4, 4);
 console.log(cache.get(1));
 console.log(cache.get(3));
 console.log(cache.get(4));
+
+// 621. Task Scheduler
+
+var leastInterval = function (tasks, n) {
+  let frequencies = new Array(26).fill(0);
+
+  for (let task of tasks) {
+    let index = task.charCodeAt() - "A".charCodeAt();
+    frequencies[index]++;
+  }
+
+  let maxFreq = Math.max(...frequencies);
+  let maxFreqCount = frequencies.filter((task) => task === maxFreq).length;
+
+  return Math.max(tasks.length, (maxFreq - 1) * (n + 1) + maxFreqCount);
+};
+
+// Explanation:
+// -Create array of length 26 to keep frequency of each task
+// -For each task in tasks:
+// -Update frequency in frequencies array
+// -Find the max frequency
+// -Find the number of tasks with the max frequency
+// -Return maximum of length of tasks or (maxFreq - 1) * (idle time + 1) + number of tasks w/ max frequency
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+// -For result, n + 1 accounts for task execution plus cooling period. Max frequency - 1 groups most frequent task plus cooling period, as there is no cooling period after our last tasks. The addition of the max frequent count at the end of our result accounts for most frequent tasks we put at the end that don't have an idle time associated with them.
+
+console.log(leastInterval("AAABBB", 2));
