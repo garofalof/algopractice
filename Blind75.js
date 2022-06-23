@@ -3186,3 +3186,79 @@ var leastInterval = function (tasks, n) {
 // -For result, n + 1 accounts for task execution plus cooling period. Max frequency - 1 groups most frequent task plus cooling period, as there is no cooling period after our last tasks. The addition of the max frequent count at the end of our result accounts for most frequent tasks we put at the end that don't have an idle time associated with them.
 
 console.log(leastInterval("AAABBB", 2));
+
+// 310. Minimum Height Trees
+
+var findMinHeightTrees = function (n, edges) {
+  if (n < 2) {
+    return [0];
+  }
+
+  let graph = new Map();
+
+  for (let i = 0; i < n; i++) {
+    graph.set(i, new Set());
+  }
+
+  for (let [node, edge] of edges) {
+    graph.get(node).add(edge);
+    graph.get(edge).add(node);
+  }
+
+  let leaves = [];
+
+  for (let node of graph.keys()) {
+    if (graph.get(node).size === 1) {
+      leaves.push(node);
+    }
+  }
+
+  while (n > 2) {
+    n -= leaves.length;
+    let newLeaves = [];
+
+    for (let leaf of leaves) {
+      let [neighbor] = graph.get(leaf);
+      graph.get(neighbor).delete(leaf);
+
+      if (graph.get(neighbor).size === 1) {
+        newLeaves.push(neighbor);
+      }
+
+      graph.delete(leaf);
+    }
+
+    leaves = newLeaves;
+  }
+
+  return leaves;
+};
+
+// Explanation:
+// -Map out graph
+// -For each node in graph:
+// -If node is leaf, add node to leaves array
+// -Max number of centroids is two, so while n > 2:
+// -Subtract leaves from n
+// -Set new leaves to empty array
+// -For each leaf in leaves:
+// -Get first neighbor
+// -Delete leaf from neighbor
+// -If neighbor is now leaf, push to new leaves array
+// -Delete leaf from graph
+// -Once done iterating through leaves, update leaves to equal new leaves
+// -Once centroids found, return leaves
+
+// Notes:
+// -Time complexity: O(n), where n is the number of nodes
+// -Space complexity: O(n) space required for both the graph and the queue
+
+console.log(
+  findMinHeightTrees(6, [
+    [3, 0],
+    [3, 1],
+    [3, 2],
+    [3, 4],
+    [5, 4],
+  ])
+);
