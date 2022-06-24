@@ -219,11 +219,15 @@ var isAnagram = function (s, t) {
     return false;
   }
 
-  s = s.split("").sort();
-  t = t.split("").sort();
+  let buffer = new Array(26).fill(0);
 
   for (let i = 0; i < s.length; i++) {
-    if (s[i] !== t[i]) {
+    buffer[s[i].charCodeAt() - "a".charCodeAt()]++;
+    buffer[t[i].charCodeAt() - "a".charCodeAt()]--;
+  }
+
+  for (let index of buffer) {
+    if (index !== 0) {
       return false;
     }
   }
@@ -233,10 +237,13 @@ var isAnagram = function (s, t) {
 
 // Explanation:
 // -If s and t are not same length, return false
-// -Sort s and t
+// -Create buffer array
 // -For each char in s:
-// -If char at index i is not same for s and t, return false
-// -If done iterating, return true as we have valid anagram
+// -Increase char count in buffer for s
+// -Decrease char count in buffer for t
+// -For each index in buffer:
+// -If index not equal to 0, return false
+// -Else, return true
 
 // Notes:
 // -Time complexity: O(n log n), as sorting costs O(n log n) and comparing two strings costs O(n)
