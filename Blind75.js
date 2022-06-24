@@ -2382,53 +2382,35 @@ console.log(sortColors([1, 0, 1, 2, 0, 1]));
 // 139. Word Break
 
 var wordBreak = function (s, wordDict) {
-  if (wordDict.length === 0 || wordDict === null) {
-    return false;
-  }
+  let dict = new Set(wordDict);
+  let dp = new Array(s.length + 1).fill(false);
+  dp[0] = true;
 
-  let words = new Set(wordDict);
-  let visited = new Set();
-  let queue = [0];
+  for (let i = 1; i <= s.length; i++) {
+    for (let j = 0; j < i; j++) {
+      let curr = s.substring(j, i);
 
-  while (queue.length) {
-    let start = queue.shift();
-
-    if (!visited.has(start)) {
-      for (let end = start + 1; end <= s.length; end++) {
-        let curr = s.substring(start, end);
-
-        if (words.has(curr)) {
-          if (end === s.length) {
-            return true;
-          }
-          queue.push(end);
-        }
+      if (dp[j] && dict.has(curr)) {
+        dp[i] = true;
       }
-      visited.add(start);
     }
   }
 
-  return false;
+  return dp[s.length];
 };
 
 // Explanation:
-// -If dictionary is not valid or empty, return false
 // -Create set from dictionary
-// -Create new set to track visited characters
-// -Put first index in queue
-// -While queue has work:
-// -Remove first index from queue
-// -If index not visited:
-// -For each character after curr index:
-// -If substring in dictionary:
-// -Return true if we've reached end of string
-// -Else add substring end index to queue
-// -Once done iterating through string, mark curr index as visited
-// -If we iterate through string without returning true, return false
+// -Create dp array of size string length + 1 and fill with false values
+// -Set index 0 to true, as null string is always present in dictionary
+// -For each index i, where i refers to the size of the substring starting from the beginning:
+// -For each index j, where j refers to the index partitioning the current substring:
+// -Check to see if prev substring was formed at j and, if so, if dictionary has word, set i to true
+// -Once done, if valid then index at string length will contain true so we return this value
 
 // Notes:
-// -Time complexity: O(n^3), as for every starting index the search can continue until the end of the string
-// -Space complexity: O(n) space for the queue
+// -Time complexity: O(n^3), as we have two nested loops with substring computation inside second loop
+// -Space complexity: O(n)
 
 console.log(wordBreak("leetcode", ["leet", "code"]));
 
@@ -3082,7 +3064,7 @@ var kthSmallest = function (root, k) {
 // -Set node to node right to check left most nodes right subtree if exists
 
 // Notes:
-// -Time complexity: O(h + k), where h is the tree height and k is kth smallest element. This complexity is defined by the stack, which contains at least h + k elements, since before starting to pop out one has to go down to a leaf
+// -Time complexity: O(h + k), where h is the tree height and k is kth smallest element. This complexity is defined by the stack, which contains at least h + k elements, since before starting to pop out one has to go down to a leaf.
 // -Space complexity: O(h) to keep the stack, where h is the height of the tree
 
 function Node(val) {
