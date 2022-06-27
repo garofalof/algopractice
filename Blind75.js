@@ -2037,7 +2037,7 @@ var combinationSum = function (candidates, target) {
 // -Once done recursing, return results
 
 // Notes:
-// -Time complexity: O(n ^ ((t /m) + 1)), where n is number of nodes, t is target value, and m is the min value amongst candidates. Fan out of each node is bounded by n, the total number of nodes. The maximum depth would be t / m, where we keep on adding the smallest element to the combination. Finally, the maximum number of nodes in a N-ary tree of t / m height would be N ^ ((t / m) + 1).
+// -Time complexity: O(n ^ ((t / m) + 1)), where n is number of nodes, t is target value, and m is the min value amongst candidates. Fan out of each node is bounded by n, the total number of nodes. The maximum depth would be t / m, where we keep on adding the smallest element to the combination. Finally, the maximum number of nodes in a N-ary tree of t / m height would be N ^ ((t / m) + 1).
 // -Space complexity: O(t / m), as the number of recursive calls can pile up to t / m, where we keep on adding the smallest element to the combination. We also keep a combination of numbers in our memo, which requires at most t / m space as well.
 
 console.log(combinationSum([2, 3, 5, 7], 7));
@@ -2219,21 +2219,26 @@ class TimeMap {
     if (!this.root[key]) {
       this.root[key] = [];
     }
-    this.root[key][time] = value;
+    this.root[key].push([value, time]);
   }
   get(key, time) {
-    if (!this.root[key]) {
-      return "";
-    }
-    if (this.root[key][time]) {
-      return this.root[key][time];
-    }
-    while (!this.root[key][time] && time-- > 0) {
-      if (this.root[key][time]) {
-        return this.root[key][time];
+    let arr = this.root[key] || [];
+    let result = "";
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+      let mid = Math.floor((right - left) / 2 + left);
+
+      if (this.root[key][mid][1] <= time) {
+        result = this.root[key][mid][0];
+        left = mid + 1;
+      } else {
+        right = mid - 1;
       }
     }
-    return "";
+
+    return result;
   }
 }
 
@@ -2241,15 +2246,20 @@ class TimeMap {
 // -Initialize root as empty object
 // -For set method:
 // -If root doesn't have key, set key to empty array
-// -Set value at time index in array
+// -Push value / time array to key
 // -For get method:
-// -If root doesn't have key, return empty string
-// -If root has key and time, return corresponding value
-// -Else decrease time until timestamp found and return that time's value
-// -Else if we reach 0 time, return empty string
+// -Set search array to array at key or empty array
+// -Set result to empty string
+// -Set left and right pointers
+// -While left <= right:
+// -Get midpoint
+// -If timestamp at midpoint <= input timestamp:
+// -Update result to value at curr timestamp and set left to mid + 1
+// -Else set right to mid - 1
+// -Once done, return result
 
 // Notes:
-// -Time complexity: O(1) for insertion and O(n) for get
+// -Time complexity: O(1) for insertion and O(log n) for get
 // -Space complexity: O(n)
 
 let storage = new TimeMap();
@@ -3251,3 +3261,41 @@ console.log(
     [5, 4],
   ])
 );
+
+// 100. Same Tree
+
+var isSameTree = function (p, q) {
+  if (!p && !q) {
+    return true;
+  }
+  if (!p || !q || p.val !== q.val) {
+    return false;
+  }
+
+  return isSameTree(p.right, q.right) && isSameTree(p.left, q.left);
+};
+
+// Explanation:
+// -If p and q are null, return true and exit
+// -If only p or q is null or p val not equal to q val, return false and exit
+// -Return result of recursing on right and left subtrees. If both return true, we return true. Else, we return false.
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(log n) best of completely balanced tree, O(n) worst case of completely unbalanced tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let p = new Node(1);
+p.left = new Node(2);
+p.right = new Node(3);
+let q = new Node(1);
+q.left = new Node(2);
+q.right = new Node(3);
+console.log(isSameTree(p, q));

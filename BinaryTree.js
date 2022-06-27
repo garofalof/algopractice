@@ -259,7 +259,6 @@ function postorderTraverse(root) {
 
   while (stack.length) {
     let curr = stack.pop();
-    console.log("curr result is ", result);
 
     if (curr) {
       result.push(curr);
