@@ -224,3 +224,51 @@ function eliminateDuplicates(nums) {
 // -Space complexity: O(1)
 
 console.log(eliminateDuplicates([3, 3, 4, 5, 5]));
+
+// 136. Single Number
+
+var singleNumber = function (nums) {
+  let result = 0;
+
+  for (let num of nums) {
+    result ^= num;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -For each num in nums:
+// -Set result to XOR of result and num
+// -XOR of a number and 0 is that number, while XOR of two identical numbers is 0
+// -Therefore, we will end up returning the unique number as duplicates will get cancelled out
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(singleNumber([1, 1, 2, 3, 3]));
+
+// 191. Number of 1 Bits
+
+var hammingWeight = function (n) {
+  let count = 0;
+
+  while (n !== 0) {
+    count++;
+    n = n & (n - 1);
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Set count to 0
+// -For each 1 in n, we repeatedly flip each least significant 1 to 0 and increase count until we have no more 1s
+// -We then return count
+
+// Notes:
+// -Time complexity: O(1) in the case of a 32-bit integer, as size is capped
+// -Space complexity: O(1), since no additional space is allocated
+
+console.log(hammingWeight(00000000000000000000000000001011));
