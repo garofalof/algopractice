@@ -3299,3 +3299,58 @@ let q = new Node(1);
 q.left = new Node(2);
 q.right = new Node(3);
 console.log(isSameTree(p, q));
+
+// 572. Subtree of Another Tree
+
+var isSubtree = function (root, subRoot) {
+  function isSame(root, subRoot) {
+    if (!root && !subRoot) {
+      return true;
+    }
+    if (!root || !subRoot || root.val !== subRoot.val) {
+      return false;
+    }
+
+    return isSame(root.left, subRoot.left) && isSame(root.right, subRoot.right);
+  }
+
+  function dfs(root, subRoot) {
+    if (!root) {
+      return false;
+    }
+    if (root.val === subRoot.val && isSame(root, subRoot)) {
+      return true;
+    }
+
+    return dfs(root.left, subRoot) || dfs(root.right, subRoot);
+  }
+
+  return dfs(root, subRoot);
+};
+
+// Explanation:
+// -Perform dfs on root node to find where root val equals subroot val
+// -Check to see if subtrees are same
+// -If is same returns true, we return true to our dfs and exit
+
+// Notes:
+// -Time complexity: O(m * n), where m is the number of nodes in the first tree and n is the number of nodes in the second tree. In worst case, we check is same for each node in 1st tree.
+// -Space complexity: O(n) worst case, O(log n) average case
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let p = new Node(3);
+p.left = new Node(4);
+p.right = new Node(5);
+p.left.left = new Node(1);
+p.left.right = new Node(2);
+let q = new Node(4);
+q.left = new Node(1);
+q.right = new Node(2);
+console.log(isSubtree(p, q));
