@@ -3443,3 +3443,27 @@ console.log(Kth.add(5));
 console.log(Kth.add(10));
 console.log(Kth.add(9));
 console.log(Kth.add(4));
+
+// 746. Min Cost Climbing Stairs
+
+var minCostClimbingStairs = function (cost) {
+  cost.push(0);
+
+  for (let i = cost.length - 3; i >= 0; i--) {
+    cost[i] += Math.min(cost[i + 1], cost[i + 2]);
+  }
+
+  return Math.min(cost[0], cost[1]);
+};
+
+// Explanation:
+// -Push 0 to cost array
+// -For each num right to left starting at third to last:
+// -Cost at index is equal to curr cost plus min of previous two costs
+// -Once done, return min of cost at index 0 or 1
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(minCostClimbingStairs([10, 15, 20]));
