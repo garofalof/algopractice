@@ -3354,3 +3354,92 @@ let q = new Node(4);
 q.left = new Node(1);
 q.right = new Node(2);
 console.log(isSubtree(p, q));
+
+// 1046. Last Stone Weight
+
+var lastStoneWeight = function (stones) {
+  stones.sort((a, b) => a - b);
+
+  while (stones.length > 1) {
+    let first = stones.pop();
+    let second = stones.pop();
+
+    if (first !== second) {
+      let diff = first - second;
+      let pointer = 0;
+
+      while (stones[pointer] <= diff) {
+        pointer++;
+      }
+
+      stones.splice(pointer, 0, diff);
+    }
+  }
+
+  return stones.length === 0 ? 0 : stones[0];
+};
+
+// Explanation:
+// -Sort nums in ascending order
+// -While size of nums > 1:
+// -Pop largest and second largest nums off nums
+// -If two nums not equal to each other, get their difference and place in sorted order
+// -Once done, return 0 if nums array is empty or last remaining num if not
+
+// Notes:
+// -Time complexity: O(n^2), could be brought down to O(n log n) using max heap
+// -Space complexity: O(log n) for sorting algorithm
+
+console.log(lastStoneWeight([2, 7, 4, 1, 8, 1]));
+
+// 703. Kth Largest Element in a Stream
+
+class KthLargest {
+  constructor(k, nums) {
+    this.k = k;
+    this.nums = nums.sort((a, b) => a - b);
+  }
+  add(val) {
+    let index = this.insert(val);
+    this.nums.splice(index, 0, val);
+
+    return this.nums[this.nums.length - this.k];
+  }
+  insert(val) {
+    let l = 0;
+    let r = this.nums.length - 1;
+
+    while (l <= r) {
+      let mid = Math.floor((r - l) / 2 + l);
+
+      if (this.nums[mid] === val) {
+        return mid;
+      }
+      if (this.nums[mid] > val) {
+        r = mid - 1;
+      } else {
+        l = mid + 1;
+      }
+    }
+
+    return l;
+  }
+}
+
+// Explanation:
+// -Initialize class w/ k and nums sorted
+// -For add:
+// -Get insert index by performing binary search and finding position for input value
+// -Insert value at found index
+// -Then, return value at nums length - k
+
+// Notes:
+// -Time complexity: O(n log n) for initializing nums property, O(n) for add, O(log n) for insert. Time complexity could be brought down to log n for add if we use min heap instead.
+// -Space complexity: O(n) for storing nums
+
+let Kth = new KthLargest(3, [4, 5, 8, 2]);
+console.log(Kth.add(3));
+console.log(Kth.add(5));
+console.log(Kth.add(10));
+console.log(Kth.add(9));
+console.log(Kth.add(4));
