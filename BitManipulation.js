@@ -272,3 +272,60 @@ var hammingWeight = function (n) {
 // -Space complexity: O(1), since no additional space is allocated
 
 console.log(hammingWeight(00000000000000000000000000001011));
+
+// 338. Counting Bits
+
+var countBits = function(n) {
+  let dp = new Array(n + 1).fill(0);
+  let offset = 1;
+
+  for (let i = 1; i <= n; i++) {
+    if (offset * 2 === i) {
+      offset = i;
+    }
+
+    dp[i] = 1 + dp[i - offset];
+  }
+
+  return dp;
+};
+
+// Explanation:
+// -Fill dp array of length n + 1 with zeros
+// -Set initial offset to 1
+// -For each num from 1 to n:
+// -If offset * 2 equals i, set offset to i
+// -Current index is equal to 1 plus val at index - offset
+// -Once done, return dp array
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1), as output array does not count as extra space
+
+console.log(countBits(5));
+
+// 190. Reverse Bits
+
+var reverseBits = function(n) {
+  let result = 0;
+
+  for (let i = 0; i < 32; i++) {
+    result *= 2;
+    result += n & 1;
+    n /= 2;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Result *= 2 shifts bits left and adds 0 at the end
+// -We retrieve rightmost bit and add it to result using n & 1
+// -We then shift bits right and remove 0 from n
+// -Once done, we return result
+
+// Notes:
+// -Time complexity: O(1), as size of integer is fixed
+// -Space complexity: O(1)
+
+console.log(reverseBits(00000010100101000001111010011100));
