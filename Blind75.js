@@ -3664,3 +3664,71 @@ var topKFrequent = function (nums, k) {
 // -Space complexity: O(n)
 
 console.log(topKFrequent([1, 1, 1, 2, 2, 3], 2));
+
+// 36. Valid Sudoku
+
+var isValidSudoku = function (board) {
+  for (let i = 0; i < board.length; i++) {
+    let rowCheck = new Set();
+    let colCheck = new Set();
+    let boxCheck = new Set();
+
+    for (let j = 0; j < board[0].length; j++) {
+      let row = board[i][j];
+      let col = board[j][i];
+      let box =
+        board[3 * Math.floor(i / 3) + Math.floor(j / 3)][3 * (i % 3) + (j % 3)];
+
+      if (row !== ".") {
+        if (rowCheck.has(row)) {
+          return false;
+        }
+        rowCheck.add(row);
+      }
+      if (col !== ".") {
+        if (colCheck.has(col)) {
+          return false;
+        }
+        colCheck.add(col);
+      }
+      if (box !== ".") {
+        if (boxCheck.has(box)) {
+          return false;
+        }
+        boxCheck.add(box);
+      }
+    }
+  }
+
+  return true;
+};
+
+// Explanation:
+// -For each row in board:
+// -Initialize empty set for row check, column check, and box check
+// -For each column in board:
+// -Get current row, col, and box values
+// -If row value is number:
+// -If row check has row value, return false
+// -Else add row value to row set
+// -Perform same checks for col and box value
+// -If we iterate through board without returning false, we return true
+
+// Notes:
+// -Time complexity: O(n^2), with n being board length (in most cases 9)
+// -Space complexity: O(n^2)
+// -If size of board is fixed, both time and space complexity will be O(1)
+
+board = [
+  ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+  ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+  [".", "9", "8", ".", ".", ".", ".", "6", "."],
+  ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+  ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+  ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+  [".", "6", ".", ".", ".", ".", "2", "8", "."],
+  [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+  [".", ".", ".", ".", "8", ".", ".", "7", "9"],
+];
+
+console.log(isValidSudoku(board));
