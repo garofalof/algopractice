@@ -3569,3 +3569,98 @@ var plusOne = function (digits) {
 // -Space complexity: O(1)
 
 console.log(plusOne([4, 3, 2, 9]));
+
+// 49. Group Anagrams
+
+var groupAnagrams = function (strs) {
+  let map = {};
+
+  for (let string of strs) {
+    let count = new Array(26).fill(0);
+
+    for (let char of string) {
+      let index = char.charCodeAt() - "a".charCodeAt();
+      count[index]++;
+    }
+
+    count = JSON.stringify(count);
+
+    if (!map[count]) {
+      map[count] = [];
+    }
+
+    map[count].push(string);
+  }
+
+  return Object.values(map);
+};
+
+// Explanation:
+// -Create map of anagrams based on character counts
+// -For each string in strings:
+// -Create buffer array
+// -For each char in string, increase count at respective index in buffer
+// -Stringify count array
+// -Push string to anagram array at count
+// -Once done, return grouped anagrams
+
+// Notes:
+// -Time complexity: O(n * k), where n is the length of strings and k is the max length of any string
+// -Space complexity: O(n * k), as we will store n strings of size k in worst case, where n is number of strings and k is max length of string
+
+console.log(groupAnagrams(["eat", "tea", "tan", "ate", "nat", "bat"]));
+
+// 347. Top K Frequent Elements
+
+var topKFrequent = function (nums, k) {
+  let count = {};
+
+  for (let num of nums) {
+    count[num] = count[num] + 1 || 1;
+  }
+
+  let frequencies = {};
+
+  for (let num in count) {
+    let frequency = count[num];
+
+    if (!frequencies[frequency]) {
+      frequencies[frequency] = [];
+    }
+
+    frequencies[frequency].push(num);
+  }
+
+  let keys = Object.keys(frequencies);
+  let result = [];
+
+  for (let i = keys.length - 1; i >= 0; i--) {
+    let frequency = keys[i];
+
+    while (frequencies[frequency].length && k) {
+      result.push(frequencies[frequency].pop());
+      k--;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize count map
+// -For each num in nums:
+// -Update count in map
+// -Initialize frequencies map
+// -For each num in count map:
+// -Push num to frequency
+// -For each key in frequencies back to front:
+// -While frequency has items and k isn't 0:
+// -Pop item off frequency and push to result
+// -Decrease k by 1
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(topKFrequent([1, 1, 1, 2, 2, 3], 2));
