@@ -3732,3 +3732,99 @@ board = [
 ];
 
 console.log(isValidSudoku(board));
+
+// 271. Encode and Decode Strings
+
+var encode = function (strs) {
+  let result = "";
+
+  for (let str of strs) {
+    result += String(str.length) + "#" + str;
+  }
+
+  return result;
+};
+
+var decode = function (s) {
+  let result = [];
+  let left = 0;
+
+  while (left < s.length) {
+    let right = left + 1;
+
+    while (s[right] !== "#") {
+      right++;
+    }
+
+    let length = parseInt(s.substring(left, right));
+    result.push(s.substring(right + 1, right + 1 + length));
+    left = right + 1 + length;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -For encode:
+// -Initialize result as empty string
+// -For each word in input string:
+// -Add string length, #, and word to result
+// -Once done, return result
+// -For decode:
+// -Set result to empty array
+// -Set left pointer to 0
+// -While left < string length:
+// -Set right pointer to left + 1
+// -Increase right pointer until we reach #
+// -Parse string length
+// -Push encoded string to result
+// -Update left pointer
+
+// Notes:
+// -Time complexity: O(n) for encode, O(n^2) for decode
+// -Space complexity: O(n) for both encode and decode
+
+let encoded = encode("Hello World");
+console.log(encoded);
+console.log(decode(encoded));
+
+// 128. Longest Consecutive Sequence
+
+var longestConsecutive = function (nums) {
+  let unique = new Set(nums);
+  let longest = 0;
+
+  for (let num of unique) {
+    if (!unique.has(num - 1)) {
+      let curr = num;
+      let streak = 1;
+
+      while (unique.has(curr + 1)) {
+        curr++;
+        streak++;
+      }
+
+      longest = Math.max(longest, streak);
+    }
+  }
+
+  return longest;
+};
+
+// Explanation:
+// -Create set from nums
+// -Set longest to 0
+// -For each num in set:
+// -If set does not contain num - 1:
+// -Set curr to num
+// -Set streak to 1
+// -While set has curr + 1:
+// -Increase curr and streak by 1
+// -Update to longest to greater of longest or current streak
+// -Once done iterating through nums, return longest
+
+// Notes:
+// -Time complexity: O(n), as the while loop is only reached when current num marks the beginning of a sequence
+// -Space complexity: O(n)
+
+console.log(longestConsecutive([100, 4, 200, 1, 3, 2]));
