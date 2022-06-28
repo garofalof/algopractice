@@ -329,3 +329,24 @@ var reverseBits = function(n) {
 // -Space complexity: O(1)
 
 console.log(reverseBits(00000010100101000001111010011100));
+
+// 268. Missing Number
+
+var missingNumber = function(nums) {
+  let expected = nums.length * (nums.length + 1) / 2;
+  let actual = nums.reduce((a, b) => a + b, 0);
+
+  return expected - actual;
+};
+
+// Explanation:
+// -Get expected sum by multiplying nums.length and nums.length + 1 and dividing that by 2
+// -Add up nums to get actual sum
+// -Return missing num, which is expected - actual sum
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+// -An alternative approach would be to set missing to nums length and XOR missing against XOR of index and value and returning missing
+
+console.log(missingNumber([0, 1, 3, 5, 4]));

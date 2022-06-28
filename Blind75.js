@@ -3467,3 +3467,105 @@ var minCostClimbingStairs = function (cost) {
 // -Space complexity: O(1)
 
 console.log(minCostClimbingStairs([10, 15, 20]));
+
+// 252. Meeting Rooms
+
+var canAttendMeetings = function (intervals) {
+  intervals.sort((a, b) => a[0] - b[0]);
+
+  for (let i = 0; i < intervals.length - 1; i++) {
+    let [start, end] = intervals[i];
+
+    if (end > intervals[i + 1][0]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+// Explanation:
+// -Sort intervals by start time
+// -For each interval in intervals:
+// -If end time > next interval start time, return false
+// -Once done iterating, return true
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(log n) for sorting
+
+console.log(
+  canAttendMeetings([
+    [0, 30],
+    [5, 10],
+    [15, 20],
+  ])
+);
+
+// 202. Happy Number
+
+var isHappy = function (n) {
+  let seen = new Set();
+
+  while (!seen.has(n)) {
+    seen.add(n);
+
+    let num = String(n);
+    let sum = 0;
+
+    for (let digit of num) {
+      sum += Number(digit) ** 2;
+    }
+
+    if (sum === 1) {
+      return true;
+    }
+
+    n = sum;
+  }
+
+  return false;
+};
+
+// Explanation:
+// -Initialize empty set
+// -While set doesn't have n:
+// -Add n to set
+// -Iterate through digits and add squares to num
+// -If sum equals 1, return true
+// -Else set n to equal sum
+// -If we find cycle, return false
+
+// Notes:
+// -Time complexity: O(log n), as there is a cap on how large sum can get and, therefore, how many digits we need to iterate through
+// -Space complexity: O(log n), as measured by the numbers we put in our hash set. We can use Floyd's cycle finding algorithm to detect cycle and bring space complexity down to O(1)
+
+console.log(isHappy(2));
+
+// 66. Plus One
+
+var plusOne = function (digits) {
+  for (let i = digits.length - 1; i >= 0; i--) {
+    if (digits[i] === 9) {
+      digits[i] = 0;
+    } else {
+      digits[i]++;
+      return digits;
+    }
+  }
+
+  digits.unshift(1);
+  return digits;
+};
+
+// Explanation:
+// -For each digit in digits right to left:
+// -If curr digit is 9, mark as 0
+// -Else add 1 to curr digit and return answer
+// -If we iterate through digits, that means each digit was 9 and so we add 1 at the beginning and return answer
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(plusOne([4, 3, 2, 9]));
