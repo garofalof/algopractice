@@ -3879,7 +3879,7 @@ console.log(hammingWeight(00000000000000000000000000001011));
 
 // 338. Counting Bits
 
-var countBits = function(n) {
+var countBits = function (n) {
   let dp = new Array(n + 1).fill(0);
   let offset = 1;
 
@@ -3910,7 +3910,7 @@ console.log(countBits(5));
 
 // 190. Reverse Bits
 
-var reverseBits = function(n) {
+var reverseBits = function (n) {
   let result = 0;
 
   for (let i = 0; i < 32; i++) {
@@ -3936,8 +3936,8 @@ console.log(reverseBits(00000010100101000001111010011100));
 
 // 268. Missing Number
 
-var missingNumber = function(nums) {
-  let expected = nums.length * (nums.length + 1) / 2;
+var missingNumber = function (nums) {
+  let expected = (nums.length * (nums.length + 1)) / 2;
   let actual = nums.reduce((a, b) => a + b, 0);
 
   return expected - actual;
@@ -3954,3 +3954,158 @@ var missingNumber = function(nums) {
 // -An alternative approach would be to set missing to nums length and XOR missing against XOR of index and value and returning missing
 
 console.log(missingNumber([0, 1, 3, 5, 4]));
+
+// 167. Two Sum II - Input Array Is Sorted
+
+var twoSum = function(numbers, target) {
+  let left = 0;
+  let right = numbers.length - 1;
+
+  while (left < right) {
+    let sum = numbers[left] + numbers[right];
+
+    if (sum > target) {
+      right--;
+    } else if (sum < target) {
+      left++;
+    } else {
+      break;
+    }
+  }
+
+  return [left + 1, right + 1];
+};
+
+// Explanation:
+// -Set left and right pointers to beginning and end of nums
+// -While left < right:
+// -If sum > target, decrease right by 1
+// -Else if sum < target, increase left by 1
+// -Else break and return left and right indices
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(twoSum([1, 7, 9, 11, 14], 16));
+
+// 424. Longest Repeating Character Replacement
+
+var characterReplacement = function(s, k) {
+  let count = {};
+  let longest = 0;
+  let left = 0;
+  let maxFreq = 0;
+
+  for (let right = 0; right < s.length; right++) {
+    let leftChar = s[left];
+    let rightChar = s[right];
+
+    count[rightChar] = count[rightChar] + 1 || 1;
+    maxFreq = Math.max(maxFreq, count[rightChar]);
+
+    while ((right - left + 1) - maxFreq > k) {
+        count[leftChar]--;
+        left++;
+    }
+
+    longest = Math.max(longest, right - left + 1);
+  }
+
+  return longest;
+};
+
+// Explanation:
+// -Create character count map
+// -Set longest, left pointer, and max frequency to 0
+// -For each char in string:
+// -Increase char count in map
+// -Set max frequency to greater of max frequency or curr char count
+// -If replacement characters exceed k:
+// -Decrease left character count and increase left pointer
+// -Update longest to greater of longest or window size
+// -Once done, return longest
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1), as character map is of fixed max size of 26
+
+console.log(characterReplacement('AABABBA', 1));
+
+// 567. Permutation in String
+
+var checkInclusion = function(s1, s2) {
+  if (s1.length > s2.length) {
+    return false;
+  }
+
+  let s1Count = new Array(26).fill(0);
+  let s2Count = new Array(26).fill(0);
+
+  for (let index in s1) {
+    s1Count[s1[index].charCodeAt() - 'a'.charCodeAt()]++;
+    s2Count[s2[index].charCodeAt() - 'a'.charCodeAt()]++;
+  }
+
+  let matches = 0;
+
+  for (let i = 0; i < 26; i++) {
+    matches += s1Count[i] === s2Count[i] ? 1 : 0;
+  }
+
+  let left = 0;
+
+  for (let right = s1.length; right < s2.length; right++) {
+    if (matches === 26) {
+      return true;
+    }
+
+    let index = s2[right].charCodeAt() - 'a'.charCodeAt();
+    s2Count[index]++;
+
+    if (s1Count[index] === s2Count[index]) {
+      matches++;
+    } else if (s1Count[index] + 1 === s2Count[index]) {
+      matches--;
+    }
+
+    index = s2[left].charCodeAt() - 'a'.charCodeAt();
+    s2Count[index]--;
+
+    if (s1Count[index] === s2Count[index]) {
+      matches++;
+    } else if (s1Count[index] - 1 === s2Count[index]) {
+      matches--;
+    }
+
+    left++;
+  }
+
+  return matches === 26;
+};
+
+// Explanation:
+// -If s1 length > s2 length, return false
+// -Map out counts of characters up to length of s1 for both strings
+// -Set matches to 0
+// -For each index in count arrays:
+// -If char count is equal for both strings, increase matches by 1
+// -Set left pointer to 0
+// -For each character from s1 length to end of s2:
+// -If matches equals 26, return true
+// -Get index in count array for right character
+// -Increase s2 count at index
+// -If s2 count and s1 count at that index are equal, increase matches by 1
+// -Else if s2 count is 1 greater than s1 count, decrease matches by 1
+// -Get index in count array for left character
+// -Decrease left character count
+// -If s1 and s2 count at that index are equal, increase matches by 1
+// -Else if s2 count 1 less than s1 count, decrease matches by 1
+// -Decrease left pointer
+// -Once done, return whether matches equals 26
+
+// Notes:
+// -Time complexity: O(s1 length + (s2 length - s1 length))
+// -Space complexity: O(1)
+
+console.log(checkInclusion('ab', 'eidboaoo'));
