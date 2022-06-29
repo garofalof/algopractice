@@ -3957,7 +3957,7 @@ console.log(missingNumber([0, 1, 3, 5, 4]));
 
 // 167. Two Sum II - Input Array Is Sorted
 
-var twoSum = function(numbers, target) {
+var twoSum = function (numbers, target) {
   let left = 0;
   let right = numbers.length - 1;
 
@@ -3991,7 +3991,7 @@ console.log(twoSum([1, 7, 9, 11, 14], 16));
 
 // 424. Longest Repeating Character Replacement
 
-var characterReplacement = function(s, k) {
+var characterReplacement = function (s, k) {
   let count = {};
   let longest = 0;
   let left = 0;
@@ -4004,9 +4004,9 @@ var characterReplacement = function(s, k) {
     count[rightChar] = count[rightChar] + 1 || 1;
     maxFreq = Math.max(maxFreq, count[rightChar]);
 
-    while ((right - left + 1) - maxFreq > k) {
-        count[leftChar]--;
-        left++;
+    while (right - left + 1 - maxFreq > k) {
+      count[leftChar]--;
+      left++;
     }
 
     longest = Math.max(longest, right - left + 1);
@@ -4030,11 +4030,11 @@ var characterReplacement = function(s, k) {
 // -Time complexity: O(n)
 // -Space complexity: O(1), as character map is of fixed max size of 26
 
-console.log(characterReplacement('AABABBA', 1));
+console.log(characterReplacement("AABABBA", 1));
 
 // 567. Permutation in String
 
-var checkInclusion = function(s1, s2) {
+var checkInclusion = function (s1, s2) {
   if (s1.length > s2.length) {
     return false;
   }
@@ -4043,8 +4043,8 @@ var checkInclusion = function(s1, s2) {
   let s2Count = new Array(26).fill(0);
 
   for (let index in s1) {
-    s1Count[s1[index].charCodeAt() - 'a'.charCodeAt()]++;
-    s2Count[s2[index].charCodeAt() - 'a'.charCodeAt()]++;
+    s1Count[s1[index].charCodeAt() - "a".charCodeAt()]++;
+    s2Count[s2[index].charCodeAt() - "a".charCodeAt()]++;
   }
 
   let matches = 0;
@@ -4060,7 +4060,7 @@ var checkInclusion = function(s1, s2) {
       return true;
     }
 
-    let index = s2[right].charCodeAt() - 'a'.charCodeAt();
+    let index = s2[right].charCodeAt() - "a".charCodeAt();
     s2Count[index]++;
 
     if (s1Count[index] === s2Count[index]) {
@@ -4069,7 +4069,7 @@ var checkInclusion = function(s1, s2) {
       matches--;
     }
 
-    index = s2[left].charCodeAt() - 'a'.charCodeAt();
+    index = s2[left].charCodeAt() - "a".charCodeAt();
     s2Count[index]--;
 
     if (s1Count[index] === s2Count[index]) {
@@ -4108,4 +4108,86 @@ var checkInclusion = function(s1, s2) {
 // -Time complexity: O(s1 length + (s2 length - s1 length))
 // -Space complexity: O(1)
 
-console.log(checkInclusion('ab', 'eidboaoo'));
+console.log(checkInclusion("ab", "eidboaoo"));
+
+// 22. Generate Parentheses
+
+var generateParenthesis = function (n) {
+  let stack = [];
+  let result = [];
+
+  backtrack(0, 0);
+
+  return result;
+
+  function backtrack(open, close) {
+    if (stack.length === n * 2) {
+      result.push(stack.join(""));
+      return;
+    }
+    if (open < n) {
+      stack.push("(");
+      backtrack(open + 1, close);
+      stack.pop();
+    }
+    if (close < open) {
+      stack.push(")");
+      backtrack(open, close + 1);
+      stack.pop();
+    }
+  }
+};
+
+// Explanation:
+// -Initialize stack to store sequence and result array to store results
+// -Backtrack on starting sequence of 0 open and 0 close
+// -In backtrack:
+// -If sequence length equals n * 2, convert stack to string, push to result, and return to exit
+// -If open < n, push open parenthesis to stack and backtrack with open increased by 1
+// -Once we hit base case, pop last open off stack
+// -If close < open, push close parenthesis and backtrack with close increased by 1
+// -Once we hit base case, pop last close off stack
+// -Once done generating combinations, return result
+
+// Notes:
+// -Time complexity: O((4 ^ n) / (n ^ 0.5))
+// -Space complexity: O((4 ^ n) / (n ^ 0.5))
+
+console.log(generateParenthesis(9));
+
+// 739. Daily Temperatures
+
+var dailyTemperatures = function(temperatures) {
+  let result = new Array(temperatures.length).fill(0);
+  let stack = [[temperatures[0], 0]];
+
+  for (let i = 0; i < temperatures.length; i++) {
+    let temp = temperatures[i];
+    let last = stack.length - 1;
+
+    while (stack.length && temp > stack[last][0]) {
+      let [stackTemp, stackIndex] = stack.pop();
+      result[stackIndex] = i - stackIndex;
+    }
+
+    stack.push([temp, i]);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Fill result array of size temperatures length with zeros
+// -Initialize empty stack
+// -For each temp in temperatures:
+// -While stack has work and last temp in stack < curr temp:
+// -Pop last temp off stack
+// -Get distance from curr to last temp and add that distance to last temp's index
+// -Push curr temp index to stack
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n), as even though it looks like time complexity should be O(n ^ 2), we push and pop all items in temperatures at most once in worst case
+// -Space complexity: O(n) for the stack, as result array does not count towards extra space
+
+console.log(dailyTemperatures([73,74,75,71,69,72,76,73]));
