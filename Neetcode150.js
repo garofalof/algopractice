@@ -4309,3 +4309,44 @@ console.log(
     3
   )
 );
+
+// 875. Koko Eating Bananas
+
+var minEatingSpeed = function (piles, h) {
+  let left = 1;
+  let right = Math.max(...piles);
+
+  while (left <= right) {
+    let k = Math.floor((right - left) / 2 + left);
+    let hours = 0;
+
+    for (let pile of piles) {
+      hours += Math.ceil(pile / k);
+    }
+
+    if (hours <= h) {
+      right = k - 1;
+    } else {
+      left = k + 1;
+    }
+  }
+
+  return left;
+};
+
+// Explanation:
+// -Set left and right to possible speeds 1 through max of piles bananas per hour
+// -While left <= right:
+// -Get middle speed
+// -Set curr hour count to 0
+// -For each pile in piles:
+// -Round up pile / middle speed and add to hours
+// -If total hours <= max hours provided, set right to middle - 1
+// -Else set left to middle + 1
+// -Once done, return left pointer
+
+// Notes:
+// -Time complexity: O(log m * n), where m is the max pile and n is the total number of piles
+// -Space complexity: O(1)
+
+console.log(minEatingSpeed([3, 11, 8, 12], 8));
