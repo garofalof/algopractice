@@ -4350,3 +4350,161 @@ var minEatingSpeed = function (piles, h) {
 // -Space complexity: O(1)
 
 console.log(minEatingSpeed([3, 11, 8, 12], 8));
+
+// 153. Find Minimum in Rotated Sorted Array
+
+var findMin = function (nums) {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left < right) {
+    let mid = Math.floor((right - left) / 2 + left);
+
+    if (nums[mid] > nums[right]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+
+  return nums[left];
+};
+
+// Explanation:
+// -Set left and right pointers to beginning and end of nums
+// -While left < right:
+// -Get mid index
+// -If num at mid > num at right, set left to mid + 1
+// -Else set right to mid
+// -Once we break out of while, return num at left index
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(findMin([4, 6, 7, 1, 2, 3]));
+
+// 143. Reorder List
+
+var reorderList = function (head) {
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast.next) {
+    fast = fast.next.next;
+    slow = slow.next;
+  }
+
+  let curr = slow;
+  let prev = null;
+
+  while (curr) {
+    [curr.next, prev, curr] = [prev, curr, curr.next];
+  }
+
+  let list1 = head;
+  let list2 = prev;
+
+  while (list2.next) {
+    [list1.next, list1] = [list2, list1.next];
+    [list2.next, list2] = [list1, list2.next];
+  }
+};
+
+// Explanation:
+// -Using fast and slow pointer to find middle
+// -Reverse linked list from middle onwards
+// -Merge two lists and return list
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+function ListNode(val) {
+  return {
+    val,
+    next: null,
+  };
+}
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = new ListNode(5);
+reorderList(list);
+console.log(list);
+
+// 76. Minimum Window Substring
+
+var minWindow = function (s, t) {
+  let countT = {};
+  let window = {};
+  let have = 0;
+  let unique = 0;
+
+  for (let char of t) {
+    unique = countT[char] ? unique : unique + 1;
+    countT[char] = countT[char] + 1 || 1;
+  }
+
+  let left = 0;
+  let right = 0;
+  let pointers = [-1, -1];
+  let shortest = Infinity;
+
+  while (right < s.length) {
+    let rightChar = s[right];
+    window[rightChar] = window[rightChar] + 1 || 1;
+
+    if (window[rightChar] === countT[rightChar]) {
+      have++;
+    }
+
+    while (have === unique) {
+      let size = right - left + 1;
+      let leftChar = s[left];
+
+      if (size < shortest) {
+        shortest = size;
+        pointers = [left, right];
+      }
+
+      window[leftChar]--;
+
+      if (countT[leftChar] && window[leftChar] < countT[leftChar]) {
+        have--;
+      }
+
+      left++;
+    }
+
+    right++;
+  }
+
+  return shortest === Infinity ? "" : s.substring(pointers[0], pointers[1] + 1);
+};
+
+// Explanation:
+// -Map out character count and count unique characters for string t
+// -Set left and right pointers to 0
+// -Set shortest substring pointers to -1 and shortest substring to Infinity
+// -While right < string s length:
+// -Get right char
+// -Increase char count in window map
+// -If char count in window equals t count, increase have by 1
+// -While have equals unique:
+// -Get window size and left char
+// -If size < shortest window: update shortest window and pointers
+// -Decrease left char count by 1
+// -If left char exists in count t and window left char count < t count:
+// -Decrease have by 1
+// -Increase left pointer by 1
+// -Once done moving window, increase right pointer by 1
+// -Finally, if shortest window equals infinity, return empty string, else return shortest substring
+
+// Notes:
+// -Time complexity: O(len t + len s)
+// -Space complexity: O(len t + len s)
+
+console.log(minWindow("ADOBECODEBANC", "ABC"));
