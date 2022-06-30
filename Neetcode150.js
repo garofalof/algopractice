@@ -4157,7 +4157,7 @@ console.log(generateParenthesis(9));
 
 // 739. Daily Temperatures
 
-var dailyTemperatures = function(temperatures) {
+var dailyTemperatures = function (temperatures) {
   let result = new Array(temperatures.length).fill(0);
   let stack = [[temperatures[0], 0]];
 
@@ -4190,4 +4190,122 @@ var dailyTemperatures = function(temperatures) {
 // -Time complexity: O(n), as even though it looks like time complexity should be O(n ^ 2), we push and pop all items in temperatures at most once in worst case
 // -Space complexity: O(n) for the stack, as result array does not count towards extra space
 
-console.log(dailyTemperatures([73,74,75,71,69,72,76,73]));
+console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]));
+
+// 853. Car Fleet
+
+var carFleet = function (target, position, speed) {
+  let map = {};
+  let stack = [];
+
+  position.forEach((car, index) => {
+    map[car] = speed[index];
+  });
+
+  let keys = Object.keys(map);
+
+  for (let i = keys.length - 1; i >= 0; i--) {
+    let currP = keys[i];
+    let currS = map[currP];
+    let time = (target - currP) / currS;
+
+    if (
+      stack.length === 0 ||
+      (stack.length > 0 && time > stack[stack.length - 1])
+    ) {
+      stack.push(time);
+    }
+  }
+
+  return stack.length;
+};
+
+// Explanation:
+// -Initialize empty stack
+// -Map out cars and their speeds to get sorted order
+// -For each car from largest position to smallest:
+// -Get time to arrive at target from curr position
+// -If stack is empty or stack has work and curr arrival time is greater than prev arrival time in stack, push time to stack
+// -Once done, return stack length
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n) for both the map and stack
+
+console.log(carFleet(12, [10, 8, 0, 5, 3], [2, 4, 1, 1, 3]));
+
+// 74. Search a 2D Matrix
+
+var searchMatrix = function (matrix, target) {
+  let rows = matrix.length;
+  let cols = matrix[0].length;
+  let top = 0;
+  let bottom = rows - 1;
+
+  while (top <= bottom) {
+    let mid = Math.floor((bottom - top) / 2 + top);
+
+    if (target > matrix[mid][matrix[0].length - 1]) {
+      top = mid + 1;
+    } else if (target < matrix[mid][0]) {
+      bottom = mid - 1;
+    } else {
+      break;
+    }
+  }
+
+  let foundRow = top <= bottom;
+
+  if (foundRow) {
+    let row = Math.floor((bottom - top) / 2 + top);
+    let left = 0;
+    let right = cols - 1;
+
+    while (left <= right) {
+      let mid = Math.floor((right - left) / 2 + left);
+
+      if (target > matrix[row][mid]) {
+        left = mid + 1;
+      } else if (target < matrix[row][mid]) {
+        right = mid - 1;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+// Explanation:
+// -Get number of rows and columns
+// -Set top and bottom to first and last row indices
+// -While top <= bottom:
+// -Get middle row
+// -If target > last element in middle row, set top to mid + 1
+// -Else if target < first element in middle row, set bottom to mid - 1
+// -Else break, as we've found our row
+// -Check to see if row's been found and, if true:
+// -Get row
+// -Set left and right pointers to beginning and end of row
+// -While left <= right:
+// -Get middle element in row
+// -If target > mid, set left to mid + 1
+// -Else if target < mid, set right to mid - 1
+// -Else return true if mid equals target
+// -If row not found or target not found, return false
+
+// Notes:
+// -Time complexity: O(log rows + log cols), as we perform binary search first on rows and then on columns
+// -Space complexity: O(1)
+
+console.log(
+  searchMatrix(
+    [
+      [1, 3, 5, 7],
+      [10, 11, 16, 20],
+      [23, 30, 34, 60],
+    ],
+    3
+  )
+);
