@@ -4157,16 +4157,16 @@ console.log(generateParenthesis(9));
 
 // 739. Daily Temperatures
 
-var dailyTemperatures = function(temperatures) {
+var dailyTemperatures = function (temperatures) {
   let result = new Array(temperatures.length).fill(0);
   let stack = [];
 
   temperatures.forEach((temp, index) => {
-      while (stack.length && temperatures[stack[stack.length - 1]] < temp) {
-          let prev = stack.pop();
-          result[prev] = index - prev;
-      }
-      stack.push(index);
+    while (stack.length && temperatures[stack[stack.length - 1]] < temp) {
+      let prev = stack.pop();
+      result[prev] = index - prev;
+    }
+    stack.push(index);
   });
 
   return result;
@@ -4507,14 +4507,14 @@ console.log(minWindow("ADOBECODEBANC", "ABC"));
 
 // 19. Remove Nth Node From End of List
 
-var ListNode = function(val, next = null) {
+var ListNode = function (val, next = null) {
   return {
     val,
-    next
+    next,
   };
-}
+};
 
-var removeNthFromEnd = function(head, n) {
+var removeNthFromEnd = function (head, n) {
   let slow = head;
   let fast = head;
 
@@ -4558,15 +4558,15 @@ console.log(removeNthFromEnd(list, 2));
 
 // 138. Copy List with Random Pointer
 
-var Node = function(val, next, random) {
+var Node = function (val, next, random) {
   return {
     val,
     next,
-    random
+    random,
   };
-}
+};
 
-var copyRandomList = function(head) {
+var copyRandomList = function (head) {
   let curr = head;
   let map = new Map();
   map.set(null, null);
@@ -4621,14 +4621,14 @@ console.log(copyRandomList(list));
 
 // 2. Add Two Numbers
 
-var ListNode = function(val, next = null) {
+var ListNode = function (val, next = null) {
   return {
     val,
-    next
+    next,
   };
-}
+};
 
-var addTwoNumbers = function(l1, l2) {
+var addTwoNumbers = function (l1, l2) {
   let dummy = new ListNode(0);
   let curr = dummy;
   let carry = 0;
@@ -4640,7 +4640,7 @@ var addTwoNumbers = function(l1, l2) {
     let val = val1 + val2 + carry;
     carry = Math.floor(val / 10);
     val = val % 10;
-    curr.next = new ListNode(val);;
+    curr.next = new ListNode(val);
 
     curr = curr.next;
     l1 = l1 ? l1.next : null;
@@ -4680,7 +4680,7 @@ console.log(addTwoNumbers(l1, l2));
 
 // 287. Find the Duplicate Number
 
-var findDuplicate = function(nums) {
+var findDuplicate = function (nums) {
   let slow = 0;
   let fast = 0;
 
@@ -4721,7 +4721,7 @@ console.log(findDuplicate([1, 3, 2, 4, 2]));
 
 // 1448. Count Good Nodes in Binary Tree
 
-var goodNodes = function(root) {
+var goodNodes = function (root) {
   let stack = [[root, root.val]];
   let count = 0;
 
@@ -4729,11 +4729,11 @@ var goodNodes = function(root) {
     let [curr, max] = stack.pop();
 
     if (curr) {
-        if (curr.val >= max) {
-            count++;
-        }
-        stack.push([curr.left, Math.max(max, curr.val)]);
-        stack.push([curr.right, Math.max(max, curr.val)]);
+      if (curr.val >= max) {
+        count++;
+      }
+      stack.push([curr.left, Math.max(max, curr.val)]);
+      stack.push([curr.right, Math.max(max, curr.val)]);
     }
   }
 
@@ -4758,7 +4758,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
