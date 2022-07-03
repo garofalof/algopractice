@@ -2862,9 +2862,9 @@ var buildTree = function (preorder, inorder) {
   }
 
   let preorderIdx = 0;
-  return arrayToTree(preorder, 0, preorder.length - 1);
+  return arrayToTree(0, preorder.length - 1);
 
-  function arrayToTree(arr, start, end) {
+  function arrayToTree(start, end) {
     if (start > end) {
       return null;
     }
@@ -2873,8 +2873,8 @@ var buildTree = function (preorder, inorder) {
     let root = new Node(rootVal);
     preorderIdx++;
 
-    root.left = arrayToTree(preorder, start, map.get(rootVal) - 1);
-    root.right = arrayToTree(preorder, map.get(rootVal) + 1, end);
+    root.left = arrayToTree(start, map.get(rootVal) - 1);
+    root.right = arrayToTree(map.get(rootVal) + 1, end);
 
     return root;
   }
@@ -3781,7 +3781,7 @@ var decode = function (s) {
 // -Update left pointer
 
 // Notes:
-// -Time complexity: O(n) for encode, O(n^2) for decode
+// -Time complexity: O(n) for both encode and decode
 // -Space complexity: O(n) for both encode and decode
 
 let encoded = encode("Hello World");
@@ -4157,21 +4157,17 @@ console.log(generateParenthesis(9));
 
 // 739. Daily Temperatures
 
-var dailyTemperatures = function (temperatures) {
+var dailyTemperatures = function(temperatures) {
   let result = new Array(temperatures.length).fill(0);
-  let stack = [[temperatures[0], 0]];
+  let stack = [];
 
-  for (let i = 0; i < temperatures.length; i++) {
-    let temp = temperatures[i];
-    let last = stack.length - 1;
-
-    while (stack.length && temp > stack[last][0]) {
-      let [stackTemp, stackIndex] = stack.pop();
-      result[stackIndex] = i - stackIndex;
-    }
-
-    stack.push([temp, i]);
-  }
+  temperatures.forEach((temp, index) => {
+      while (stack.length && temperatures[stack[stack.length - 1]] < temp) {
+          let prev = stack.pop();
+          result[prev] = index - prev;
+      }
+      stack.push(index);
+  });
 
   return result;
 };
@@ -4508,3 +4504,268 @@ var minWindow = function (s, t) {
 // -Space complexity: O(len t + len s)
 
 console.log(minWindow("ADOBECODEBANC", "ABC"));
+
+// 19. Remove Nth Node From End of List
+
+var ListNode = function(val, next = null) {
+  return {
+    val,
+    next
+  };
+}
+
+var removeNthFromEnd = function(head, n) {
+  let slow = head;
+  let fast = head;
+
+  while (fast && n) {
+    fast = fast.next;
+    n--;
+  }
+
+  if (!fast) {
+    return head.next;
+  }
+
+  while (fast.next) {
+    fast = fast.next;
+    slow = slow.next;
+  }
+
+  slow.next = slow.next.next;
+  return head;
+};
+
+// Explanation:
+// -Set slow and fast pointers to head
+// -While fast not null and n > 0:
+// -Move fast forward by n steps
+// -If fast null, return head.next
+// -While fast.next not null:
+// -Move both fast and slow pointers forward
+// -Once done, delete nth node by setting slow.next to slow.next.next and return head
+
+// Notes:
+// -Time complexity: O(n), where n is length of list
+// -Space complexity: O(1)
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = new ListNode(5);
+console.log(removeNthFromEnd(list, 2));
+
+// 138. Copy List with Random Pointer
+
+var Node = function(val, next, random) {
+  return {
+    val,
+    next,
+    random
+  };
+}
+
+var copyRandomList = function(head) {
+  let curr = head;
+  let map = new Map();
+  map.set(null, null);
+
+  while (curr) {
+    copy = new Node(curr.val);
+    map.set(curr, copy);
+    curr = curr.next;
+  }
+
+  curr = head;
+
+  while (curr) {
+    copy = map.get(curr);
+    copy.next = map.get(curr.next);
+    copy.random = map.get(curr.random);
+    curr = curr.next;
+  }
+
+  return map.get(head);
+};
+
+// Explanation:
+// -Set curr to head
+// -Initialize map w/ null values
+// -While curr:
+// -Create copy and set w/ curr in map
+// -Then move forward in list
+// -Set curr to head
+// -While curr:
+// -Get copy from map
+// -Get next and set to copy.next
+// -Do the same for random
+// -Move curr forward
+// -Once done, get head copy and return
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+let list = new Node(1);
+list.next = new Node(2);
+list.next.next = new Node(3);
+list.next.next.next = new Node(4);
+list.next.next.next.next = new Node(5);
+list.random = list.next.next.next.next;
+list.next.random = list.next.next;
+list.next.next.random = list.next;
+list.next.next.next.random = null;
+list.next.next.next.next.random = list.next.next.next;
+console.log(copyRandomList(list));
+
+// 2. Add Two Numbers
+
+var ListNode = function(val, next = null) {
+  return {
+    val,
+    next
+  };
+}
+
+var addTwoNumbers = function(l1, l2) {
+  let dummy = new ListNode(0);
+  let curr = dummy;
+  let carry = 0;
+
+  while (l1 || l2 || carry) {
+    let val1 = l1 ? l1.val : 0;
+    let val2 = l2 ? l2.val : 0;
+
+    let val = val1 + val2 + carry;
+    carry = Math.floor(val / 10);
+    val = val % 10;
+    curr.next = new ListNode(val);;
+
+    curr = curr.next;
+    l1 = l1 ? l1.next : null;
+    l2 = l2 ? l2.next : null;
+  }
+
+  return dummy.next;
+};
+
+// Explanation:
+// -Set dummy to new list node
+// -Set curr to dummy
+// -Set carry to 0
+// -While l1 not null or l2 not null or carry not 0:
+// -Get l1 val or set to 0 if l1 is null
+// -Get l2 val or set to 0 if l2 is null
+// -Add l1 val, l2 val, and carry
+// -Set carry to floor of val / 10
+// -Set val to remainder of val / 10
+// -Set curr next value to new list node from val
+// -Set curr to next value
+// -Set l1 and l2 to next values or null if null
+// -Once done, return dummy next value
+
+// Notes:
+// -Time complexity: O(max(l1, l2))
+// -Space complexity: O(max(l1, l2))
+
+let l1 = new ListNode(4);
+l1.next = new ListNode(5);
+l1.next.next = new ListNode(8);
+let l2 = new ListNode(1);
+l2.next = new ListNode(3);
+l2.next.next = new ListNode(7);
+l2.next.next.next = new ListNode(1);
+console.log(addTwoNumbers(l1, l2));
+
+// 287. Find the Duplicate Number
+
+var findDuplicate = function(nums) {
+  let slow = 0;
+  let fast = 0;
+
+  while (true) {
+    slow = nums[slow];
+    fast = nums[nums[fast]];
+
+    if (slow === fast) {
+      break;
+    }
+  }
+
+  let slow2 = 0;
+
+  while (slow !== slow2) {
+    slow = nums[slow];
+    slow2 = nums[slow2];
+  }
+
+  return slow;
+};
+
+// Explanation:
+// -Set fast and slow pointers to index 0
+// -While true:
+// -Set slow to num at index slow and fast to num at num at index fast
+// -If slow equals fast, break
+// -Set second slow pointer to 0
+// -While slow not equal to second slow:
+// -Set slow and second slow to nums at their respective indicies
+// -Once done and start of cycle detected, return slow
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(findDuplicate([1, 3, 2, 4, 2]));
+
+// 1448. Count Good Nodes in Binary Tree
+
+var goodNodes = function(root) {
+  let stack = [[root, root.val]];
+  let count = 0;
+
+  while (stack.length) {
+    let [curr, max] = stack.pop();
+
+    if (curr) {
+        if (curr.val >= max) {
+            count++;
+        }
+        stack.push([curr.left, Math.max(max, curr.val)]);
+        stack.push([curr.right, Math.max(max, curr.val)]);
+    }
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Push root and root val to stack
+// -Set count to 0
+// -While stack has work:
+// -Pop last item off stack
+// -If valid node:
+// -If curr val >= max, update count
+// -Push left and right children to stack w/ max set as greater of max or curr val
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let bt = new Node(3);
+bt.left = new Node(1);
+bt.right = new Node(4);
+bt.left.left = new Node(3);
+bt.right.left = new Node(1);
+bt.right.right = new Node(5);
+console.log(goodNodes(bt));
