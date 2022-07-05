@@ -5009,3 +5009,98 @@ t.postTweet(2, 6);
 console.log(t.getNewsFeed(1));
 t.unfollow(1, 2);
 t.getNewsFeed(1);
+
+// 90. Subsets II
+
+var subsetsWithDup = function (nums) {
+  nums.sort((a, b) => a - b);
+  let results = [];
+
+  backtrack(0, []);
+
+  return results;
+
+  function backtrack(start, path) {
+    results.push(path.slice());
+
+    for (let i = start; i < nums.length; i++) {
+      if (i !== start && nums[i] === nums[i - 1]) {
+        continue;
+      }
+
+      path.push(nums[i]);
+      backtrack(i + 1, path);
+      path.pop();
+    }
+  }
+};
+
+// Explanation:
+// -Sort nums array
+// -Set results to empty array
+// -Backtrack on index 0 and empty path
+// -In backtrack:
+// -Push copy of path to results
+// -For each index in num starting at i:
+// -If the num is considered for the first time in function call and is not a duplicate:
+// -Add num to path
+// -Backtrack on updated path and curr index + 1
+// -While backtracking, remove last num added from path and continue iterating
+// -Once done, return results
+
+// Notes:
+// -Time complexity: O(n * 2 ^ n), as it takes 2 ^ n to generate all subsets, and we have to make a copy of the subset at each call, adding an additional O(n) time
+// -Space complexity: O(n) for the recursion stack
+
+console.log(subsetsWithDup([3, 1, 2, 1, 5]));
+
+// 40. Combination Sum II
+
+var combinationSum2 = function (candidates, target) {
+  candidates.sort((a, b) => a - b);
+
+  let result = [];
+
+  backtrack(target, 0, []);
+
+  return result;
+
+  function backtrack(amount, start, path) {
+    if (amount === 0) {
+      result.push(path.slice());
+    }
+    if (amount <= 0) {
+      return;
+    }
+
+    for (let i = start; i < candidates.length; i++) {
+      let candidate = candidates[i];
+
+      if (i !== start && candidate === candidates[i - 1]) {
+        continue;
+      }
+
+      path.push(candidate);
+      backtrack(amount - candidate, i + 1, path);
+      path.pop();
+    }
+  }
+};
+
+// Explanation:
+// -Sort input array
+// -Backtrack on target amount, start index of 0, and empty path
+// -Inside backtrack:
+// -If amount equals 0, push copy of path to results
+// -If amount <= 0, return and exit backtrack
+// -For each num in array starting from input index:
+// -If curr index not equal to input index and curr num equal to prev num, continue
+// -Else push candidate to path and backtrack w/ updated path and curr index + 1
+// -While backtracking, remove last num from path and continue iteration
+// -Once done, return results
+
+// Notes:
+// -Time complexity: O(2 ^ n) in the worst case to exhaust all possible combinations in array
+// -Space complexity: O(n) for both the recursion stack and path
+
+console.log(combinationSum2([10, 1, 2, 7, 6, 1, 5], 8));
