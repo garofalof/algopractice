@@ -4769,3 +4769,243 @@ bt.left.left = new Node(3);
 bt.right.left = new Node(1);
 bt.right.right = new Node(5);
 console.log(goodNodes(bt));
+
+// 211. Design Add and Search Words Data Structure
+
+class Node {
+  constructor() {
+    this.keys = new Map();
+    this.end = false;
+  }
+  setEnd(bool) {
+    this.end = bool;
+  }
+  isEnd() {
+    return this.end;
+  }
+}
+
+class WordDictionary {
+  constructor() {
+    this.root = new Node();
+  }
+  addWord(string) {
+    let node = this.root;
+
+    for (let char of string) {
+      if (!node.keys.has(char)) {
+        node.keys.set(char, new Node());
+      }
+      node = node.keys.get(char);
+    }
+
+    node.setEnd(true);
+  }
+  search(string) {
+    function dfs(index, root) {
+      let node = root;
+
+      for (let i = index; i < string.length; i++) {
+        let char = string[i];
+
+        if (char === ".") {
+          for (let val of node.keys.keys()) {
+            if (dfs(i + 1, node.keys.get(val))) {
+              return true;
+            }
+          }
+
+          return false;
+        } else {
+          if (!node.keys.has(char)) {
+            return false;
+          }
+
+          node = node.keys.get(char);
+        }
+      }
+
+      return node.isEnd();
+    }
+
+    return dfs(0, this.root);
+  }
+}
+
+// Explanation:
+// -Initialize trie node class
+// -Initialize trie
+// -For add word:
+// -Perform normal trie word insertion and set end to true
+// -For word search:
+// -Perform dfs on index 0 and trie root
+// -In dfs:
+// -Set node to input root
+// -For each index from input index to end of string:
+// -If char is wildcard, perform dfs on node's children w/ index increased by 1
+// -If dfs returns true, we return true
+// -Else we return false if we make it through all children without returning true
+// -Else if char is valid letter:
+// -If node doesn't have char, return false
+// -Else update node to char's children
+// -Once done iterating through string, return node's end
+
+// Notes:
+// -Time complexity: O(n) for add word, where n is the string length. For search, time complexity is O(n) for well-defined word without dots and O((26 ^ n)) for undefined words, as we'll have to make up to 26 calls for each character in string
+// -Space complexity: O(n) for add word, O(1) for defined word search, and O(n) for undefined word search to keep recursion stack
+
+let trie = new WordDictionary();
+trie.addWord("bad");
+trie.addWord("cab");
+trie.addWord("sad");
+console.log(trie.search("..d"));
+console.log(trie.search("bad"));
+console.log(trie.search("car"));
+console.log(trie.search("b.."));
+
+// 215. Kth Largest Element in an Array
+
+var findKthLargest = function (nums, k) {
+  k = nums.length - k;
+
+  function quickSelect(l, r) {
+    let pivot = nums[r];
+    let pointer = l;
+
+    for (let i = l; i < r; i++) {
+      if (nums[i] <= pivot) {
+        [nums[pointer], nums[i]] = [nums[i], nums[pointer]];
+        pointer++;
+      }
+    }
+
+    [nums[pointer], nums[r]] = [nums[r], nums[pointer]];
+
+    if (pointer > k) {
+      return quickSelect(l, pointer - 1);
+    } else if (pointer < k) {
+      return quickSelect(pointer + 1, r);
+    } else {
+      return nums[pointer];
+    }
+  }
+
+  return quickSelect(0, nums.length - 1);
+};
+
+// Explanation:
+// -Set k to index of kth largest element
+// -Return result of running quick select on full nums array
+// -In quick select:
+// -Set pivot to num at input right index
+// -Set pointer to input left index
+// -For each num from left index to right index:
+// -If num <= pivot, swap num w/ num at pointer and increase pointer
+// -Once done, swap num at pointer with rightmost num to get partitioned array
+// -If pointer > k, return result of running quick select from left to pointer - 1
+// -Else if pointer < k, return result of running quick select from pointer + 1 to right
+// -Else return num at pointer if pointer equals k
+
+// Notes:
+// -Time complexity: O(n) average case, O(n ^ 2) worst case
+// -Space complexity: O(1)
+
+console.log(findKthLargest([-3, 2, 1, -5, 6, -4], 2));
+
+// 355. Design Twitter
+
+class Twitter {
+  constructor() {
+    this.time = 0;
+    this.tweets = new Map();
+    this.users = new Map();
+  }
+  postTweet(userId, tweetId) {
+    if (!this.tweets.has(userId)) {
+      this.tweets.set(userId, []);
+    }
+    this.tweets.get(userId).push([tweetId, this.time]);
+    this.time++;
+  }
+  getNewsFeed(userId) {
+    if (!this.users.has(userId)) {
+      this.users.set(userId, new Set());
+    }
+
+    this.users.get(userId).add(userId);
+    let following = Array.from(this.users.get(userId));
+    let tweets = {};
+
+    for (let user of following) {
+      if (this.tweets.has(user)) {
+        for (let [id, time] of this.tweets.get(user)) {
+          tweets[time] = id;
+        }
+      }
+    }
+
+    let result = [];
+    let sorted = Object.keys(tweets);
+
+    for (let i = sorted.length - 1; i >= 0; i--) {
+      if (result.length < 10) {
+        result.push(tweets[sorted[i]]);
+      } else {
+        break;
+      }
+    }
+
+    return result;
+  }
+  follow(followerId, followeeId) {
+    if (!this.users.has(followerId)) {
+      this.users.set(followerId, new Set());
+    }
+    this.users.get(followerId).add(followeeId);
+  }
+  unfollow(followerId, followeeId) {
+    if (this.users.has(followerId)) {
+      if (this.users.get(followerId).has(followeeId)) {
+        this.users.get(followerId).delete(followeeId);
+      }
+    }
+  }
+}
+
+// Explanation:
+// -Initialize twitter class w/ time at 0 and users and tweets set to empty maps
+// -For post tweet method:
+// -If user not in tweets, set user and empty array in tweets
+// -Push tweet id and time to user in tweets and increase time by 1
+// -For get news feed method:
+// -If users doesn't have user id, add user and empty set to users
+// -Add user id to user following set
+// -Get array of followers
+// -Set tweets to empty object
+// -For each follower in followers:
+// -If follower has tweeted:
+// -Add time and tweet id to tweets object
+// -Once tweets added to tweets object, set result to empty array and get times in tweets
+// -For all times back to front:
+// -If result length < 10, add tweet id to result
+// -Else break and return result
+// -For follow method:
+// -If users doesn't have follower id, add follower id and empty set
+// -Add followee to follower set
+// -For unfollow method:
+// -If users has follower id:
+// -If follower has followee in set:
+// -Delete followee from set
+
+// Notes:
+// -Time complexity: O(1) for add tweet, follow, and unfollow. O(n) for get news feed, where n is the number of tweets
+// -Space complexity: O(n) for post tweet, get news feed, and follow. O(1) for unfollow.
+
+let t = new Twitter();
+t.postTweet(1, 5);
+console.log(t.getNewsFeed(1));
+t.follow(1, 2);
+t.postTweet(2, 6);
+console.log(t.getNewsFeed(1));
+t.unfollow(1, 2);
+t.getNewsFeed(1);
