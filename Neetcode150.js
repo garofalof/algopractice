@@ -5240,4 +5240,68 @@ var partition = function (s) {
 // -Time complexity: O(n * (2 ^ n)), as getting all combinations takes O(2 ^ n) time and creating substring takes O(n) time
 // -Space complexity: O(n) on the recursion stack
 
-console.log(partition('aab'));
+console.log(partition("aab"));
+
+// 695. Max Area of Island
+
+var maxAreaOfIsland = function (grid) {
+  let maxRow = grid.length - 1;
+  let maxCol = grid[0].length - 1;
+  let max = 0;
+
+  for (let row = 0; row <= maxRow; row++) {
+    for (let col = 0; col <= maxCol; col++) {
+      max = Math.max(max, dfs(row, col));
+    }
+  }
+
+  return max;
+
+  function dfs(row, col) {
+    if (
+      row < 0 ||
+      row > maxRow ||
+      col < 0 ||
+      col > maxCol ||
+      grid[row][col] !== 1
+    ) {
+      return 0;
+    }
+
+    grid[row][col] = "*";
+
+    return (
+      1 +
+      dfs(row + 1, col) +
+      dfs(row - 1, col) +
+      dfs(row, col + 1) +
+      dfs(row, col - 1)
+    );
+  }
+};
+
+// Explanation:
+// -For each node in grid:
+// -Set max to greater of max or result of dfs on node coordinates
+// -In dfs:
+// -If coordinates out of bounds or node not equal to 1, return 0
+// -Mark node as visited
+// -Return 1 + sum of results of dfs performed on 4-directional neighbors
+// -Once done, we return max area
+
+// Notes:
+// -Time complexity: O(rows * cols)
+// -Space complexity: O(rows * cols) on the recursion stack
+
+console.log(
+  maxAreaOfIsland([
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0],
+    [0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+  ])
+);
