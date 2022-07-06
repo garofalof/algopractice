@@ -5305,3 +5305,70 @@ console.log(
     [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
   ])
 );
+
+// 417. Pacific Atlantic Water Flow
+
+var pacificAtlantic = function (heights) {
+  let maxRow = heights.length - 1;
+  let maxCol = heights[0].length - 1;
+  let pacific = new Set();
+  let atlantic = new Set();
+
+  for (let col = 0; col <= maxCol; col++) {
+    dfs(0, col, pacific, heights[0][col]);
+    dfs(maxRow, col, atlantic, heights[maxRow][col]);
+  }
+
+  for (let row = 0; row <= maxRow; row++) {
+    dfs(row, 0, pacific, heights[row][0]);
+    dfs(row, maxCol, atlantic, heights[row][maxCol]);
+  }
+
+  return Array.from(pacific)
+    .filter((coordinate) => atlantic.has(coordinate))
+    .map((coordinate) => coordinate.split(","));
+
+  function dfs(row, col, memo, prevHeight) {
+    let directions = [0, 1, 0, -1, 0];
+    let coordinate = `${row},${col}`;
+
+    if (memo.has(coordinate) || prevHeight > heights[row][col]) {
+      return;
+    }
+
+    memo.add(coordinate);
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newRow = row + directions[i];
+      let newCol = col + directions[i + 1];
+      let newCoordinate = `${newRow},${newCol}`;
+
+      if (newRow >= 0 && newCol >= 0 && newRow <= maxRow && newCol <= maxCol) {
+        dfs(newRow, newCol, memo, heights[row][col]);
+      }
+    }
+  }
+};
+
+// Explanation:
+// -Create empty sets to track valid nodes from pacific and atlantic
+// -For each row bordering pacific and atlantic, perform dfs on rows adding valid nodes to set
+// -For each col bordering pacific and atlantic, perform dfs on cols adding valid nodes to set
+// -In dfs:
+// -If curr set has coordinate or curr height < prev height, return to exit dfs
+// -Else add coordinate to set and perform dfs on valid neighbors
+// -Once done, return array of all node in both sets
+
+// Notes:
+// -Time complexity: O(rows * columns)
+// -Space complexity: O(rows * columns)
+
+console.log(
+  pacificAtlantic([
+    [1, 2, 2, 3, 5],
+    [3, 2, 3, 4, 4],
+    [2, 4, 5, 3, 1],
+    [6, 7, 1, 4, 5],
+    [5, 1, 1, 2, 4],
+  ])
+);
