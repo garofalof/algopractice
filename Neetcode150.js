@@ -5372,3 +5372,73 @@ console.log(
     [5, 1, 1, 2, 4],
   ])
 );
+
+// 130. Surrounded Regions
+
+var solve = function (board) {
+  let maxRow = board.length - 1;
+  let maxCol = board[0].length - 1;
+
+  for (let row = 0; row <= maxRow; row++) {
+    for (let col = 0; col <= maxCol; col++) {
+      if (row === 0 || row === maxRow || col === 0 || col === maxCol) {
+        if (board[row][col] === "O") {
+          dfs(row, col);
+        }
+      }
+    }
+  }
+  for (let row = 0; row <= maxRow; row++) {
+    for (let col = 0; col <= maxCol; col++) {
+      if (board[row][col] === "O") {
+        board[row][col] = "X";
+      }
+      if (board[row][col] === "*") {
+        board[row][col] = "O";
+      }
+    }
+  }
+
+  return board;
+
+  function dfs(row, col) {
+    let directions = [0, 1, 0, -1, 0];
+    board[row][col] = "*";
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newRow = row + directions[i];
+      let newCol = col + directions[i + 1];
+
+      if (
+        newRow >= 0 &&
+        newRow <= maxRow &&
+        newCol >= 0 &&
+        newCol <= maxCol &&
+        board[newRow][newCol] === "O"
+      ) {
+        dfs(newRow, newCol);
+      }
+    }
+  }
+};
+
+// Explanation:
+// -For each node in board, if node on border and marked as O, perform dfs on node
+// -In dfs:
+// -Mark node as visited
+// -If neighbor in bounds and equal to 0, perform dfs on neighbor
+// -Once done, iterate through board and mark all O's as X's and all visited as O's
+// -Finally, return board
+
+// Notes:
+// -Time complexity: O(rows * cols)
+// -Space complexity: O(rows * cols)
+
+console.log(
+  solve([
+    ["X", "X", "X", "X"],
+    ["X", "O", "O", "X"],
+    ["X", "X", "O", "X"],
+    ["X", "O", "X", "X"],
+  ])
+);
