@@ -5442,3 +5442,47 @@ console.log(
     ["X", "O", "X", "X"],
   ])
 );
+
+// 42. Trapping Rain Water
+
+var trap = function (height) {
+  if (height === null || height.length === 0) {
+    return 0;
+  }
+
+  let left = 0;
+  let right = height.length - 1;
+  let leftMax = height[left];
+  let rightMax = height[right];
+  let result = 0;
+
+  while (left < right) {
+    if (rightMax > leftMax) {
+      left++;
+      leftMax = Math.max(leftMax, height[left]);
+      result += leftMax - height[left];
+    } else {
+      right--;
+      rightMax = Math.max(rightMax, height[right]);
+      result += rightMax - height[right];
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -If height array is empty or null, return 0
+// -Set left and right pointers to beginning and end of array
+// -Set left max and right max to nums at left and right pointers
+// -While left < right:
+// -If right max > left max:
+// -Trapped is determined by left max so we increment left, update left max, and add left max - curr left to result
+// -Else trapped is determined by right max so we decrement right, update right max, and add right max - curr right to result
+// -Once done, we return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]));
