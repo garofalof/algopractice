@@ -5104,3 +5104,140 @@ var combinationSum2 = function (candidates, target) {
 // -Space complexity: O(n) for both the recursion stack and path
 
 console.log(combinationSum2([10, 1, 2, 7, 6, 1, 5], 8));
+
+// 297. Serialize and Deserialize Binary Tree
+
+function TreeNode(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+var serialize = function (root) {
+  let result = [];
+
+  dfs(root);
+
+  return result.join(",");
+
+  function dfs(node) {
+    if (!node) {
+      result.push("N");
+      return;
+    }
+
+    result.push(String(node.val));
+    dfs(node.left);
+    dfs(node.right);
+  }
+};
+
+var deserialize = function (data) {
+  data = data.split(",");
+  let index = 0;
+
+  return dfs();
+
+  function dfs() {
+    if (data[index] === "N") {
+      index++;
+      return null;
+    }
+
+    let rootVal = Number(data[index]);
+    let root = new TreeNode(rootVal);
+    index++;
+    root.left = dfs();
+    root.right = dfs();
+
+    return root;
+  }
+};
+
+// Explanation:
+// -For serialize:
+// -Perform preorder dfs traversal on bt starting at root
+// -In dfs:
+// -If node is null, push 'N' to result and return to exit
+// -Push node val to result as string
+// -Perform dfs on left and right children
+// -Once done, return result joined on ','
+// -For deserialize:
+// -Split string in ','
+// -Set index to 0
+// -Return result of dfs on serialized data
+// -In dfs:
+// -If curr index is 'N', increase index by 1 and return null and exit
+// -Create new node from node val
+// -Increase index by 1
+// -Set root left and root right to result of dfs
+// -Once done searching, return root to dfs
+
+// Notes:
+// -Time complexity: O(n) for both serialization and deserialization
+// -Space complexity: O(n) for both serialization and deserialization
+
+let bt = new TreeNode(1);
+bt.left = new TreeNode(2);
+bt.right = new TreeNode(3);
+bt.right.left = new TreeNode(4);
+bt.right.right = new TreeNode(5);
+console.log(deserialize(serialize(bt)));
+
+// 131. Palindrome Partitioning
+
+var partition = function (s) {
+  let palindromes = [];
+
+  dfs(0, []);
+
+  return palindromes;
+
+  function dfs(start, path) {
+    if (start >= s.length) {
+      palindromes.push(path.slice());
+      return;
+    }
+
+    for (let i = start; i < s.length; i++) {
+      if (isPalindrome(start, i)) {
+        let palindrome = s.substring(start, i + 1);
+        path.push(palindrome);
+        dfs(i + 1, path);
+        path.pop();
+      }
+    }
+  }
+
+  function isPalindrome(l, r) {
+    while (l < r) {
+      if (s[l] !== s[r]) {
+        return false;
+      }
+
+      l++;
+      r--;
+    }
+
+    return true;
+  }
+};
+
+// Explanation:
+// -Perform dfs on string w/ start index at 0 and empty path
+// -In dfs:
+// -If start index >= string length, push copy of path to result and return
+// -For each char in string from start index:
+// -If curr substring start through curr index is palindrome:
+// -Push substring to path
+// -Backtrack on curr index + 1 and updated path
+// -While backtracking, pop last char off path and continue iteration
+// -Once done, return palindromes
+
+// Notes:
+// -Time complexity: O(n * (2 ^ n)), as getting all combinations takes O(2 ^ n) time and creating substring takes O(n) time
+// -Space complexity: O(n) on the recursion stack
+
+console.log(partition('aab'));
