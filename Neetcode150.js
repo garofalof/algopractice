@@ -5341,7 +5341,6 @@ var pacificAtlantic = function (heights) {
     for (let i = 0; i < directions.length - 1; i++) {
       let newRow = row + directions[i];
       let newCol = col + directions[i + 1];
-      let newCoordinate = `${newRow},${newCol}`;
 
       if (newRow >= 0 && newCol >= 0 && newRow <= maxRow && newCol <= maxCol) {
         dfs(newRow, newCol, memo, heights[row][col]);
