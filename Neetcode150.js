@@ -5764,3 +5764,64 @@ console.log(
     [3, 4],
   ])
 );
+
+// 261. Graph Valid Tree
+
+var validTree = function (n, edges) {
+  let graph = new Map();
+  let visited = new Set();
+
+  for (let i = 0; i < n; i++) {
+    graph.set(i, []);
+  }
+  for (let [node, edge] of edges) {
+    graph.get(node).push(edge);
+    graph.get(edge).push(node);
+  }
+
+  return dfs(0, -1) && n === visited.size;
+
+  function dfs(node, prev) {
+    if (visited.has(node)) {
+      return false;
+    }
+
+    visited.add(node);
+
+    for (let edge of graph.get(node)) {
+      if (edge === prev) {
+        continue;
+      }
+      if (!dfs(edge, node)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+};
+
+// Explanation:
+// -Create adjacency list
+// -Perform dfs on index 0 and prev index -1
+// -In dfs:
+// -If visited has node, return false
+// -Add node to visited
+// -For each of node's edges:
+// -If edge equals previous, continue
+// -Else if dfs on edge returns false, return false
+// -Once done recursing on edges, return true
+// -If dfs returns true and size of visited is equal to n, return true
+
+// Notes:
+// -Time complexity: O(vertices + edges)
+// -Space complexity: O(vertices + edges)
+
+console.log(
+  validTree(5, [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+    [1, 4],
+  ])
+);
