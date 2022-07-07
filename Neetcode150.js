@@ -5877,14 +5877,50 @@ class Heap {
     }
   }
   bubbleDown() {
+    let index = 0;
+    let size = this.size();
+
+    while (true) {
+      let left, right;
+      let leftIdx = this.left(index);
+      let rightIdx = this.right(index);
+      let curr = this.data[index];
+      let swap = null;
+
+      if (leftIdx < size) {
+        left = this.data[leftIdx];
+
+        if (this.compare(left, curr)) {
+          swap = leftIdx;
+        }
+      }
+      if (rightIdx < size) {
+        right = this.data[rightIdx];
+
+        if ((swap !== null && this.compare(right, left)) || (swap === null && this.compare(right, curr))) {
+          swap = rightIdx;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(index, swap);
+      index = swap;
+    }
   }
 }
 
-let heap = new Heap((a, b) => a > b);
-heap.add(4);
-heap.add(2);
-heap.add(1);
-heap.add(3);
-heap.add(5);
-console.log(heap.data);
-heap.pop();
+class MedianFinder {
+  constructor() {
+    this.maxHeap = new Heap((a, b) => a > b);
+    this.minHeap = new Heap((a, b) => a < b);
+    this.even = true;
+  }
+  addNum(num) {
+
+  }
+  findMedian() {
+
+  }
+}
