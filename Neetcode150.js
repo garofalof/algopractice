@@ -5548,3 +5548,78 @@ console.log(
     [0, -1, 2147483647, 2147483647],
   ])
 );
+
+// 210. Course Schedule II
+
+var findOrder = function (numCourses, prerequisites) {
+  let graph = new Map();
+  let visiting = new Set();
+  let visited = new Set();
+  let result = [];
+
+  for (let i = 0; i < numCourses; i++) {
+    graph.set(i, []);
+  }
+  for (let [course, prereq] of prerequisites) {
+    graph.get(course).push(prereq);
+  }
+  for (let [course, prereqs] of graph) {
+    if (!dfs(course)) {
+      return [];
+    }
+  }
+
+  return result;
+
+  function dfs(course) {
+    if (visiting.has(course)) {
+      return false;
+    }
+    if (visited.has(course)) {
+      return true;
+    }
+
+    visiting.add(course);
+    let prereqs = graph.get(course);
+
+    if (prereqs) {
+      for (let prereq of prereqs) {
+        if (!dfs(prereq)) {
+          return false;
+        }
+      }
+    }
+
+    visiting.delete(course);
+    visited.add(course);
+    result.push(course);
+    return true;
+  }
+};
+
+// Explanation:
+// -Initialize graph w/ all courses 0 through numCourses
+// -Push prereqs to courses in graph
+// -For each course in graph:
+// -If dfs returns false, return empty array
+// -In dfs:
+// -If course in visiting, cycle found so we return false
+// -If course in visited, return true as course has already been validated
+// -Else add course to visiting and get prereqs
+// -Perform dfs on each prereq
+// -If we find cycle by checking prereq, return false
+// -Once done checking course and its prereq:
+// -Remove course from visiting, add to visited, push course to result, and return true
+
+// Notes:
+// -Time complexity: O(vertices + edges)
+// -Space complexity: O(vertices + edges)
+
+console.log(
+  findOrder(4, [
+    [1, 0],
+    [2, 0],
+    [3, 1],
+    [3, 2],
+  ])
+);
