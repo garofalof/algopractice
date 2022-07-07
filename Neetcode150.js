@@ -5702,3 +5702,65 @@ console.log(
     [1, 5],
   ])
 );
+
+// 323. Number of Connected Components in an Undirected Graph
+
+var countComponents = function (n, edges) {
+  let graph = new Map();
+
+  for (let i = 0; i < n; i++) {
+    graph.set(i, []);
+  }
+  for (let [node, edge] of edges) {
+    graph.get(node).push(edge);
+    graph.get(edge).push(node);
+  }
+
+  let count = 0;
+  let visited = new Set();
+
+  for (let [node, edges] of graph) {
+    if (!visited.has(node)) {
+      count++;
+      dfs(node);
+    }
+  }
+
+  return count;
+
+  function dfs(node) {
+    visited.add(node);
+    let edges = graph.get(node);
+
+    for (let edge of edges) {
+      if (!visited.has(edge)) {
+        dfs(edge);
+      }
+    }
+  }
+};
+
+// Explanation:
+// -Create adjacency list
+// -Set count to 0 and visited to empty set
+// -For each node in graph:
+// -If node not in visited:
+// -Increase count and perform dfs on node
+// -In dfs:
+// -Mark node as visited
+// -For each of node's edges:
+// -If edge not in visited:
+// -Perform dfs on edge
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(vertices + edges)
+// -Space complexity: O(vertices + edges)
+
+console.log(
+  countComponents([
+    [0, 1],
+    [1, 2],
+    [3, 4],
+  ])
+);
