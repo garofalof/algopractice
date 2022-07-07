@@ -5623,3 +5623,82 @@ console.log(
     [3, 2],
   ])
 );
+
+// 684. Redundant Connection
+
+var findRedundantConnection = function (edges) {
+  let parent = [];
+  let rank = new Array(edges.length + 1).fill(1);
+
+  for (let i = 0; i <= edges.length; i++) {
+    parent[i] = i;
+  }
+  for (let [node, edge] of edges) {
+    if (!union(node, edge)) {
+      return [node, edge];
+    }
+  }
+
+  function find(node) {
+    let p = parent[node];
+
+    while (p !== parent[p]) {
+      parent[p] = parent[parent[p]];
+      p = parent[p];
+    }
+
+    return p;
+  }
+
+  function union(node1, node2) {
+    let p1 = find(node1);
+    let p2 = find(node2);
+
+    if (p1 === p2) {
+      return false;
+    }
+    if (rank[p1] > rank[p2]) {
+      parent[p2] = p1;
+      rank[p1] += rank[p2];
+    } else {
+      parent[p1] = p2;
+      rank[p2] += rank[p1];
+    }
+
+    return true;
+  }
+};
+
+// Explanation:
+// -Set values in parent array to all indices in edges
+// -For each edge, set rank to 1
+// -For each node, edge in edges:
+// -If union find returns false, return node / edge pair
+// -In union:
+// -Get parent nodes of node and edge using find:
+// -In find:
+// -Get parent of node
+// -While parent not equal to parent of parent:
+// -Set parent of node to parent of node's parent
+// -Set parent to parent of parent
+// -Once we've found our leader, we return it
+// -Back in union:
+// -If both leaders are equal, we return false
+// -If rank of first leader > second leader:
+// -Set parent of second leader to first leader and update rank of first leader to include rank of second leader
+// -Else set parent at first leader to second leader and update second leader rank to include rank of first leader
+// -Then return true and move to next node / edge pair
+
+// Notes:
+// -Time complexity: O(n), where n is the number of vertices
+// -Space complexity: O(n)
+
+console.log(
+  findRedundantConnection([
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [1, 4],
+    [1, 5],
+  ])
+);
