@@ -5825,3 +5825,66 @@ console.log(
     [1, 4],
   ])
 );
+
+// 295. Find Median from Data Stream
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(index) {
+    return Math.floor(index - 1 / 2);
+  }
+  left(index) {
+    return 2 * index + 1;
+  }
+  right(index) {
+    return 2 * index + 2;
+  }
+  swap(start, end) {
+    [this.data[start], this.data[end]] = [this.data[end], this.data[start]];
+  }
+  size() {
+    return this.data.length;
+  }
+  top() {
+    return this.data[0];
+  }
+  add(val) {
+    this.data.push(val);
+    this.bubbleUp();
+  }
+  pop() {
+    if (this.size() === 1) {
+      return this.data.pop();
+    }
+
+    let top = this.data[0];
+    this.data[0] = this.data.pop();
+    this.bubbleDown();
+
+    return top;
+  }
+  bubbleUp() {
+    let index = this.size() - 1;
+    let parent = this.parent(index);
+
+    while (this.compare(this.data[index], this.data[parent])) {
+      this.swap(index, parent);
+      index = parent;
+      parent = this.parent(parent);
+    }
+  }
+  bubbleDown() {
+  }
+}
+
+let heap = new Heap((a, b) => a > b);
+heap.add(4);
+heap.add(2);
+heap.add(1);
+heap.add(3);
+heap.add(5);
+console.log(heap.data);
+heap.pop();
