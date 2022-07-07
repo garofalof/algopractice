@@ -5485,3 +5485,66 @@ var trap = function (height) {
 // -Space complexity: O(1)
 
 console.log(trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]));
+
+// 286. Walls and Gates
+
+var wallsAndGates = function (rooms) {
+  let maxRow = rooms.length - 1;
+  let maxCol = rooms[0].length - 1;
+  let directions = [0, 1, 0, -1, 0];
+  let q = [];
+
+  for (let row = 0; row <= maxRow; row++) {
+    for (let col = 0; col <= maxCol; col++) {
+      if (rooms[row][col] === 0) {
+        q.push([row, col]);
+      }
+    }
+  }
+
+  while (q.length) {
+    let [row, col] = q.shift();
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newRow = row + directions[i];
+      let newCol = col + directions[i + 1];
+
+      if (
+        newRow < 0 ||
+        newCol < 0 ||
+        newRow > maxRow ||
+        newCol > maxCol ||
+        rooms[newRow][newCol] !== Math.pow(2, 31) - 1
+      ) {
+        continue;
+      }
+
+      rooms[newRow][newCol] = rooms[row][col] + 1;
+      q.push([newRow, newCol]);
+    }
+  }
+
+  return rooms;
+};
+
+// Explanation:
+// -Add all gates to queue
+// -While queue has work:
+// -Pop first item off queue
+// -For each direction up, down, left, right:
+// -If new coordinate not out of bounds and is empty:
+// -Mark cell as 1 + curr coordinate distance and push new coordinates to queue
+// -Once done, return rooms
+
+// Notes:
+// -Time complexity: O((row * columns) ^ 2) given shift operation inside while loop
+// -Space complexity: O(rows * columns) for the queue
+
+console.log(
+  wallsAndGates([
+    [2147483647, -1, 0, 2147483647],
+    [2147483647, 2147483647, 2147483647, -1],
+    [2147483647, -1, 2147483647, -1],
+    [0, -1, 2147483647, 2147483647],
+  ])
+);
