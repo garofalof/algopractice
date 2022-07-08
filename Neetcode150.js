@@ -5834,7 +5834,7 @@ class Heap {
     this.compare = func;
   }
   parent(index) {
-    return Math.floor(index - 1 / 2);
+    return Math.floor((index - 1) / 2);
   }
   left(index) {
     return 2 * index + 1;
@@ -5849,20 +5849,20 @@ class Heap {
     return this.data.length;
   }
   top() {
-    return this.data[0];
+    return this.data[0] || null;
   }
-  add(val) {
-    this.data.push(val);
+  add(num) {
+    this.data.push(num);
     this.bubbleUp();
   }
   pop() {
-    if (this.size() === 1) {
-      return this.data.pop();
-    }
-
     let top = this.data[0];
-    this.data[0] = this.data.pop();
-    this.bubbleDown();
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
 
     return top;
   }
@@ -5870,7 +5870,7 @@ class Heap {
     let index = this.size() - 1;
     let parent = this.parent(index);
 
-    while (this.compare(this.data[index], this.data[parent])) {
+    while (this.compare(this.data[index], this.data[parent]) < 0) {
       this.swap(index, parent);
       index = parent;
       parent = this.parent(parent);
@@ -5881,24 +5881,27 @@ class Heap {
     let size = this.size();
 
     while (true) {
-      let left, right;
-      let leftIdx = this.left(index);
-      let rightIdx = this.right(index);
-      let curr = this.data[index];
+      let left = null;
+      let right = null;
       let swap = null;
+      let leftIndex = this.left(index);
+      let rightIndex = this.right(index);
 
-      if (leftIdx < size) {
-        left = this.data[leftIdx];
+      if (leftIndex < size) {
+        left = this.data[leftIndex];
 
-        if (this.compare(left, curr)) {
-          swap = leftIdx;
+        if (this.compare(left, this.data[index]) < 0) {
+          swap = leftIndex;
         }
       }
-      if (rightIdx < size) {
-        right = this.data[rightIdx];
+      if (rightIndex < size) {
+        right = this.data[rightIndex];
 
-        if ((swap !== null && this.compare(right, left)) || (swap === null && this.compare(right, curr))) {
-          swap = rightIdx;
+        if (
+          (swap !== null && this.compare(right, left) < 0) ||
+          (swap === null && this.compare(right, this.data[index]))
+        ) {
+          swap = rightIndex;
         }
       }
       if (swap === null) {
@@ -5913,14 +5916,135 @@ class Heap {
 
 class MedianFinder {
   constructor() {
-    this.maxHeap = new Heap((a, b) => a > b);
-    this.minHeap = new Heap((a, b) => a < b);
-    this.even = true;
+    this.maxHeap = new Heap((a, b) => b - a);
+    this.minHeap = new Heap((a, b) => a - b);
   }
   addNum(num) {
+    let lowSize = this.maxHeap.size();
+    let highSize = this.minHeap.size();
 
+    if (highSize < 1) {
+      this.minHeap.add(num);
+      return;
+    }
+    if (lowSize === highSize) {
+      if (num < this.maxHeap.top()) {
+        this.minHeap.add(this.maxHeap.pop());
+        this.maxHeap.add(num);
+      } else {
+        this.minHeap.add(num);
+      }
+    } else {
+      if (num > this.minHeap.top()) {
+        let remove = this.minHeap.pop();
+        this.maxHeap.add(remove);
+        this.minHeap.add(num);
+      } else {
+        this.maxHeap.add(num);
+      }
+    }
   }
   findMedian() {
+    let lowSize = this.maxHeap.size();
+    let highSize = this.minHeap.size();
 
+    if (lowSize < 1 && highSize < 1) {
+      return null;
+    }
+    if (lowSize === highSize) {
+      return (this.maxHeap.top() + this.minHeap.top()) / 2;
+    }
+
+    return this.minHeap.top();
   }
 }
+
+// Explanation:
+// -Initialize max heap to keep low half and min heap to keep high half
+// -For insert:
+// -If high half empty, push num to high half and return to exit
+// -If low and high half are even:
+// -If num < low half top:
+// -Remove top from low half and add to high half, then add num to low half
+// -Else add num to high half
+// -Else if not even:
+// -If num > high half bottom:
+// -Remove bottom from high half and add top low half, then add num to high half
+// -Else add num to low half
+// -For find median:
+// -If heaps are empty, return null
+// -If even, return average of low half top and high half bottom
+// -Else return high half botttom
+
+// Notes:
+// -Time complexity: O(log n) for insert and O(1) for find median
+// -Space complexity: O(n)
+
+let median = new MedianFinder();
+median.addNum(1);
+console.log(median.findMedian());
+median.addNum(3);
+median.addNum(5);
+console.log(median.findMedian());
+median.addNum(2);
+console.log(median.findMedian());
+
+// 1584. Min Cost to Connect All Points
+
+var minCostConnectPoints = function (points) {
+  let cost = 0;
+  let next = 0;
+  let n = points.length;
+  let dist = new Array(n).fill(Infinity);
+  dist[0] = 0;
+
+  for (let j = 1; j < n; j++) {
+    let min = Infinity;
+    let point = -1;
+
+    for (let i = 1; i < n; i++) {
+      if (dist[i] > 0) {
+        let currDist =
+          Math.abs(points[i][0] - points[next][0]) +
+          Math.abs(points[i][1] - points[next][1]);
+        dist[i] = Math.min(dist[i], currDist);
+
+        if (dist[i] < min) {
+          min = dist[i];
+          point = i;
+        }
+      }
+    }
+
+    cost += min;
+    dist[point] = 0;
+    next = point;
+  }
+
+  return cost;
+};
+
+// Explanation:
+// -Set result cost to 0
+// -Set distances for each node to infinity
+// -Set next pointer to 0
+// -Calculate all distances from selected point
+// -Get point w/ min distance
+// -Add that distance to cost
+// -Mark point as visited to exclude from future search
+// -Update next point to curr min point
+// -Once all points connected, return cost
+
+// Notes:
+// -Time complexity: O(n ^ 2)
+// -Space complexity: O(n)
+
+console.log(
+  minCostConnectPoints([
+    [0, 0],
+    [2, 2],
+    [3, 10],
+    [5, 2],
+    [7, 0],
+  ])
+);
