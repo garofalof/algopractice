@@ -6102,3 +6102,58 @@ console.log(
     2
   )
 );
+
+// 787. Cheapest Flights Within K Stops
+
+var findCheapestPrice = function (n, flights, src, dst, k) {
+  let prices = new Array(n).fill(Infinity);
+  prices[src] = 0;
+
+  for (let i = 0; i <= k; i++) {
+    let temp = prices.slice();
+
+    for (let [source, dest, price] of flights) {
+      if (prices[source] === Infinity) {
+        continue;
+      }
+      if (temp[dest] > prices[source] + price) {
+        temp[dest] = prices[source] + price;
+      }
+    }
+
+    prices = temp;
+  }
+
+  return prices[dst] === Infinity ? -1 : prices[dst];
+};
+
+// Explanation:
+// -Fill price for each node w/ infinity
+// -Set price at source to 0
+// -For k + 1 edges, or k stops:
+// -Set temp to copy of prices
+// -For each flight:
+// -If price at curr origin is infinity, path not found yet so we continue
+// -Else if price to curr destination < curr price at curr destination, update price
+// -Once we iterate through all flights, set prices to temp
+// -Once done iterating through stops, return -1 if price at destination not found or price at destination
+
+// Notes:
+// -Time complexity: O(nodes * edges)
+// -Space complexity: O(nodes)
+
+console.log(
+  findCheapestPrice(
+    4,
+    [
+      [0, 1, 100],
+      [1, 2, 100],
+      [2, 0, 100],
+      [1, 3, 600],
+      [2, 3, 200],
+    ],
+    0,
+    3,
+    1
+  )
+);
