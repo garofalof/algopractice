@@ -6048,3 +6048,57 @@ console.log(
     [7, 0],
   ])
 );
+
+// 743. Network Delay Time
+
+var networkDelayTime = function (times, n, k) {
+  let weights = new Array(n + 1).fill(Infinity);
+  weights[k] = 0;
+
+  for (let i = 0; i < n; i++) {
+    for (let [source, target, time] of times) {
+      if (weights[source] === Infinity) {
+        continue;
+      }
+      if (weights[target] > weights[source] + time) {
+        weights[target] = weights[source] + time;
+      }
+    }
+  }
+
+  let result = 0;
+
+  for (let i = 1; i < weights.length; i++) {
+    if (weights[i] > result) {
+      result = weights[i];
+    }
+  }
+
+  return result === Infinity ? -1 : result;
+};
+
+// Explanation:
+// -Set weights for each node to 0
+// -Set start node weight to 0
+// -For each node:
+// -Iterate through signal times lowering time to node at each iteration
+// -If node equals infinity, we haven't figured out path to node yet so continue
+// -Else update time to target if time from curr node less than time at target
+// -Return max in weights, as this is how long it'll take to reach last node
+// -Once done, return -1 if max is infinity and node can't be reached, else return max
+
+// Notes
+// -Time complexity: O(nodes * edges)
+// -Space complexity: O(n)
+
+console.log(
+  networkDelayTime(
+    [
+      [2, 1, 1],
+      [2, 3, 1],
+      [3, 4, 1],
+    ],
+    4,
+    2
+  )
+);
