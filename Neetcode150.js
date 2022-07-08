@@ -6157,3 +6157,66 @@ console.log(
     1
   )
 );
+
+// 198. House Robber
+
+var rob = function (nums) {
+  let rob1 = 0;
+  let rob2 = 0;
+
+  for (let num of nums) {
+    [rob1, rob2] = [rob2, Math.max(num + rob1, rob2)];
+  }
+
+  return rob2;
+};
+
+// Explanation:
+// -For each house in nums:
+// -Rob 1 will equal rob 2
+// -Rob 2 will equal greater of curr + rob 1 or rob 2
+// -Once done, return rob 2
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(rob([1, 2, 3, 1]));
+
+// 213. House Robber II
+
+var rob = function (nums) {
+  let first = helper(0, nums.length - 1);
+  let second = helper(1, nums.length);
+
+  return Math.max(nums[0], first, second);
+
+  function helper(start, end) {
+    let rob1 = 0;
+    let rob2 = 0;
+
+    while (start < end) {
+      [rob1, rob2] = [rob2, Math.max(nums[start] + rob1, rob2)];
+      start++;
+    }
+
+    return rob2;
+  }
+};
+
+// Explanation:
+// -Run helper on all nums excluding last
+// -Run helper on all nums excluding first
+// -Return greater of first item, first partition, or second partition
+// -In helper:
+// -Set 2 prev home and prev home to 0
+// -While start < end:
+// -Set 2 prev home to prev home
+// -Set prev home to greater of curr num plus 2 prev home or prev home and increase start
+// -Once done, return val at prev home
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(rob([1, 2, 3, 1]));
