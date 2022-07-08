@@ -6220,3 +6220,84 @@ var rob = function (nums) {
 // -Space complexity: O(1)
 
 console.log(rob([1, 2, 3, 1]));
+
+// 51. N-Queens
+
+var solveNQueens = function (n) {
+  let cols = new Set();
+  let negDiagonals = new Set();
+  let posDiagonals = new Set();
+  let board = [];
+
+  for (let i = 0; i < n; i++) {
+    board[i] = [];
+
+    for (let j = 0; j < n; j++) {
+      board[i][j] = ".";
+    }
+  }
+
+  let result = [];
+
+  backtrack(0);
+
+  return result;
+
+  function backtrack(row) {
+    if (row === n) {
+      let copy = [];
+
+      for (let i = 0; i < board.length; i++) {
+        copy.push(board[i].join(""));
+      }
+
+      result.push(copy);
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      let posDiagonal = row + col;
+      let negDiagonal = row - col;
+
+      if (
+        cols.has(col) ||
+        posDiagonals.has(posDiagonal) ||
+        negDiagonals.has(negDiagonal)
+      ) {
+        continue;
+      }
+
+      cols.add(col);
+      posDiagonals.add(posDiagonal);
+      negDiagonals.add(negDiagonal);
+
+      board[row][col] = "Q";
+      backtrack(row + 1);
+
+      cols.delete(col);
+      posDiagonals.delete(posDiagonal);
+      negDiagonals.delete(negDiagonal);
+      board[row][col] = ".";
+    }
+  }
+};
+
+// Explanation:
+// -Track placed cols and diagonals w/ sets
+// -Build n x n board
+// -Backtrack on first row
+// -In backtrack:
+// -If row equals n:
+// -Push copy of board to result and return to exit
+// -For each col in row:
+// -Continue if col or diagonals are in set
+// -Add col and diagonals to set
+// -Mark node as queen
+// -Backtrack on next row
+// -While backtracking, remove col and diagonals from set and unmark node before continuing iteration
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n!), as we have n tries on first row, n - 1 tries on second row, and so on
+// -Space complexity: O(n ^ 2) to keep board state
+
+console.log(solveNQueens(10));
