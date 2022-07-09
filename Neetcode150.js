@@ -6335,3 +6335,29 @@ var countSubstrings = function (s) {
 // -Space complexity: O(1)
 
 console.log(countSubstrings("abc"));
+
+// 91. Decode Ways
+
+var numDecodings = function (s) {
+  if (s.length === 0 || s === null || s[0] === "0") {
+    return 0;
+  }
+
+  let dp = new Array(s.length + 1).fill(0);
+  dp[0] = 1;
+  dp[1] = 1;
+
+  for (let i = 2; i <= s.length; i++) {
+    if (s[i - 1] !== "0") {
+      dp[i] += dp[i - 1];
+    }
+
+    let num = Number(s.substring(i - 2, i));
+
+    if (num >= 10 && num <= 26) {
+      dp[i] += dp[i - 2];
+    }
+  }
+
+  return dp[s.length];
+};
