@@ -6301,3 +6301,37 @@ var solveNQueens = function (n) {
 // -Space complexity: O(n ^ 2) to keep board state
 
 console.log(solveNQueens(10));
+
+// 647. Palindromic Substrings
+
+var countSubstrings = function (s) {
+  let count = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    for (let j of [i, i + 1]) {
+      let l = i;
+      let r = j;
+
+      while (s[l] && s[l] === s[r]) {
+        count++;
+        l--;
+        r++;
+      }
+    }
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Set count to 0
+// -For each char in string:
+// -Expand around center for both even and odd
+// -If palindrome found, increase count and move pointers
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(n ^ 2);
+// -Space complexity: O(1)
+
+console.log(countSubstrings("abc"));
