@@ -6416,3 +6416,32 @@ var maxProduct = function (nums) {
 // -Space complexity: O(1)
 
 console.log(maxProduct([2, 3, -2, 4]));
+
+// 300. Longest Increasing Subsequence
+
+var lengthOfLIS = function (nums) {
+  let dp = new Array(nums.length).fill(1);
+
+  for (let i = nums.length - 1; i >= 0; i--) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] < nums[j]) {
+        dp[i] = Math.max(dp[i], dp[j] + 1);
+      }
+    }
+  }
+
+  return Math.max(...dp);
+};
+
+// Explanation:
+// -Fill dp array of size nums length with 1s
+// -From each num back to front:
+// -Check all previous nums against curr num
+// -If curr num < prev num, update curr num index in dp w/ max of curr dp val or prev dp val + 1
+// -Once done, return greatest subsequence in dp
+
+// Notes:
+// -Time complexity: O(n ^ 2)
+// -Space complexity: O(n)
+
+console.log(lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]));
