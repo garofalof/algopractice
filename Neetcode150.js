@@ -6361,3 +6361,58 @@ var numDecodings = function (s) {
 
   return dp[s.length];
 };
+
+// Explanation:
+// -Fill dp array with zeros
+// -Set count for first two digits to 1
+// -For each subsequent digit in string:
+// -If prev digit from curr between 1 and 9, add count from prev digit in dp
+// -If prev two digits from curr between 10 and 26, add count from prev 2 in dp
+// -Once done, return count at end of dp array
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(numDecodings("101127"));
+
+// 152. Maximum Product Subarray
+
+var maxProduct = function (nums) {
+  let result = Math.max(...nums);
+  let [currMax, currMin] = [1, 1];
+
+  for (let i = 0; i < nums.length; i++) {
+    let num = nums[i];
+
+    if (num === 0) {
+      [currMax, currMin] = [1, 1];
+      continue;
+    }
+
+    let temp = currMax * num;
+    currMax = Math.max(temp, currMin * num, num);
+    currMin = Math.min(temp, currMin * num, num);
+
+    result = Math.max(result, currMax);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set result to largest num in nums
+// -Set curr max and curr min to 1
+// -For each num in nums:
+// -If num equals 0, reset curr max and min and continue
+// -Else set temp to curr max * num
+// -Set curr max to greater of temp, curr min * num, or num
+// -Set curr min to lesser of temp, curr min * num, or num
+// -Set result to greater of result or new curr max
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(maxProduct([2, 3, -2, 4]));
