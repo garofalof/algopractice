@@ -6586,3 +6586,85 @@ var findTargetSumWays = function (nums, target) {
 // -Space complexity: O(sum of nums * length of nums)
 
 console.log(findTargetSumWays([1, 1, 1, 1, 1], 3));
+
+// 97. Interleaving String
+
+var isInterleave = function (s1, s2, s3) {
+  if (s1.length + s2.length !== s3.length) {
+    return false;
+  }
+
+  let dp = [];
+
+  for (let i = 0; i <= s1.length; i++) {
+    dp.push(new Array(s2.length + 1).fill(false));
+  }
+
+  dp[s1.length][s2.length] = true;
+
+  for (let i = s1.length; i >= 0; i--) {
+    for (let j = s2.length; j >= 0; j--) {
+      if (i < s1.length && s1[i] === s3[i + j] && dp[i + 1][j]) {
+        dp[i][j] = true;
+      }
+      if (j < s2.length && s2[j] === s3[i + j] && dp[i][j + 1]) {
+        dp[i][j] = true;
+      }
+    }
+  }
+
+  return dp[0][0];
+};
+
+// Explanation:
+// -Fill m * n grid of s1 length and s2 length w/ false values
+// -Set end value in grid to true
+// -For each char in s1 back to front:
+// -For each char in s2 back to front:
+// -If i < s1 length and char at i in string 1 equal to char at i + j in string 3 and dp[i + 1][j] is true:
+// -Set dp[i][j] to true
+// -Run same check for j in string 2
+// -Once done, return value at dp[0][0]
+
+// Notes:
+// -Time complexity: O(s1 length * s2 length)
+// -Space complexity: O(s1 length * s2 length)
+
+console.log(isInterleave("aabcc", "dbbca", "aadbbcbcac"));
+
+// 1143. Longest Common Subsequence
+
+var longestCommonSubsequence = function (text1, text2) {
+  let dp = [];
+
+  for (let i = 0; i <= text1.length; i++) {
+    dp.push(new Array(text2.length + 1).fill(0));
+  }
+
+  for (let i = 1; i <= text1.length; i++) {
+    for (let j = 1; j <= text2.length; j++) {
+      if (text1[i - 1] !== text2[j - 1]) {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      } else {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      }
+    }
+  }
+
+  return dp[text1.length][text2.length];
+};
+
+// Explanation:
+// -Fill str1 length * str2 length grid w/ zeros
+// -For each char in str1:
+// -For each char in str2:
+// -If char at str1 and str2 not equal:
+// -Set node at curr index as max of length at prev char in str1 or prev char in str2
+// -Else set node at curr index as length at prev char in both strings + 1
+// -Once done, return length at last node in grid
+
+// Notes:
+// -Time complexity: O(str1 length * str2 length)
+// -Space complexity: O(str1 length * str2 length)
+
+console.log(longestCommonSubsequence("abcde", "ace"));
