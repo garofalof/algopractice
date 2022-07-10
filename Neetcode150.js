@@ -6448,12 +6448,12 @@ console.log(lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]));
 
 // 127. Word Ladder
 
-var ladderLength = function(beginWord, endWord, wordList) {
+var ladderLength = function (beginWord, endWord, wordList) {
   let graph = new Map();
 
   for (let word of wordList) {
     for (let i = 0; i < word.length; i++) {
-      let pattern = word.substring(0, i) + '*' + word.substring(i + 1);
+      let pattern = word.substring(0, i) + "*" + word.substring(i + 1);
 
       if (!graph.has(pattern)) {
         graph.set(pattern, []);
@@ -6476,7 +6476,7 @@ var ladderLength = function(beginWord, endWord, wordList) {
     }
 
     for (let i = 0; i < word.length; i++) {
-      let pattern = word.substring(0, i) + '*' + word.substring(i + 1);
+      let pattern = word.substring(0, i) + "*" + word.substring(i + 1);
 
       for (let edge of graph.get(pattern) || []) {
         if (!visited.has(edge)) {
@@ -6512,11 +6512,13 @@ var ladderLength = function(beginWord, endWord, wordList) {
 // -Time complexity: O(n * (m ^ 2)), where n is number of words and m is longest word length
 // -Space complexity: O(n * (m ^ 2)) to store all m transformations of n words
 
-console.log(ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"]));
+console.log(
+  ladderLength("hit", "cog", ["hot", "dot", "dog", "lot", "log", "cog"])
+);
 
 // 518. Coin Change 2
 
-var change = function(amount, coins) {
+var change = function (amount, coins) {
   let dp = new Array(amount + 1).fill(0);
   dp[0] = 1;
 
@@ -6543,3 +6545,44 @@ var change = function(amount, coins) {
 
 console.log(change(5, [1, 2, 5]));
 
+// 494. Target Sum
+
+var findTargetSumWays = function (nums, target) {
+  let memo = new Map();
+
+  return backtrack(0, 0);
+
+  function backtrack(index, amount) {
+    let key = `${index}, ${amount}`;
+    let num = nums[index];
+
+    if (index === nums.length) {
+      return amount === target ? 1 : 0;
+    }
+    if (memo.has(key)) {
+      return memo.get(key);
+    }
+
+    let count =
+      backtrack(index + 1, amount - num) + backtrack(index + 1, amount + num);
+    memo.set(key, count);
+
+    return count;
+  }
+};
+
+// Explanation:
+// -Initialize empty map to map out totals at each index
+// -Backtrack on index 0 and amount 0
+// -In backtrack:
+// -If we've reached end of list, return 1 if amount equals target, else return 0
+// -If memo has index and total, return that total to our function call
+// -Get count by adding the result of backtracking on next index and increasing/decreasing amount by num
+// -Once we get that total, add it to our memo and return that count to our backtrack function
+// -Once done, we return the result of backtracking on our nums array
+
+// Notes:
+// -Time complexity: O(sum of nums * length of nums)
+// -Space complexity: O(sum of nums * length of nums)
+
+console.log(findTargetSumWays([1, 1, 1, 1, 1], 3));
