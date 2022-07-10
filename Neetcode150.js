@@ -6445,3 +6445,101 @@ var lengthOfLIS = function (nums) {
 // -Space complexity: O(n)
 
 console.log(lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]));
+
+// 127. Word Ladder
+
+var ladderLength = function(beginWord, endWord, wordList) {
+  let graph = new Map();
+
+  for (let word of wordList) {
+    for (let i = 0; i < word.length; i++) {
+      let pattern = word.substring(0, i) + '*' + word.substring(i + 1);
+
+      if (!graph.has(pattern)) {
+        graph.set(pattern, []);
+      }
+
+      graph.get(pattern).push(word);
+    }
+  }
+
+  let stack = [beginWord];
+  let edges = [];
+  let visited = new Set();
+  let result = 0;
+
+  while (stack.length) {
+    let word = stack.pop();
+
+    if (word === endWord) {
+      return result + 1;
+    }
+
+    for (let i = 0; i < word.length; i++) {
+      let pattern = word.substring(0, i) + '*' + word.substring(i + 1);
+
+      for (let edge of graph.get(pattern) || []) {
+        if (!visited.has(edge)) {
+          visited.add(edge);
+          edges.push(edge);
+        }
+      }
+    }
+
+    if (stack.length === 0) {
+      [stack, edges] = [edges, []];
+      result++;
+    }
+  }
+
+  return 0;
+};
+
+// Explanation:
+// -Add patterns and corresponding words to graph
+// -Push begin word to stack
+// -Set edges to empty array and visited to empty set
+// -While stack has work:
+// -Pop last word off stack
+// -If word equals end word, add 1 to result and return
+// -For each possible pattern from word:
+// -For all words in pattern:
+// -If not in visited, add to visited and push to edges
+// -If stack empty, replace stack w/ edges and reset edges. Then add 1 to result.
+// -If we don't find end word, return 0
+
+// Notes:
+// -Time complexity: O(n * (m ^ 2)), where n is number of words and m is longest word length
+// -Space complexity: O(n * (m ^ 2)) to store all m transformations of n words
+
+console.log(ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"]));
+
+// 518. Coin Change 2
+
+var change = function(amount, coins) {
+  let dp = new Array(amount + 1).fill(0);
+  dp[0] = 1;
+
+  for (let coin of coins) {
+    for (let i = coin; i <= amount; i++) {
+      dp[i] += dp[i - coin];
+    }
+  }
+
+  return dp[amount];
+};
+
+// Explanation:
+// -Fill dp array from 0 to amount w/ zeros
+// -Set dp[0] to 1, as there is only one way to make 0 change
+// -For each coin:
+// -For each index starting at coin:
+// -Dp index equal to curr ways to make change plus amount - coin ways to make change
+// -Once done, return value at amount
+
+// Notes:
+// -Time complexity: O(n * amount), where n is the number of coins
+// -Space complexity: O(amount) for dp array
+
+console.log(change(5, [1, 2, 5]));
+
