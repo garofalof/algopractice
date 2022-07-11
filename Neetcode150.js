@@ -6812,3 +6812,50 @@ var isNStraightHand = function (hand, groupSize) {
 // -Space complexity: O(n)
 
 console.log(isNStraightHand([1, 2, 3, 6, 2, 3, 4, 7, 8], 3));
+
+// 1899. Merge Triplets to Form Target Triplet
+
+var mergeTriplets = function (triplets, target) {
+  let [first, second, third] = [false, false, false];
+  let [t1, t2, t3] = target;
+
+  for (let [a, b, c] of triplets) {
+    if (a === t1 && b <= t2 && c <= t3) {
+      first = true;
+    }
+    if (b === t2 && a <= t1 && c <= t3) {
+      second = true;
+    }
+    if (c === t3 && a <= t1 && b <= t2) {
+      third = true;
+    }
+    if (first && second && third) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+// Explanation:
+// -Set good values at first, second, and third triplet to false
+// -For each triplet in triplets:
+// -At each index:
+// -If we find matching triplet and other triplets are <= their corresponding values, set good value to true for that index
+// -If all three indices are good, we return true
+// -Else if we iterate through all triplets without returning true, we return false
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(
+  mergeTriplets(
+    [
+      [2, 5, 3],
+      [1, 8, 4],
+      [1, 7, 5],
+    ],
+    [2, 7, 5]
+  )
+);
