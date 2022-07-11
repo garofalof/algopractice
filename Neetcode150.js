@@ -6923,3 +6923,131 @@ var calculate = function (s) {
 // -Space complexity: O(n)
 
 console.log(calculate("(1+(4+5+2)-3)+(6+8)"));
+
+// 763. Partition Labels
+
+var partitionLabels = function (s) {
+  let map = {};
+
+  for (let i = 0; i < s.length; i++) {
+    map[s[i]] = i;
+  }
+
+  let result = [];
+  let [size, end] = [0, 0];
+
+  for (let i = 0; i < s.length; i++) {
+    size++;
+    end = Math.max(end, map[s[i]]);
+
+    if (i === end) {
+      result.push(size);
+      size = 0;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Map out last indices for all chars in string
+// -Set result to empty array and size and end to 0
+// -For each char in string:
+// -Increase size by 1
+// -Update end to greater of end or char's last index
+// -When we reach our current max end, we push size to result and reset size
+// -Once done, we return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(partitionLabels("abbacbadefedferw"));
+
+// 678. Valid Parenthesis String
+
+var checkValidString = function (s) {
+  let [leftMin, leftMax] = [0, 0];
+
+  for (let char of s) {
+    if (char === "(") {
+      leftMin++;
+      leftMax++;
+    } else if (char === ")") {
+      leftMin--;
+      leftMax--;
+    } else {
+      leftMin--;
+      leftMax++;
+    }
+
+    if (leftMax < 0) {
+      return false;
+    }
+    if (leftMin < 0) {
+      leftMin = 0;
+    }
+  }
+
+  return leftMin === 0;
+};
+
+// Explanation:
+// -Set left min and left max to 0
+// -Left min and max keep track of our wildcard decisions
+// -For each char in string:
+// -If open parenthesis, increase left min and max by 1
+// -Else if closed parenthesis, decrease left min and max by 1
+// -Else if wildcard, decrease left min by 1 and increase left max by 1
+// -If left max is ever negative, return false
+// -If left min goes negative, reset to 0
+// -Once done, return true if left min is 0
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(checkValidString("(*))"));
+
+// 435. Non-overlapping Intervals
+
+var eraseOverlapIntervals = function (intervals) {
+  intervals.sort((a, b) => a[0] - b[0]);
+
+  let result = 0;
+  let prevEnd = intervals[0][1];
+
+  for (let i = 1; i < intervals.length; i++) {
+    let [start, end] = intervals[i];
+
+    if (start >= prevEnd) {
+      prevEnd = end;
+    } else {
+      result++;
+      prevEnd = Math.min(end, prevEnd);
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Sort intervals ascending by start
+// -Set result count to 0 and prev end to first end in intervals
+// -For each subsequent interval:
+// -If curr start >= prev end, update prev end to curr end
+// -Else increase result by 1 and update prev end to minimum of curr end or prev end
+// -Once done, return result count
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(log n) for sorting
+
+console.log(
+  eraseOverlapIntervals([
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [1, 3],
+  ])
+);
