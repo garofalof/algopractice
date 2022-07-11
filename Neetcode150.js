@@ -7097,3 +7097,52 @@ console.log(
     [15, 20],
   ])
 );
+
+// 48. Rotate Image
+
+var rotate = function (matrix) {
+  let [l, r] = [0, matrix.length - 1];
+
+  while (l < r) {
+    let window = r - l;
+
+    for (let i = 0; i < window; i++) {
+      let [t, b] = [l, r];
+
+      let topLeft = matrix[t][l + i];
+      matrix[t][l + i] = matrix[b - i][l];
+      matrix[b - i][l] = matrix[b][r - i];
+      matrix[b][r - i] = matrix[t + i][r];
+      matrix[t + i][r] = topLeft;
+    }
+
+    l++;
+    r--;
+  }
+};
+
+// Explanation:
+// -Set left and right pointers to 0 and end or matrix
+// -While left < right:
+// -Get current window by subtracting two pointers
+// -From each index in window:
+// -Set top and bottom to left and right pointers
+// -Set temp variable for top left
+// -Set top left + index to bottom - index left
+// -Set bottom - index left to bottom right - index
+// -Set bottom right - index to top + index right
+// -Set top + index right to top left
+// -Once done iterating through window, increase left pointer by 1 and decrease right pointer by 1
+
+// Notes:
+// -Time complexity: O(n ^ 2)
+// -Space complexity: O(1)
+
+console.log(
+  rotate([
+    [5, 1, 9, 11],
+    [2, 4, 8, 10],
+    [13, 3, 6, 7],
+    [15, 14, 12, 16],
+  ])
+);
