@@ -6668,3 +6668,147 @@ var longestCommonSubsequence = function (text1, text2) {
 // -Space complexity: O(str1 length * str2 length)
 
 console.log(longestCommonSubsequence("abcde", "ace"));
+
+// 55. Jump Game
+
+var canJump = function (nums) {
+  let goal = nums.length - 1;
+
+  for (let i = nums.length - 1; i >= 0; i--) {
+    if (i + nums[i] >= goal) {
+      goal = i;
+    }
+  }
+
+  return goal === 0 ? true : false;
+};
+
+// Explanation:
+// -Set goalpost to last index
+// -For each num in nums back to front:
+// -If curr index + num at index >= goal, move goalpost to curr index
+// -Once done, return true if goalpost has reached 0, else return false
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(canJump([2, 3, 1, 1, 4]));
+
+// 45. Jump Game II
+
+var jump = function (nums) {
+  let [count, left, right] = [0, 0, 0];
+
+  while (right < nums.length - 1) {
+    let farthest = 0;
+
+    for (let i = left; i < right + 1; i++) {
+      farthest = Math.max(farthest, nums[i] + i);
+    }
+
+    left = right + 1;
+    right = farthest;
+    count++;
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Set count and left/right pointers to 0
+// -While right pointer hasn't reached end:
+// -Set farthest to 0
+// -Iterate through current window and find furthest jump
+// -Set left pointer outside of curr window and right pointer end of new furthest window and increase count
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(jump([2, 3, 1, 1, 4]));
+
+// 134. Gas Station
+
+var canCompleteCircuit = function (gas, cost) {
+  if (gas.reduce((a, b) => a + b, 0) < cost.reduce((a, b) => a + b, 0)) {
+    return -1;
+  }
+
+  let [total, start] = [0, 0];
+
+  for (let i = 0; i < gas.length; i++) {
+    total += gas[i] - cost[i];
+
+    if (total < 0) {
+      total = 0;
+      start = i + 1;
+    }
+  }
+
+  return start;
+};
+
+// Explanation:
+// -If sum of gas < sum of cost, solution not possible so return -1
+// -Set total and start to 0
+// -For each value in gas and cost:
+// -Add gas - cost to total
+// -If total < 0, reset total and move potential start to i + 1
+// -Once done, return start
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(canCompleteCircuit([1, 2, 3, 4, 5], [3, 4, 5, 1, 2]));
+
+// 846. Hand of Straights
+
+var isNStraightHand = function (hand, groupSize) {
+  let map = {};
+
+  for (let num of hand) {
+    map[num] = map[num] + 1 || 1;
+  }
+  for (let num in map) {
+    let freq = map[num];
+
+    for (let i = 1; i < groupSize; i++) {
+      let next = Number(num) + i;
+      let nextFreq = map[next];
+
+      if (!nextFreq || nextFreq < freq) {
+        return false;
+      }
+
+      map[next] = nextFreq - freq;
+
+      if (map[next] === 0) {
+        delete map[next];
+      }
+    }
+
+    delete map[num];
+  }
+
+  return Object.keys(map).length === 0;
+};
+
+// Explanation:
+// -Map out values and counts
+// -For each value in map:
+// -Look at all next values up to group size
+// -For each subsequent value:
+// -If next value doesn't exist or next frequency < curr frequency, return false
+// -Set next value frequency to next frequency - curr frequency
+// -If next frequency equals 0, delete next value from map
+// -Once done successfully checking neighbors, delete num from map
+// -Once done, if our map is empty return true
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(isNStraightHand([1, 2, 3, 6, 2, 3, 4, 7, 8], 3));
