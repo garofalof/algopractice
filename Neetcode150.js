@@ -6859,3 +6859,67 @@ console.log(
     [2, 7, 5]
   )
 );
+
+// 224. Basic Calculator
+
+var calculate = function (s) {
+  let [sign, sum, index] = [1, 0, 0];
+  let stack = [];
+  let valid = {};
+
+  for (let i = 0; i < 10; i++) {
+    valid[i] = true;
+  }
+  while (index < s.length) {
+    if (valid[s[index]]) {
+      let curr = 0;
+
+      while (valid[s[index]]) {
+        curr *= 10;
+        curr += Number(s[index]);
+        index++;
+      }
+
+      sum += curr * sign;
+      index--;
+    } else if (s[index] === "-" || s[index] === "+") {
+      sign = s[index] === "-" ? -1 : 1;
+    } else if (s[index] === "(") {
+      stack.push(sum);
+      stack.push(sign);
+
+      [sum, sign] = [0, 1];
+    } else if (s[index] === ")") {
+      sum *= stack.pop();
+      sum += stack.pop();
+    }
+
+    index++;
+  }
+
+  return sum;
+};
+
+// Explanation:
+// -Set sign to 1, sum to 0, and index to 0
+// -Initialize empty stack
+// -For each char in string:
+// -If char is num:
+// -Set curr to 0
+// -While char is num:
+// -Multiply curr by 10, add num to curr, and increase index
+// -Once done, add curr * sign to sum and bring index back 1
+// -Else if char is sign:
+// -Set sign to -1 or 1
+// -Else if char is open parenthesis:
+// -Push sum and sign to stack and reset sum and sign
+// -Else if closed parenthesis:
+// -Multiply sum by sign and add previous sum to sum
+// -For each iteration, increase index by 1
+// -Once done, return sum
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(calculate("(1+(4+5+2)-3)+(6+8)"));
