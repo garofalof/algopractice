@@ -7146,3 +7146,70 @@ console.log(
     [15, 14, 12, 16],
   ])
 );
+
+// 1235. Maximum Profit in Job Scheduling
+
+var jobScheduling = function (startTime, endTime, profit) {
+  let n = startTime.length;
+  let dp = new Array(n).fill(0);
+
+  class Node {
+    constructor(start, end, profit) {
+      this.start = start;
+      this.end = end;
+      this.profit = profit;
+    }
+  }
+
+  function binarySearch(currEnd, currIdx) {
+    let start = currIdx;
+    let end = jobs.length - 1;
+    let result = -1;
+
+    while (start <= end) {
+      let mid = Math.floor((end - start) / 2 + start);
+
+      if (jobs[mid].start >= currEnd) {
+        result = mid;
+        end = mid - 1;
+      } else {
+        start = mid + 1;
+      }
+    }
+
+    return result;
+  }
+
+  let jobs = startTime
+    .map((time, index) => new Node(time, endTime[index], profit[index]))
+    .sort((a, b) => a.start - b.start);
+
+  dp[n - 1] = jobs[n - 1].profit;
+
+  for (let i = n - 2; i >= 0; i--) {
+    let index = binarySearch(jobs[i].end, i);
+    let profit = index === -1 ? 0 : dp[index];
+
+    dp[i] = Math.max(dp[i + 1], profit + jobs[i].profit);
+  }
+
+  return dp[0];
+};
+
+// Explanation:
+// -Create dp buffer array of size n to track profits
+// -Combine start, end, and profit and sort by start time
+// -Set profit for last interval in dp array
+// -For each interval back to front:
+// -Use binary search to find interval after curr w/ least greatest start time
+// -If interval found, set profit to profit at dp for that index or 0 if not found
+// -Set profit for curr index in dp to greater of next profit in dp or profit plus curr profit
+// -Once done, return profit at first index in dp array
+
+// Notes:
+// -Time complexity: O(n log n) for both sort and profit search
+// -Space complexity: O(n)
+
+console.log(
+  jobScheduling([1, 2, 3, 4, 6], [3, 5, 10, 6, 9], [20, 20, 100, 70, 60])
+);
