@@ -7051,3 +7051,49 @@ console.log(
     [1, 3],
   ])
 );
+
+// 253. Meeting Rooms II
+
+var minMeetingRooms = function (intervals) {
+  let start = intervals.map((interval) => interval[0]).sort((a, b) => a - b);
+  let end = intervals.map((interval) => interval[1]).sort((a, b) => a - b);
+
+  let [result, count] = [0, 0];
+  let [s, e] = [0, 0];
+
+  while (s < intervals.length) {
+    if (start[s] < end[e]) {
+      s++;
+      count++;
+    } else {
+      e++;
+      count--;
+    }
+
+    result = Math.max(result, count);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Sort start times and end times in two separate arrays
+// -Set result and curr rooms to 0
+// -Set start pointer and end pointer to 0
+// -While we have start times:
+// -If start time < end time, increase start pointer and count by 1
+// -Else increase end pointer by 1 and decrease count by 1
+// -At each iteration, set result to greater of result or curr room count
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(n)
+
+console.log(
+  minMeetingRooms([
+    [0, 30],
+    [5, 10],
+    [15, 20],
+  ])
+);
