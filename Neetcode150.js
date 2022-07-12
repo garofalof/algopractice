@@ -7213,3 +7213,66 @@ var jobScheduling = function (startTime, endTime, profit) {
 console.log(
   jobScheduling([1, 2, 3, 4, 6], [3, 5, 10, 6, 9], [20, 20, 100, 70, 60])
 );
+
+// 73. Set Matrix Zeroes
+
+var setZeroes = function (matrix) {
+  let rows = matrix.length;
+  let cols = matrix[0].length;
+  let topRow = false;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (matrix[r][c] === 0) {
+        matrix[0][c] = 0;
+
+        if (r > 0) {
+          matrix[r][0] = 0;
+        } else {
+          topRow = true;
+        }
+      }
+    }
+  }
+  for (let r = 1; r < rows; r++) {
+    for (let c = 1; c < cols; c++) {
+      if (matrix[0][c] === 0 || matrix[r][0] === 0) {
+        matrix[r][c] = 0;
+      }
+    }
+  }
+  if (matrix[0][0] === 0) {
+    for (let r = 0; r < rows; r++) {
+      matrix[r][0] = 0;
+    }
+  }
+  if (topRow) {
+    for (let c = 0; c < cols; c++) {
+      matrix[0][c] = 0;
+    }
+  }
+};
+
+// Explanation:
+// -Set top row check to false
+// -For each node in matrix:
+// -If node equals 0:
+// -Mark beginning of column as 0
+// -If row > 0, mark beginning of row as 0
+// -Else mark top row as true
+// -For each node starting from row 1, col 1:
+// -If beginning of row or column marked as 0, mark node as 0
+// -If first node marked as 0, mark each node in first column as 0
+// -If top row is true, mark whole top row row as 0
+
+// Notes:
+// -Time complexity: O(rows * cols)
+// -Space complexity: O(1)
+
+console.log(
+  setZeroes([
+    [1, 1, 1],
+    [1, 0, 1],
+    [1, 1, 1],
+  ])
+);
