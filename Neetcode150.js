@@ -7321,3 +7321,47 @@ var myPow = function (x, n) {
 // -Space complexity: O(log n)
 
 console.log(myPow(2, 10));
+
+// 43. Multiply Strings
+
+var multiply = function (num1, num2) {
+  if (num1 === "0" || num2 === "0") {
+    return "0";
+  }
+
+  let [m, n] = [num1.length, num2.length];
+  let result = new Array(m + n).fill(0);
+
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      let [pos1, pos2] = [i + j, i + j + 1];
+      let sum = result[pos2] + Number(num1[i]) * Number(num2[j]);
+
+      result[pos2] = sum % 10;
+      result[pos1] += Math.floor(sum / 10);
+    }
+  }
+  if (result[0] === 0) {
+    result.shift();
+  }
+
+  return result.join("");
+};
+
+// Explanation:
+// -If num1 or num2 are 0, return 0
+// -Fill array of size m + n with 0s
+// -For each digit in num1 back to front:
+// -For each digit in num2 back to front:
+// -Set position 1 and position 2 as i + j and i + j + 1
+// -Sum is equal to curr result at position 2 + curr digit in num1 * curr digit in num2
+// -Set result at position 2 as remainder of sum / 10
+// -Set carry at position 1 as curr result at position 1 + floor of sum / 10
+// -Once done iterating through digits, remove 0 from front if exists
+// -Finally, join result array and return result
+
+// Notes:
+// -Time complexity: O(m * n)
+// -Space complexity: O(m + n)
+
+console.log(multiply("231", "4567"));
