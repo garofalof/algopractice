@@ -6697,7 +6697,7 @@ console.log(canJump([2, 3, 1, 1, 4]));
 
 // 45. Jump Game II
 
-var jump = function(nums) {
+var jump = function (nums) {
   let [count, left, right] = [0, 0, 0];
 
   while (right < nums.length - 1) {
