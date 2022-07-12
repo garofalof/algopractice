@@ -6680,7 +6680,7 @@ var canJump = function (nums) {
     }
   }
 
-  return goal === 0 ? true : false;
+  return goal === 0;
 };
 
 // Explanation:
@@ -6697,13 +6697,13 @@ console.log(canJump([2, 3, 1, 1, 4]));
 
 // 45. Jump Game II
 
-var jump = function (nums) {
+var jump = function(nums) {
   let [count, left, right] = [0, 0, 0];
 
   while (right < nums.length - 1) {
     let farthest = 0;
 
-    for (let i = left; i < right + 1; i++) {
+    for (let i = left; i <= right; i++) {
       farthest = Math.max(farthest, nums[i] + i);
     }
 
