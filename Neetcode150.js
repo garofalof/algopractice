@@ -7276,3 +7276,48 @@ console.log(
     [1, 1, 1],
   ])
 );
+
+// 50. Pow(x, n)
+
+var myPow = function (x, n) {
+  function helper(x, n) {
+    if (x === 0) {
+      return 0;
+    }
+    if (n === 0) {
+      return 1;
+    }
+
+    let result = helper(x * x, Math.floor(n / 2));
+
+    if (n % 2) {
+      return x * result;
+    } else {
+      return result;
+    }
+  }
+
+  let result = helper(x, Math.abs(n));
+
+  if (n >= 0) {
+    return result;
+  } else {
+    return 1 / result;
+  }
+};
+
+// Explanation:
+// -Recurse on x and absolute value of n
+// -In recursion:
+// -If x equals 0, return 0
+// -If n equals 0, return 1
+// -Result equals result of recursing on x^2 and floor of n / 2
+// -Once we find result, if n is odd we return x * result, else we return result
+// -Once done finding result, we check to see if n is negative
+// -If so, we return 1 / result, else we return result
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(log n)
+
+console.log(myPow(2, 10));
