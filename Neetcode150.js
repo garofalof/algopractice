@@ -7365,3 +7365,134 @@ var multiply = function (num1, num2) {
 // -Space complexity: O(m + n)
 
 console.log(multiply("231", "4567"));
+
+// 2013. Detect Squares
+
+class DetectSquares {
+  constructor() {
+    this.pointCount = {};
+    this.points = [];
+  }
+  add(point) {
+    let [x, y] = point;
+
+    if (!this.pointCount[x]) {
+      this.pointCount[x] = {};
+    }
+
+    this.pointCount[x][y] = this.pointCount[x][y] + 1 || 1;
+    this.points.push(point);
+  }
+  count(point) {
+    let count = 0;
+    let [px, py] = point;
+
+    for (let [x, y] of this.points) {
+      let xDist = Math.abs(px - x);
+      let yDist = Math.abs(py - y);
+
+      if (xDist !== yDist || x === px || y === py || !this.pointCount[px]) {
+        continue;
+      }
+
+      count += (this.pointCount[x][py] || 0) * (this.pointCount[px][y] || 0);
+    }
+
+    return count;
+  }
+}
+
+// Explanation:
+// -Initialize detect squares class with point count hashmap and points array
+// -For add method:
+// -If x doesn't exist in count map, add x with empty object
+// -Increase x / y count to map and point to array
+// -For count method:
+// -Get origin x and y and set count to 0
+// -For each x / y pair in points array:
+// -Get distance from origin x and x and origin y and y
+// -If distance not equal or points are same or origin x doesn't exist in map, continue
+// -Else add product of x / origin y count or 0 and origin x / y count or 0 to count
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(1) for add method and O(n) for count
+// -Space complexity: O(n) for add method and O(1) for count
+
+let squares = new DetectSquares();
+squares.add([3, 10]);
+squares.add([3, 2]);
+squares.add([11, 2]);
+console.log(squares.count([11, 10]));
+console.log(squares.count([14, 8]));
+squares.add([11, 2]);
+console.log(squares.count([11, 10]));
+
+// 371. Sum of Two Integers
+
+var getSum = function (a, b) {
+  while (b) {
+    let temp = (a & b) << 1;
+    a ^= b;
+    b = temp;
+  }
+
+  return a;
+};
+
+// Explanation:
+// -While b is not 0:
+// -Get carry values by bitshifting a & b left by one
+// -We then add a and b by XORing them together and set b to our carry value
+// -Once b is 0 and we no longer have carry, we return a
+
+// Notes:
+// -Time complexity: O(1) given integer constraints
+// -Space complexity: O(1)
+
+console.log(getSum(19, 23));
+
+// 7. Reverse Integer
+
+var reverse = function (x) {
+  let result = 0;
+  let sign = x < 0 ? -1 : 1;
+  let maxSafe = Math.pow(2, 31) - 1;
+
+  x = Math.abs(x);
+
+  while (x) {
+    let digit = x % 10;
+    x = Math.floor(x / 10);
+
+    if (
+      result > Math.floor(maxSafe / 10) ||
+      (result === Math.floor(maxSafe / 10) && digit >= maxSafe % 10)
+    ) {
+      return 0;
+    }
+
+    result *= 10;
+    result += digit;
+  }
+
+  return result * sign;
+};
+
+// Explanation:
+// -Set result to 0 and sign to -1 or 1 depending on whether x is negative or positive
+// -Get max safe integer
+// -Make x positive
+// -While x not 0:
+// -Get last digit by getting remainder of x / 10
+// -Set x to floor of x / 10
+// -If result > floor of max safe / 10 or result equals max safe / 10 && digit >= remainder of max safe % 10, return 0
+// -Multiply result by 10
+// -Add digit to result
+// -Once done, return result * sign
+
+// Notes:
+// -Time complexity: O(log x), as there are roughly log 10(x) digits in x
+// -Space complexity: O(1)
+
+console.log(reverse(-321));
