@@ -344,6 +344,10 @@ var maxSubArray = function (nums) {
 // -Set max end to greater of max end plus curr num or curr num
 // -Set max sum to greater of max sum or max end
 
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
 console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4]));
 
 // 235. Lowest Common Ancestor of a Binary Search Tree
@@ -7496,3 +7500,54 @@ var reverse = function (x) {
 // -Space complexity: O(1)
 
 console.log(reverse(-321));
+
+// 309. Best Time to Buy and Sell Stock with Cooldown
+
+var maxProfit = function (prices) {
+  let dp = {};
+
+  return dfs(0, true);
+
+  function dfs(index, buying) {
+    let key = `${index},${buying}`;
+    if (index >= prices.length) {
+      return 0;
+    }
+    if (dp[key] !== undefined) {
+      return dp[key];
+    }
+
+    let cooldown = dfs(index + 1, buying);
+
+    if (buying) {
+      let buy = dfs(index + 1, !buying) - prices[index];
+      dp[key] = Math.max(buy, cooldown);
+    } else {
+      let sell = dfs(index + 2, !buying) + prices[index];
+      dp[key] = Math.max(sell, cooldown);
+    }
+
+    return dp[key];
+  }
+};
+
+// Explanation:
+// -Initialize dp hashmap to store index state and profit
+// -Perform dfs on index 0 w/ buying set to true
+// -In dfs:
+// -If index out of bounds, return 0
+// -If index and state in dp, return profit in hashmap
+// -Get max cooldown profit by performing dfs on next index w/ buying set to true
+// -If buying is true:
+// -Get max buy profit by performing dfs on subsequent indices w/ buying set to false and subtracting curr price from result
+// -Then set state as greater of buy profit or cooldown profit
+// -Else if selling:
+// -Get max sell profit by performing dfs on curr index + 2 w/ buying set to false and adding curr price from result
+// -Set state as greater of sell or cooldown profit
+// -Once done recursing, return max profit at curr index and state
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(maxProfit([1, 3, 2, 7, 4, 5]));
