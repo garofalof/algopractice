@@ -162,7 +162,7 @@ var isPalindrome = function (s) {
 
 // Notes:
 // -Time complexity: O(n), where n is the length of string, as we traverse over each character at most once, until the two pointers meet in the middle, or when we break and return early
-// -Space complexity: O(1), as no extra space is required
+// -Space complexity: O(n) to store the valid string
 
 console.log(isPalindrome("A man, a plan, a canal: Panama"));
 
@@ -7451,7 +7451,7 @@ var getSum = function (a, b) {
 // -Once b is 0 and we no longer have carry, we return a
 
 // Notes:
-// -Time complexity: O(1) given integer constraints
+// -Time complexity: O(1) given each integer is 32 bit constrained
 // -Space complexity: O(1)
 
 console.log(getSum(19, 23));
@@ -7551,3 +7551,42 @@ var maxProfit = function (prices) {
 // -Space complexity: O(n)
 
 console.log(maxProfit([1, 3, 2, 7, 4, 5]));
+
+// 974. Subarray Sums Divisible by K
+
+var subarraysDivByK = function (nums, k) {
+  let [sum, result] = [0, 0];
+  let dp = {};
+
+  dp[0] = 1;
+
+  for (let num of nums) {
+    sum += num;
+    let key = sum % k;
+
+    if (dp[key]) {
+      result += dp[key];
+    }
+
+    dp[key] = dp[key] + 1 || 1;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set running sum and result to 0
+// -Create dp hashmap to store remainder counts
+// -Set dp[0] to count of 1 to account for any num in array equal to k
+// -For each num in nums:
+// -Increase running sum by num
+// -Get key by taking remainder of sum / k
+// -If dp has key, add count at key to result
+// -Increase count of key in dp to 1 or curr count + 1
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(k), as remainders will not go over k
+
+console.log(subarraysDivByK([4, 5, 0, -2, -3, 1], 5));
