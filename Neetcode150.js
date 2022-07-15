@@ -7593,3 +7593,62 @@ var subarraysDivByK = function (nums, k) {
 // -Space complexity: O(k), as remainders will not go over k
 
 console.log(subarraysDivByK([4, 5, 0, -2, -3, 1], 5));
+
+// 394. Decode String
+
+var decodeString = function(str) {
+  let stack = [];
+  let currStr = '';
+  let currNum = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    let char = str[i];
+
+    if (char === '[') {
+      stack.push(currStr);
+      stack.push(currNum);
+
+      [currStr, currNum] = ['', 0];
+    } else if (char === ']') {
+      let prevNum = stack.pop();
+      let prevStr = stack.pop();
+      let repeat = '';
+
+      while (prevNum) {
+        repeat += currStr;
+        prevNum--;
+      }
+
+      currStr = prevStr + repeat;
+    } else if (char >= '0' && char <= '9') {
+      currNum *= 10;
+      currNum += Number(char);
+    } else {
+      currStr += char;
+    }
+  }
+
+  return currStr;
+}
+
+// Explanation:
+// -Initialize empty stack
+// -Set curr string to empty string and curr num to 0
+// -For each char in string:
+// -If char is open bracket:
+// -Push curr string and curr num to stack and reset both
+// -Else if char is closed bracket:
+// -Pop prev num and prev string from stack
+// -Repeat curr string prev num times and add to prev string
+// -Set curr string to updated string
+// -Else if char is num:
+// -Add num to curr num
+// -Else if char is character:
+// -Add char to curr string
+// -Once done, return curr string
+
+// Notes:
+// -Time complexity: O(max k * n), where k is largest num and n is length of string
+// -Space complexity: O(m + n), where m is the number of letters and n is the number of digits in string
+
+console.log(decodeString('3[ab2[c]]'));
