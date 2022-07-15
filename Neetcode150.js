@@ -7841,8 +7841,6 @@ var findMedianSortedArrays = function (nums1, nums2) {
 };
 
 // Explanation:
-// -Get total length of both sorted arrays
-// -Get half of total
 // -Swap arrays to ensure smallest is first
 // -Set left and right pointers to first and last index of smaller array
 // -While median not found:
