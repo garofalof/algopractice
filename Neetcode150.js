@@ -7555,23 +7555,25 @@ console.log(maxProfit([1, 3, 2, 7, 4, 5]));
 // 974. Subarray Sums Divisible by K
 
 var subarraysDivByK = function (nums, k) {
-  let [sum, result] = [0, 0];
+  let [rs, ans] = [0, 0];
   let dp = {};
-
   dp[0] = 1;
 
   for (let num of nums) {
-    sum += num;
-    let key = sum % k;
+    rs += num;
+    let key = rs % k;
 
+    if (key < 0) {
+      key += k;
+    }
     if (dp[key]) {
-      result += dp[key];
+      ans += dp[key];
     }
 
     dp[key] = dp[key] + 1 || 1;
   }
 
-  return result;
+  return ans;
 };
 
 // Explanation:
@@ -7581,6 +7583,7 @@ var subarraysDivByK = function (nums, k) {
 // -For each num in nums:
 // -Increase running sum by num
 // -Get key by taking remainder of sum / k
+// -If remainder negative, add k back to remainder
 // -If dp has key, add count at key to result
 // -Increase count of key in dp to 1 or curr count + 1
 // -Once done, return result
