@@ -7766,3 +7766,41 @@ var largestRectangleArea = function (heights) {
 // -Space complexity: O(n) for the stack
 
 console.log(largestRectangleArea([2, 1, 5, 6, 2, 3]));
+
+// 239. Sliding Window Maximum
+
+var maxSlidingWindow = function (nums, k) {
+  let q = [];
+  let result = [];
+
+  for (let i = 0; i < nums.length; i++) {
+    while (q.length && nums[q[q.length - 1]] <= nums[i]) {
+      q.pop();
+    }
+
+    q.push(i);
+
+    if (q[0] === i - k) {
+      q.shift();
+    }
+    if (i >= k - 1) {
+      result.push(nums[q[0]]);
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set queue and result to empty arrays
+// -For each num in nums:
+// -While curr num is greater than last num in queue, pop last item in queue
+// -Push curr index to queue
+// -If index in front of queue is equal to window size, remove first item from front
+// -If i >= window size, push front of queue to result
+
+// Notes:
+// -Time complexity: O(n ^ 2) because of shift operation, but can be reduced to O(n) w/ queue using stacks
+// -Space complexity: O(n) for output array and O(k) for the queue
+
+console.log(maxSlidingWindow([1, 3, -1, -3, 5, 3, 6, 7], 3));
