@@ -7652,3 +7652,117 @@ var decodeString = function (str) {
 // -Space complexity: O(m + n), where m is the number of letters and n is the number of digits in string
 
 console.log(decodeString("3[ab2[c]]"));
+
+// 23. Merge k Sorted Lists
+
+var ListNode = function (val, next) {
+  return {
+    val,
+    next: null,
+  };
+};
+
+var mergeKLists = function (lists) {
+  if (lists.length === 0 || lists === null) {
+    return null;
+  }
+
+  while (lists.length > 1) {
+    let merged = [];
+
+    for (let i = 0; i < lists.length; i += 2) {
+      let l1 = lists[i];
+      let l2 = lists[i + 1] || null;
+
+      merged.push(mergeLists(l1, l2));
+    }
+
+    lists = merged;
+  }
+
+  return lists[0];
+};
+
+var mergeLists = function (l1, l2) {
+  let dummy = new ListNode();
+  let head = dummy;
+
+  while (l1 && l2) {
+    if (l1.val < l2.val) {
+      [head.next, l1] = [l1, l1.next];
+    } else {
+      [head.next, l2] = [l2, l2.next];
+    }
+
+    head = head.next;
+  }
+
+  head.next = l1 ? l1 : l2;
+
+  return dummy.next;
+};
+
+// Explanation:
+// -If lists not valid, return null
+// -While lists length is greater than 1:
+// -Keep temp array for merged lists
+// -For each two adjacent lists in list:
+// -Merge two lists and push to merged array
+// -Once we reach end of lists, reset lists to merged and continue until we have one final sorted list
+// -Once done, return final list
+
+// Notes:
+// -Time complexity: O(n log k), where n is the number of nodes and k is the number of lists. We initially pair up k lists and merge each pair. After the first pairing, k lists are merged into k / 2 lists with average 2N / k length, then k / 4, k / 8, etc.
+// -Space complexity: O(n) for merged list array
+
+let l1 = new ListNode(5);
+let l2 = new ListNode(3);
+let l3 = new ListNode(4);
+let l4 = new ListNode(1);
+let l5 = new ListNode(2);
+
+console.log(mergeKLists([l1, l2, l3, l4, l5]));
+
+// 84. Largest Rectangle in Histogram
+
+var largestRectangleArea = function (heights) {
+  let maxArea = 0;
+  let stack = [];
+
+  for (let i = 0; i < heights.length; i++) {
+    let h = heights[i];
+    let start = i;
+
+    while (stack.length && stack[stack.length - 1][1] > h) {
+      let [index, height] = stack.pop();
+      maxArea = Math.max(maxArea, height * (i - index));
+      start = index;
+    }
+
+    stack.push([start, h]);
+  }
+  for (let [i, h] of stack) {
+    maxArea = Math.max(maxArea, h * (heights.length - i));
+  }
+
+  return maxArea;
+};
+
+// Explanation:
+// -Set max area to 0 and initialize an empty stack
+// -For each height in heights:
+// -Set start index to curr height index
+// -While stack has work and curr height less than last height in stack:
+// -Pop last height and start index off stack
+// -Set max area to greater of max area or last height * (curr index - start index)
+// -Set start index to last start index
+// -Once we pop all larger vals off stack, push start index and curr height to stack
+// -For each index / height pair in stack left over:
+// -Set max area as greater of max area of height * (heights length - index)
+// -Finally, return max area
+
+// Notes:
+// -Time complexity: O(n), as n numbers are pushed and popped from the stack
+// -Space complexity: O(n) for the stack
+
+console.log(largestRectangleArea([2, 1, 5, 6, 2, 3]));
