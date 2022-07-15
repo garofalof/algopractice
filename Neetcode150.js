@@ -7804,3 +7804,60 @@ var maxSlidingWindow = function (nums, k) {
 // -Space complexity: O(n) for output array and O(k) for the queue
 
 console.log(maxSlidingWindow([1, 3, -1, -3, 5, 3, 6, 7], 3));
+
+// 4. Median of Two Sorted Arrays
+
+var findMedianSortedArrays = function (nums1, nums2) {
+  let [a, b] = [nums1, nums2];
+
+  if (a.length > b.length) {
+    [a, b] = [b, a];
+  }
+
+  let [x, y] = [a.length, b.length];
+  let [l, r] = [0, x - 1];
+
+  while (true) {
+    let i = Math.floor((r - l) / 2 + l);
+    let j = Math.floor((x + y) / 2) - i - 2;
+
+    aLeft = i >= 0 ? a[i] : -Infinity;
+    aRight = i + 1 < x ? a[i + 1] : Infinity;
+    bLeft = j >= 0 ? b[j] : -Infinity;
+    bRight = j + 1 < y ? b[j + 1] : Infinity;
+
+    if (aLeft <= bRight && bLeft <= aRight) {
+      if ((x + y) % 2) {
+        return Math.min(aRight, bRight);
+      }
+
+      return (Math.max(aLeft, bLeft) + Math.min(aRight, bRight)) / 2;
+    } else if (aRight > bRight) {
+      r = i - 1;
+    } else {
+      l = i + 1;
+    }
+  }
+};
+
+// Explanation:
+// -Get total length of both sorted arrays
+// -Get half of total
+// -Swap arrays to ensure smallest is first
+// -Set left and right pointers to first and last index of smaller array
+// -While median not found:
+// -Get partition index of first array
+// -Get partition index of second array
+// -Set left partition values to value at partition index or -Infinity or out of bounds
+// -Set right partition values to value next to left partition index or Infinity if out of bounds
+// -If left values <= right values:
+// -Return min of right vals if length of two arrays is odd
+// -Else return max of left vals plus min of right vals / 2
+// -Else if first right val > second right val, set r to first partition index - 1
+// -Else set left to first partition index + 1
+
+// Notes:
+// -Time complexity: O(log m + n)
+// -Space complexity: O(n) for storing two arrays
+
+console.log(findMedianSortedArrays([1, 3, 5], [2, 2, 5, 9, 10]));
