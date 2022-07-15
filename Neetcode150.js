@@ -7596,23 +7596,23 @@ console.log(subarraysDivByK([4, 5, 0, -2, -3, 1], 5));
 
 // 394. Decode String
 
-var decodeString = function(str) {
+var decodeString = function (str) {
   let stack = [];
-  let currStr = '';
+  let currStr = "";
   let currNum = 0;
 
   for (let i = 0; i < str.length; i++) {
     let char = str[i];
 
-    if (char === '[') {
+    if (char === "[") {
       stack.push(currStr);
       stack.push(currNum);
 
-      [currStr, currNum] = ['', 0];
-    } else if (char === ']') {
+      [currStr, currNum] = ["", 0];
+    } else if (char === "]") {
       let prevNum = stack.pop();
       let prevStr = stack.pop();
-      let repeat = '';
+      let repeat = "";
 
       while (prevNum) {
         repeat += currStr;
@@ -7620,7 +7620,7 @@ var decodeString = function(str) {
       }
 
       currStr = prevStr + repeat;
-    } else if (char >= '0' && char <= '9') {
+    } else if (char >= "0" && char <= "9") {
       currNum *= 10;
       currNum += Number(char);
     } else {
@@ -7629,7 +7629,7 @@ var decodeString = function(str) {
   }
 
   return currStr;
-}
+};
 
 // Explanation:
 // -Initialize empty stack
@@ -7651,4 +7651,4 @@ var decodeString = function(str) {
 // -Time complexity: O(max k * n), where k is largest num and n is length of string
 // -Space complexity: O(m + n), where m is the number of letters and n is the number of digits in string
 
-console.log(decodeString('3[ab2[c]]'));
+console.log(decodeString("3[ab2[c]]"));
