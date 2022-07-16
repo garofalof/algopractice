@@ -7859,3 +7859,114 @@ var findMedianSortedArrays = function (nums1, nums2) {
 // -Space complexity: O(n) for storing two arrays
 
 console.log(findMedianSortedArrays([1, 3, 5], [2, 2, 5, 9, 10]));
+
+// 212. Word Search II
+
+class Node {
+  constructor() {
+    this.keys = new Map();
+    this.end = false;
+  }
+  isEnd() {
+    return this.end;
+  }
+  setEnd(bool) {
+    this.end = bool;
+  }
+}
+
+class Trie {
+  constructor() {
+    this.root = new Node();
+  }
+  addWord(word) {
+    let node = this.root;
+
+    for (let char of word) {
+      if (!node.keys.has(char)) {
+        node.keys.set(char, new Node());
+      }
+
+      node = node.keys.get(char);
+    }
+
+    node.setEnd(true);
+  }
+}
+
+var findWords = function (board, words) {
+  let trie = new Trie();
+  words = new Set(words);
+  let [result, visited] = [new Set(), new Set()];
+  let [rows, cols] = [board.length, board[0].length];
+  let directions = [0, 1, 0, -1, 0];
+
+  for (let word of words) {
+    trie.addWord(word);
+  }
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      dfs(r, c, trie.root, "");
+    }
+  }
+
+  return Array.from(result);
+
+  function dfs(r, c, node, word) {
+    let char = board[r][c];
+    let key = `${r},${c}`;
+
+    if (!node.keys.has(char) || visited.has(key)) {
+      return;
+    }
+
+    visited.add(key);
+    node = node.keys.get(char);
+    word += char;
+
+    if (node.isEnd()) {
+      result.add(word);
+    }
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newR = directions[i] + r;
+      let newC = directions[i + 1] + c;
+
+      if (newR < 0 || newC < 0 || newR >= rows || newC >= cols) {
+        continue;
+      }
+
+      dfs(newR, newC, node, word);
+    }
+
+    visited.delete(key);
+  }
+};
+
+// Explanation:
+// -Initialize trie
+// -Create a hashset from words and add words to trie
+// -Initialize empty sets to store results and visited
+// -For each node in matrix:
+// -Perform dfs on node and root node of trie w/ empty string as curr word
+// -In dfs:
+// -If row/col in visited or node char not in trie, return to exit
+// -Add row/col to visited, get keys at char, and update curr word to include char
+// -If node is end of word, add word to result
+// -For each direction up, down, left, and right:
+// -If new row/col out of bounds, continue
+// -Else perform dfs on neighbor w/ updated node and curr word
+// -Once done performing dfs, delete key from visited
+// -Finally, return array from results once finished
+
+// Notes:
+// -Time complexity: O(n * (4 * (3 ^ (l - 1)))), where n is the number of nodes in the board and l is the maximum length of words. At each node, we would first have at most 4 directions to explore, but that would then be cut down to three. Given that we're one character down, our exponent is l - 1.
+// -Space complexity: O(n), where n is the total number of letters in the trie
+
+let board = [
+  ["o", "a", "a", "n"],
+  ["e", "t", "a", "e"],
+  ["i", "h", "k", "r"],
+  ["i", "f", "l", "v"],
+];
+let words = ["oath", "pea", "eat", "rain"];
+console.log(findWords(board, words));
