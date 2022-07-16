@@ -5877,7 +5877,7 @@ class Heap {
     while (this.compare(this.data[index], this.data[parent]) < 0) {
       this.swap(index, parent);
       index = parent;
-      parent = this.parent(parent);
+      parent = this.parent(index);
     }
   }
   bubbleDown() {
@@ -5903,7 +5903,7 @@ class Heap {
 
         if (
           (swap !== null && this.compare(right, left) < 0) ||
-          (swap === null && this.compare(right, this.data[index]))
+          (swap === null && this.compare(right, this.data[index]) < 0)
         ) {
           swap = rightIndex;
         }
@@ -7969,4 +7969,269 @@ let board = [
   ["i", "f", "l", "v"],
 ];
 let words = ["oath", "pea", "eat", "rain"];
+
 console.log(findWords(board, words));
+
+// 124. Binary Tree Maximum Path Sum
+
+var maxPathSum = function (root) {
+  let max = -Infinity;
+
+  function dfs(node) {
+    if (!node) {
+      return 0;
+    }
+
+    let leftMax = Math.max(dfs(node.left), 0);
+    let rightMax = Math.max(dfs(node.right), 0);
+    max = Math.max(max, node.val + leftMax + rightMax);
+
+    return node.val + Math.max(leftMax, rightMax);
+  }
+
+  dfs(root);
+  return max;
+};
+
+// Explanation:
+// -Set max to negative infinity
+// -Recurse on root node
+// -In dfs:
+// -If node is null, return 0
+// -Set left max to greater of dfs on left path or 0
+// -Set right max to greater of dfs on right path or 0
+// -Set max to greater of curr max or curr node val plus left and right max
+// -Return node val plus greater of left max or right max
+// -Once done recursing, return max
+
+// Notes:
+// -Time complexity: O(n), where n is the number of nodes
+// -Space complexity: O(h), where h is the height of the tree
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let tree = new Node(-10);
+tree.left = new Node(9);
+tree.right = new Node(20);
+tree.right.left = new Node(15);
+tree.right.right = new Node(7);
+console.log(maxPathSum(tree));
+
+// 25. Reverse Nodes in k-Group
+
+function ListNode(val) {
+  return {
+    val,
+    next: null,
+  };
+}
+
+var reverseKGroup = function (head, k) {
+  let dummy = new ListNode(0);
+  dummy.next = head;
+
+  let [curr, prev] = [head, dummy];
+
+  while (curr) {
+    let tail = curr;
+    let listIdx = 0;
+
+    while (curr && listIdx < k) {
+      curr = curr.next;
+      listIdx++;
+    }
+    if (listIdx !== k) {
+      prev.next = tail;
+    } else {
+      prev.next = reverseList(tail, k);
+      prev = tail;
+    }
+  }
+
+  return dummy.next;
+};
+
+var reverseList = function (head, k) {
+  let [curr, prev] = [head, null];
+
+  while (curr && k) {
+    [curr.next, prev, curr] = [prev, curr, curr.next];
+    k--;
+  }
+
+  return prev;
+};
+
+// Explanation:
+// -Initialize dummy node
+// -Set dummy.next to head
+// -Set curr to head and prev to dummy
+// -While curr not null:
+// -Set tail to curr
+// -Advance curr k spots
+// -If curr index not equal to k, cannot reverse so we set prev.next to tail
+// -Else we reverse current segment and set prev to tail
+// -Once done, we return dummy.next
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = new ListNode(5);
+console.log(reverseKGroup(list, 2));
+
+// 778. Swim in Rising Water
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(index) {
+    return Math.floor((index - 1) / 2);
+  }
+  left(index) {
+    return 2 * index + 1;
+  }
+  right(index) {
+    return 2 * index + 2;
+  }
+  swap(start, end) {
+    [this.data[start], this.data[end]] = [this.data[end], this.data[start]];
+  }
+  size() {
+    return this.data.length;
+  }
+  top() {
+    return this.data[0] || null;
+  }
+  add(num) {
+    this.data.push(num);
+    this.bubbleUp();
+  }
+  pop() {
+    let top = this.data[0];
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
+
+    return top;
+  }
+  bubbleUp() {
+    let index = this.size() - 1;
+    let parent = this.parent(index);
+
+    while (this.compare(this.data[index], this.data[parent] || {}) < 0) {
+      this.swap(index, parent);
+      index = parent;
+      parent = this.parent(index);
+    }
+  }
+  bubbleDown() {
+    let index = 0;
+    let size = this.size();
+
+    while (true) {
+      let left = null;
+      let right = null;
+      let swap = null;
+      let leftIndex = this.left(index);
+      let rightIndex = this.right(index);
+
+      if (leftIndex < size) {
+        left = this.data[leftIndex];
+
+        if (this.compare(left, this.data[index]) < 0) {
+          swap = leftIndex;
+        }
+      }
+      if (rightIndex < size) {
+        right = this.data[rightIndex];
+
+        if (
+          (swap !== null && this.compare(right, left) < 0) ||
+          (swap === null && this.compare(right, this.data[index]) < 0)
+        ) {
+          swap = rightIndex;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(index, swap);
+      index = swap;
+    }
+  }
+}
+
+var swimInWater = function (grid) {
+  let n = grid.length;
+  let visited = new Set();
+  let heap = new Heap((a, b) => a.depth - b.depth);
+  let directions = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0],
+  ];
+  let result = 0;
+
+  visited.add("0,0");
+  heap.add({ row: 0, col: 0, depth: grid[0][0] });
+
+  while (heap.size()) {
+    let { row, col, depth } = heap.pop();
+    result = Math.max(result, depth);
+
+    if (row === n - 1 && col === n - 1) {
+      return result;
+    }
+    for (let [dr, dc] of directions) {
+      let newR = dr + row;
+      let newC = dc + col;
+      let key = `${newR},${newC}`;
+
+      if (0 <= newR && 0 <= newC && newR < n && newC < n && !visited.has(key)) {
+        heap.add({ row: newR, col: newC, depth: grid[newR][newC] });
+        visited.add(key);
+      }
+    }
+  }
+};
+
+// Explanation:
+// -Initialize min heap comparing depths
+// -Add first node to visited and heap
+// -While heap has work:
+// -Pop min depth off heap
+// -Set result to greater of result or curr depth
+// -If we've reached last node, return result
+// -For each direction up, down, left, right:
+// -If coordinate in bounds and hasn't been visited, add coordinate w/ depth to heap and visited
+
+// Notes:
+// -Time complexity: O((n ^ 2) * log n), as we may expand n squared nodes and have to do one log n insertion at each node
+// -Space complexity: O(n ^ 2)
+
+console.log(
+  swimInWater([
+    [9, 5, 7, 2],
+    [0, 10, 8, 15],
+    [1, 4, 3, 12],
+    [6, 13, 11, 14],
+  ])
+);
