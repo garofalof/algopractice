@@ -8450,3 +8450,57 @@ var minDistance = function (word1, word2) {
 // -Space complexity: O(m * n)
 
 console.log(minDistance("hello", "hero"));
+
+// 312. Burst Balloons
+
+var maxCoins = function (nums) {
+  nums.unshift(1);
+  nums.push(1);
+
+  let dp = new Map();
+
+  return dfs(1, nums.length - 2);
+
+  function dfs(l, r) {
+    let key = `${l},${r}`;
+
+    if (l > r) {
+      return 0;
+    }
+    if (dp.has(key)) {
+      return dp.get(key);
+    }
+
+    let result = 0;
+
+    for (let i = l; i <= r; i++) {
+      let burst = nums[l - 1] * nums[i] * nums[r + 1];
+      let remaining = dfs(l, i - 1) + dfs(i + 1, r);
+
+      result = Math.max(result, burst + remaining);
+    }
+
+    dp.set(key, result);
+    return result;
+  }
+};
+
+// Explanation:
+// -Add 1s to beginning and end of nums array
+// -Initialize dp hashmap to store results at each index
+// -Perform dfs on left and right boundary of nums array not including added 1s
+// -In dfs:
+// -If l > r, return 0 to exit
+// -If dp has indices, return result
+// -Set result to 0
+// -For each num from l to r:
+// -Get burst amount by multiplying curr num w/ left and right neighbors
+// -Get remaining amount by performing dfs on updated i - 1 right bound and i + 1 left bound
+// -Set result to greater of curr result or burst + remaining amount
+// -Once done, add greatest result to key in dp map and return that result
+
+// Notes:
+// -Time complexity: O(n ^ 3), as there are O(n ^ 2) states and at each call, we must perform O(n) iteration over nums array from l to r
+// -Space complexity: O(n ^ 2) to store all states
+
+console.log(maxCoins([3, 1, 5, 8]));
