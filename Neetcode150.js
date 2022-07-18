@@ -8504,3 +8504,153 @@ var maxCoins = function (nums) {
 // -Space complexity: O(n ^ 2) to store all states
 
 console.log(maxCoins([3, 1, 5, 8]));
+
+// 1851. Minimum Interval to Include Each Query
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(i) {
+    return Math.floor((i - 1) / 2);
+  }
+  left(i) {
+    return 2 * i + 1;
+  }
+  right(i) {
+    return 2 * i + 2;
+  }
+  peek() {
+    return this.data[0];
+  }
+  size() {
+    return this.data.length;
+  }
+  swap(s, e) {
+    [this.data[s], this.data[e]] = [this.data[e], this.data[s]];
+  }
+  add(val) {
+    this.data.push(val);
+    this.bubbleUp();
+  }
+  pop() {
+    let top = this.data[0];
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
+
+    return top;
+  }
+  bubbleUp() {
+    let i = this.size() - 1;
+    let p = this.parent(i);
+
+    while (this.compare(this.data[i], this.data[p] || []) < 0) {
+      this.swap(i, p);
+      i = p;
+      p = this.parent(i);
+    }
+  }
+  bubbleDown() {
+    let i = 0;
+    let size = this.size();
+
+    while (true) {
+      let [l, r, swap, curr] = [null, null, null, this.data[i]];
+      let [lIdx, rIdx] = [this.left(i), this.right(i)];
+
+      if (lIdx < size) {
+        l = this.data[lIdx];
+
+        if (this.compare(l, curr) < 0) {
+          swap = lIdx;
+        }
+      }
+      if (rIdx < size) {
+        r = this.data[rIdx];
+
+        if (
+          (swap !== null && this.compare(r, l) < 0) ||
+          (swap === null && this.compare(r, curr) < 0)
+        ) {
+          swap = rIdx;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(i, swap);
+      i = swap;
+    }
+  }
+}
+
+var minInterval = function (intervals, queries) {
+  intervals.sort((a, b) => a[0] - b[0]);
+  let queryCopy = [...queries];
+  queries.sort((a, b) => a - b);
+
+  let result = {};
+  let index = 0;
+  let minHeap = new Heap((a, b) => a[0] - b[0]);
+
+  for (let q of queries) {
+    while (index < intervals.length && intervals[index][0] <= q) {
+      let [start, end] = intervals[index];
+      minHeap.add([end - start + 1, end]);
+      index++;
+    }
+    while (minHeap.size() && minHeap.peek()[1] < q) {
+      minHeap.pop();
+    }
+
+    result[q] = minHeap.size() ? minHeap.peek()[0] : -1;
+  }
+
+  let output = [];
+
+  for (let q of queryCopy) {
+    output.push(result[q]);
+  }
+
+  return output;
+};
+
+// Explanation:
+// -Sort input intervals by ascending start time
+// -Copy original queries
+// -Sort input queries by ascending start time
+// -Set result to empty object
+// -Set interval index to 0
+// -Initialize min heap
+// -For each query in sorted queries:
+// -While index within intervals and curr interval start <= query start:
+// -Add interval size and end to min heap and increase index
+// -While min heap has values and min size end < query start:
+// -Pop min off top
+// -If min heap has values, set result for query as min val size or -1 if min heap empty
+// -Once done iterating through queries, create output array
+// -For each query in original query list:
+// -Get result for query and push to output array
+// -Once done, return output
+
+// Notes:
+// -Time complexity: O(n log n + q log q) for sorting both intervals and query arrays
+// -Space complexity: O(n + q) as we need to store copy of queries in array and intervals in heap
+
+console.log(
+  minInterval(
+    [
+      [1, 4],
+      [2, 4],
+      [3, 6],
+      [4, 4],
+    ],
+    [2, 3, 4, 5]
+  )
+);
