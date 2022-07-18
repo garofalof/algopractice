@@ -8294,3 +8294,68 @@ console.log(
     ["ATL", "SFO"],
   ])
 );
+
+// 329. Longest Increasing Path in a Matrix
+
+var longestIncreasingPath = function (matrix) {
+  let [rows, cols] = [matrix.length, matrix[0].length];
+  let dp = new Map();
+  let longest = 0;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      longest = Math.max(longest, dfs(r, c, -1));
+    }
+  }
+
+  return longest;
+
+  function dfs(r, c, prev) {
+    let key = `${r},${c}`;
+    let result = 1;
+
+    if (r < 0 || c < 0 || r === rows || c === cols || matrix[r][c] <= prev) {
+      return 0;
+    }
+    if (dp.has(key)) {
+      return dp.get(key);
+    }
+
+    let directions = [0, 1, 0, -1, 0];
+
+    for (let i = 0; i < directions.length - 1; i++) {
+      let newR = directions[i] + r;
+      let newC = directions[i + 1] + c;
+
+      result = Math.max(result, 1 + dfs(newR, newC, matrix[r][c]));
+    }
+
+    dp.set(key, result);
+
+    return result;
+  }
+};
+
+// Explanation:
+// -Initialize empty dp hashmap and set longest to 0
+// -For each node in matrix:
+// -Set longest to greater of longest or dfs on curr node
+// -In dfs:
+// -Set curr path count to 1
+// -If key out of bounds or curr node <= prev, return 0
+// -If key in dp, return count at key
+// -Else for each direction up, down, left, right:
+// -Set curr path count to greater of curr count or 1 + dfs on neighbor
+// -Once we get longest path at neighbors, set that result in our dp map and return that result to our function call
+
+// Notes:
+// -Time complexity: O(rows * cols)
+// -Space complexity: O(rows * cols)
+
+console.log(
+  longestIncreasingPath([
+    [3, 4, 5],
+    [3, 2, 6],
+    [2, 2, 1],
+  ])
+);
