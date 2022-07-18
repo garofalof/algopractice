@@ -8235,3 +8235,62 @@ console.log(
     [6, 13, 11, 14],
   ])
 );
+
+// 332. Reconstruct Itinerary
+
+var findItinerary = function (tickets) {
+  let graph = new Map();
+
+  for (let [src, dst] of tickets) {
+    if (!graph.has(src)) {
+      graph.set(src, []);
+    }
+
+    graph.get(src).push(dst);
+  }
+  for (let [src, dst] of graph) {
+    graph.get(src).sort().reverse();
+  }
+
+  let result = [];
+
+  dfs("JFK");
+
+  return result.reverse();
+
+  function dfs(ticket) {
+    let destinations = graph.get(ticket);
+
+    while (destinations && destinations.length) {
+      let dst = destinations.pop();
+      dfs(dst);
+    }
+
+    result.push(ticket);
+  }
+};
+
+// Explanation:
+// -Build adjacency list for all origin / destination pairs
+// -Sort destinations for each origin in reverse alphabetical order
+// -Perform dfs starting at JFK
+// -In dfs:
+// -Get all destinations for curr airport
+// -While curr airport has destinations:
+// -Pop last destination off curr airport and perform dfs on that destination
+// -Once we reach destination w/ no more destinations, we push that ticket to result
+// -Once done, we reverse our list and return it
+
+// Notes:
+// -Time complexity: O(E ^ d), where e is the total number of flights and d is the maximum number of flights from an airport
+// -Space complexity: O(no. of airports + no. of flights)
+
+console.log(
+  findItinerary([
+    ["JFK", "SFO"],
+    ["JFK", "ATL"],
+    ["SFO", "ATL"],
+    ["ATL", "JFK"],
+    ["ATL", "SFO"],
+  ])
+);
