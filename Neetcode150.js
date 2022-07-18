@@ -8408,3 +8408,45 @@ var numDistinct = function (s, t) {
 // -Space complexity: O(m * n) for dp hashmap
 
 console.log(numDistinct("rabbbbit", "rabbit"));
+
+// 72. Edit Distance
+
+var minDistance = function (word1, word2) {
+  let [m, n] = [word1.length, word2.length];
+  let dp = [];
+
+  for (let i = 0; i <= m; i++) {
+    dp.push(new Array(n + 1).fill(Infinity));
+  }
+  for (let i = 0; i <= m; i++) {
+    dp[i][n] = m - i;
+  }
+  for (let j = 0; j <= n; j++) {
+    dp[m][j] = n - j;
+  }
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      if (word1[i] === word2[j]) {
+        dp[i][j] = dp[i + 1][j + 1];
+      } else {
+        dp[i][j] = 1 + Math.min(dp[i + 1][j], dp[i][j + 1], dp[i + 1][j + 1]);
+      }
+    }
+  }
+
+  return dp[0][0];
+};
+
+// Explanation:
+// -Fill m by n grid w/ Infinity
+// -Enumerate rightmost column and bottom row, which count as empty strings
+// -For each char in both words:
+// -If chars at curr indices are equal, curr dp index equals val at dp[i + 1][j + 1]
+// -Else curr dp index is equal to 1 + min of insert, delete, and replace operations
+// -Once done, we return val at first node in grid
+
+// Notes:
+// -Time complexity: O(m * n), where m and n are length of two strings
+// -Space complexity: O(m * n)
+
+console.log(minDistance("hello", "hero"));
