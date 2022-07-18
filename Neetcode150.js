@@ -8359,3 +8359,52 @@ console.log(
     [2, 2, 1],
   ])
 );
+
+// 115. Distinct Subsequences
+
+var numDistinct = function (s, t) {
+  let dp = new Map();
+
+  return dfs(0, 0);
+
+  function dfs(i, j) {
+    let key = `${i},${j}`;
+
+    if (dp.has(key)) {
+      return dp.get(key);
+    }
+    if (i === s.length || j === t.length) {
+      return j === t.length ? 1 : 0;
+    }
+
+    let count;
+
+    if (s[i] === t[j]) {
+      count = dfs(i + 1, j + 1) + dfs(i + 1, j);
+    } else {
+      count = dfs(i + 1, j);
+    }
+
+    dp.set(key, count);
+
+    return count;
+  }
+};
+
+// Explanation:
+// -Initialize dp hashmap to store counts
+// -Perform dfs on index 0 for both strings
+// -In dfs:
+// -If map has indices, return count at key
+// -If either index equals end of string:
+// -Return 1 if we've reached end of target string else return 0 if we've reached end of start string
+// -If char in start string equals char in target string:
+// -Set count to dfs on next two indices plus dfs on next start index and curr target index
+// -Else set count to dfs on next start index and curr target index
+// -Once we get count, store it in dp and return count
+
+// Notes:
+// -Time complexity: O(m * n), where m is start string length and n is target string length
+// -Space complexity: O(m * n) for dp hashmap
+
+console.log(numDistinct("rabbbbit", "rabbit"));
