@@ -8703,3 +8703,100 @@ var isMatch = function (s, p) {
 // -Space complexity: O(s * p)
 
 console.log(isMatch("aab", "a*b"));
+
+// 269. Alien Dictionary
+
+var alienOrder = function (words) {
+  let graph = new Map();
+
+  for (let word of words) {
+    for (let char of word) {
+      if (!graph.has(char)) {
+        graph.set(char, []);
+      }
+    }
+  }
+  for (let i = 0; i < words.length - 1; i++) {
+    let [w1, w2] = [words[i], words[i + 1]];
+    let minLength = Math.min(w1.length, w2.length);
+
+    if (
+      w1.length > w2.length &&
+      w1.substring(0, minLength) === w2.substring(0, minLength)
+    ) {
+      return "";
+    }
+    for (let j = 0; j < minLength; j++) {
+      if (w1[j] !== w2[j]) {
+        graph.get(w1[j]).push(w2[j]);
+        break;
+      }
+    }
+  }
+
+  let visiting = new Set();
+  let visited = new Set();
+  let result = [];
+
+  for (let [char, edge] of graph) {
+    if (!dfs(char)) {
+      return "";
+    }
+  }
+
+  return result.reverse().join("");
+
+  function dfs(char) {
+    if (visiting.has(char)) {
+      return false;
+    }
+    if (visited.has(char)) {
+      return true;
+    }
+
+    visiting.add(char);
+
+    for (let edge of graph.get(char)) {
+      if (!dfs(edge)) {
+        return false;
+      }
+    }
+
+    visiting.delete(char);
+    visited.add(char);
+    result.push(char);
+
+    return true;
+  }
+};
+
+// Explanation:
+// -Initialize empty hashmap to store adjacency list
+// -For each character in input words:
+// -If graph doesn't have character, add to graph
+// -For each word in input words:
+// -Get curr word and next word
+// -Get min length of two words
+// -If curr word longer than next word and min length substrings are equal:
+// -Return empty string
+// -For each char in min length range:
+// -Find the first differing char
+// -Add corresponding char in next word to curr string char in graph and break
+// -Set visiting, visited, and result to empty sets and array
+// -For each char in graph:
+// -If dfs on char returns false, return empty string
+// -In dfs:
+// -If visiting has char, return false
+// -If visited has char, return true
+// -Add char to visiting
+// -For each of char's neighbors:
+// -If dfs on neighbor returns false, return false to our function call
+// -If we traverse neighbors successfully from char, remove char from visiting and add to visited
+// -Push char to result and return true to our function call
+// -Once done, return our reversed joined result array
+
+// Notes:
+// -Time complexity: O(c), where c is the total length of all the words in the input list
+// -Space complexity: O(v + e)
+
+console.log(alienOrder(["wrt", "wrf", "er", "ett", "rftt"]));
