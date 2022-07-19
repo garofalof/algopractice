@@ -8805,22 +8805,22 @@ console.log(alienOrder(["wrt", "wrf", "er", "ett", "rftt"]));
 
 class Logger {
   constructor() {
-      this.data = new Map();
+    this.data = new Map();
   }
   shouldPrintMessage(time, message) {
-      if (!this.data.has(message)) {
-          this.data.set(message, time);
-          return true;
-      }
+    if (!this.data.has(message)) {
+      this.data.set(message, time);
+      return true;
+    }
 
-      let prev = this.data.get(message);
+    let prev = this.data.get(message);
 
-      if (time - prev < 10) {
-          return false;
-      } else {
-          this.data.set(message, time);
-          return true;
-      }
+    if (time - prev < 10) {
+      return false;
+    } else {
+      this.data.set(message, time);
+      return true;
+    }
   }
 }
 
@@ -8837,14 +8837,14 @@ class Logger {
 // -Space complexity: O(n) for insert
 
 let log = new Logger();
-console.log(log.shouldPrintMessage(1, 'foo'));
-console.log(log.shouldPrintMessage(3, 'bar'));
-console.log(log.shouldPrintMessage(9, 'foo'));
-console.log(log.shouldPrintMessage(13, 'bar'));
+console.log(log.shouldPrintMessage(1, "foo"));
+console.log(log.shouldPrintMessage(3, "bar"));
+console.log(log.shouldPrintMessage(9, "foo"));
+console.log(log.shouldPrintMessage(13, "bar"));
 
 // 2096. Step-By-Step Directions From a Binary Tree Node to Another
 
-var getDirections = function(root, startValue, destValue) {
+var getDirections = function (root, startValue, destValue) {
   let graph = new Map();
   let stack = [root];
 
@@ -8859,8 +8859,8 @@ var getDirections = function(root, startValue, destValue) {
         graph.set(curr.val, []);
       }
 
-      graph.get(curr.left.val).push([curr.val, 'U']);
-      graph.get(curr.val).push([curr.left.val, 'L']);
+      graph.get(curr.left.val).push([curr.val, "U"]);
+      graph.get(curr.val).push([curr.left.val, "L"]);
 
       stack.push(curr.left);
     }
@@ -8872,15 +8872,15 @@ var getDirections = function(root, startValue, destValue) {
         graph.set(curr.val, []);
       }
 
-      graph.get(curr.right.val).push([curr.val, 'U']);
-      graph.get(curr.val).push([curr.right.val, 'R']);
+      graph.get(curr.right.val).push([curr.val, "U"]);
+      graph.get(curr.val).push([curr.right.val, "R"]);
 
       stack.push(curr.right);
     }
   }
 
   let visited = new Set();
-  let queue = [[startValue, '']];
+  let queue = [[startValue, ""]];
 
   while (queue.length) {
     let [val, path] = queue.shift();
@@ -8917,7 +8917,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -8930,7 +8930,7 @@ console.log(getDirections(tree, 2, 5));
 
 // 366. Find Leaves of Binary Tree
 
-var findLeaves = function(root) {
+var findLeaves = function (root) {
   let map = {};
 
   dfs(root, 0);
@@ -8977,7 +8977,7 @@ function Node(val) {
   return {
     val,
     left: null,
-    right: null
+    right: null,
   };
 }
 
@@ -8987,3 +8987,159 @@ tree.right = new Node(3);
 tree.right.left = new Node(4);
 tree.right.right = new Node(5);
 console.log(findLeaves(tree));
+
+// 2034. Stock Price Fluctuation
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(i) {
+    return Math.floor((i - 1) / 2);
+  }
+  left(i) {
+    return 2 * i + 1;
+  }
+  right(i) {
+    return 2 * i + 2;
+  }
+  peek() {
+    return this.data[0];
+  }
+  size() {
+    return this.data.length;
+  }
+  swap(s, e) {
+    [this.data[s], this.data[e]] = [this.data[e], this.data[s]];
+  }
+  add(val) {
+    this.data.push(val);
+    this.bubbleUp();
+  }
+  pop() {
+    let top = this.data[0];
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
+
+    return top;
+  }
+  bubbleUp() {
+    let i = this.size() - 1;
+    let p = this.parent(i);
+
+    while (this.compare(this.data[i], this.data[p] || []) < 0) {
+      this.swap(i, p);
+      i = p;
+      p = this.parent(i);
+    }
+  }
+  bubbleDown() {
+    let i = 0;
+    let size = this.size();
+
+    while (true) {
+      let [l, r, swap, curr] = [null, null, null, this.data[i]];
+      let [lIdx, rIdx] = [this.left(i), this.right(i)];
+
+      if (lIdx < size) {
+        l = this.data[lIdx];
+
+        if (this.compare(l, curr) < 0) {
+          swap = lIdx;
+        }
+      }
+      if (rIdx < size) {
+        r = this.data[rIdx];
+
+        if (
+          (swap !== null && this.compare(r, l) < 0) ||
+          (swap === null && this.compare(r, curr) < 0)
+        ) {
+          swap = rIdx;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(i, swap);
+      i = swap;
+    }
+  }
+}
+
+class StockPrice {
+  constructor() {
+    this.data = new Map();
+    this.maxTime = 0;
+    this.minHeap = new Heap((a, b) => a[0] - b[0]);
+    this.maxHeap = new Heap((a, b) => b[0] - a[0]);
+  }
+  update(time, price) {
+    this.data.set(time, price);
+    this.maxTime = Math.max(this.maxTime, time);
+
+    this.minHeap.add([price, time]);
+    this.maxHeap.add([price, time]);
+  }
+  current() {
+    return this.data.get(this.maxTime);
+  }
+  maximum() {
+    let [price, time] = this.maxHeap.pop();
+
+    while (this.data.get(time) !== price) {
+      [price, time] = this.maxHeap.pop();
+    }
+
+    this.maxHeap.add([price, time]);
+
+    return price;
+  }
+  minimum() {
+    let [price, time] = this.minHeap.pop();
+
+    while (this.data.get(time) !== price) {
+      [price, time] = this.minHeap.pop();
+    }
+
+    this.minHeap.add([price, time]);
+
+    return price;
+  }
+}
+
+// Explanation:
+// -Initialize stock price class w/ data hashmap, max time, min heap, and max heap
+// -For update method:
+// -Set time and price in data map
+// -Update max time to greater of max time or input time
+// -Add price and time to both min and max heap
+// -For current method:
+// -Return price at max time
+// -For max and min methods:
+// -Pop curr max and min off top
+// -While popped price not equal to price at popped time:
+// -Keep popping and updating price and time
+// -Once max and min found, add last price and time back to min and max heap and return price
+
+// Notes:
+// -Time complexity: O(log n) for update, O(1) for current, O(n log n) for max and min
+// -Space complexity: O(n)
+
+let price = new StockPrice();
+price.update(1, 10);
+price.update(2, 5);
+console.log(price.current());
+console.log(price.maximum());
+price.update(1, 3);
+console.log(price.maximum());
+price.update(4, 2);
+console.log(price.minimum());
+
+// 2115. Find All Possible Recipes from Given Supplies
