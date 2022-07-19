@@ -8800,3 +8800,190 @@ var alienOrder = function (words) {
 // -Space complexity: O(v + e)
 
 console.log(alienOrder(["wrt", "wrf", "er", "ett", "rftt"]));
+
+// 359. Logger Rate Limiter
+
+class Logger {
+  constructor() {
+      this.data = new Map();
+  }
+  shouldPrintMessage(time, message) {
+      if (!this.data.has(message)) {
+          this.data.set(message, time);
+          return true;
+      }
+
+      let prev = this.data.get(message);
+
+      if (time - prev < 10) {
+          return false;
+      } else {
+          this.data.set(message, time);
+          return true;
+      }
+  }
+}
+
+// Explanation:
+// -Initialize logger class w/ empty hashmap to store messages
+// -For print message method:
+// -If map does not have message, add message and time and return true
+// -Else get prev time at message
+// -If curr time - prev time < 10, return false
+// -Else set message w/ curr time in map and return true
+
+// Notes:
+// -Time complexity: O(1)
+// -Space complexity: O(n) for insert
+
+let log = new Logger();
+console.log(log.shouldPrintMessage(1, 'foo'));
+console.log(log.shouldPrintMessage(3, 'bar'));
+console.log(log.shouldPrintMessage(9, 'foo'));
+console.log(log.shouldPrintMessage(13, 'bar'));
+
+// 2096. Step-By-Step Directions From a Binary Tree Node to Another
+
+var getDirections = function(root, startValue, destValue) {
+  let graph = new Map();
+  let stack = [root];
+
+  while (stack.length) {
+    let curr = stack.pop();
+
+    if (curr.left) {
+      if (!graph.has(curr.left.val)) {
+        graph.set(curr.left.val, []);
+      }
+      if (!graph.has(curr.val)) {
+        graph.set(curr.val, []);
+      }
+
+      graph.get(curr.left.val).push([curr.val, 'U']);
+      graph.get(curr.val).push([curr.left.val, 'L']);
+
+      stack.push(curr.left);
+    }
+    if (curr.right) {
+      if (!graph.has(curr.right.val)) {
+        graph.set(curr.right.val, []);
+      }
+      if (!graph.has(curr.val)) {
+        graph.set(curr.val, []);
+      }
+
+      graph.get(curr.right.val).push([curr.val, 'U']);
+      graph.get(curr.val).push([curr.right.val, 'R']);
+
+      stack.push(curr.right);
+    }
+  }
+
+  let visited = new Set();
+  let queue = [[startValue, '']];
+
+  while (queue.length) {
+    let [val, path] = queue.shift();
+
+    if (val === destValue) {
+      return path;
+    }
+
+    visited.add(val);
+
+    for (let [edge, direction] of graph.get(val)) {
+      if (!visited.has(edge)) {
+        queue.push([edge, path + direction]);
+      }
+    }
+  }
+};
+
+// Explanation:
+// -Create graph representation of tree's nodes and neighbors
+// -Initialize empty set to store visited and push start value and empty string to queue
+// -While queue has work:
+// -Pop first item off queue
+// -If val equals destination val, return path
+// -Add val to visited
+// -For each of curr val's neighbors:
+// -If neighbor not in visited, add val to queue w/ updated path
+
+// Notes:
+// -Time complexity: O(n ^ 2) given shift operation but can be brought down to O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.right = new Node(3);
+tree.right.left = new Node(4);
+tree.right.right = new Node(5);
+console.log(getDirections(tree, 2, 5));
+
+// 366. Find Leaves of Binary Tree
+
+var findLeaves = function(root) {
+  let map = {};
+
+  dfs(root, 0);
+
+  return Object.values(map);
+
+  function dfs(node, layer) {
+    if (!node) {
+      return layer;
+    }
+
+    let left = dfs(node.left, layer);
+    let right = dfs(node.right, layer);
+
+    layer = Math.max(left, right);
+
+    if (!map[layer]) {
+      map[layer] = [];
+    }
+
+    map[layer].push(node.val);
+
+    return layer + 1;
+  }
+};
+
+// Explanation:
+// -Initialize empty map to store deletion layers
+// -Perform dfs on root and layer 0
+// -In dfs:
+// -If curr node is null, return layer to function call
+// -Set left and right to result of traversing left and right subtrees
+// -Set layer to greater of left or right
+// -If our map doesn't have curr layer, set layer in map
+// -Push node val to curr layer
+// -Finally, return layer + 1 to our function call
+// -Once done, return map values
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n) for map and resolution array
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.right = new Node(3);
+tree.right.left = new Node(4);
+tree.right.right = new Node(5);
+console.log(findLeaves(tree));
