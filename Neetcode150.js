@@ -9143,3 +9143,90 @@ price.update(4, 2);
 console.log(price.minimum());
 
 // 2115. Find All Possible Recipes from Given Supplies
+
+var findAllRecipes = function (recipes, ingredients, supplies) {
+  supplies = new Set(supplies);
+  let graph = new Map();
+
+  for (let i = 0; i < recipes.length; i++) {
+    let [rec, ing] = [recipes[i], ingredients[i]];
+    let prereq = [];
+
+    for (let item of ing) {
+      if (!supplies.has(item)) {
+        prereq.push(item);
+      }
+    }
+
+    graph.set(rec, prereq);
+  }
+
+  let visited = new Set();
+  let result = [];
+
+  for (let recipe of recipes) {
+    if (dfs(recipe)) {
+      result.push(recipe);
+    }
+  }
+
+  return result;
+
+  function dfs(recipe) {
+    if (!graph.has(recipe)) {
+      return false;
+    }
+    if (graph.get(recipe).length === 0) {
+      return true;
+    }
+    if (visited.has(recipe)) {
+      return false;
+    }
+
+    visited.add(recipe);
+
+    for (let prereq of graph.get(recipe)) {
+      if (!dfs(prereq)) {
+        return false;
+      }
+    }
+
+    graph.set(recipe, []);
+
+    return true;
+  }
+};
+
+// Explanation:
+// -Create hashset from supplies
+// -Initialize empty map to store recipe and prereqs not in supplies
+// -For each recipe in recipes:
+// -Add prereqs not in supplies to prereq array
+// -Add recipe w/ prereqs to graph
+// -Initialize hashset to store visited recipes/ingredients
+// -For each recipe in recipes:
+// -If dfs on recipe returns true, add recipe to result
+// -In dfs:
+// -If input not a recipe, return false
+// -If input has no preqreqs, return true
+// -If visited has input, return false
+// -Add input to visited
+// -For each prereq for given input:
+// -If dfs on prereq returns false, return false to our function call
+// -Else clear prereqs for input recipe in graph and return true to our function call
+
+// Notes:
+// -Time complexity: O(recipes * ingredients) or O(v + e), whichever is greater
+// -Space complexity: O(v + e)
+
+console.log(
+  findAllRecipes(
+    ["bread", "sandwich", "burger"],
+    [
+      ["yeast", "flour"],
+      ["bread", "meat"],
+      ["sandwich", "meat", "bread"],
+    ],
+    ["yeast", "flour", "meat"]
+  )
+);
