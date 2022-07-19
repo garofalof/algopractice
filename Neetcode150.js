@@ -8654,3 +8654,52 @@ console.log(
     [2, 3, 4, 5]
   )
 );
+
+// 10. Regular Expression Matching
+
+var isMatch = function (s, p) {
+  let dp = new Map();
+
+  return dfs(0, 0);
+
+  function dfs(i, j) {
+    let key = `${i},${j}`;
+
+    if (dp.has(key)) {
+      return dp.get(key);
+    }
+    if (j === p.length) {
+      return i === s.length;
+    }
+
+    let result;
+    let match = i < s.length && (s[i] === p[j] || p[j] === ".");
+
+    if (j + 1 < p.length && p[j + 1] === "*") {
+      result = dfs(i, j + 2) || (match && dfs(i + 1, j));
+    } else {
+      result = dfs(i + 1, j + 1) && match;
+    }
+
+    dp.set(key, result);
+    return result;
+  }
+};
+
+// Explanation:
+// -Initialize dp hashmap to store results
+// -Perform dfs on initial indices of string and pattern
+// -In dfs:
+// -If dp has index pair, return result
+// -If pattern index has reached end, return true if string index has reached end or false if not
+// -If string index within bounds and curr string char equals pattern string char or pattern string char is wildcard, set match to true
+// -If pattern index + 1 within bounds and pattern index + 1 is star:
+// -Set result equal to result of dfs on pattern index increased by two, which is skip, or result of dfs on string index increased by 1 and curr pattern index and curr index match
+// -Else set result to result of curr index match and dfs on subsequent indices
+// -Once done recursing, set key and result in dp map and return result
+
+// Notes:
+// -Time complexity: O(s * p), where s is string length and p is pattern length
+// -Space complexity: O(s * p)
+
+console.log(isMatch("aab", "a*b"));
