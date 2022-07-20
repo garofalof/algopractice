@@ -9230,3 +9230,45 @@ console.log(
     ["yeast", "flour", "meat"]
   )
 );
+
+// 2128. Remove All Ones With Row and Column Flips
+
+var removeOnes = function (grid) {
+  let [rows, cols] = [grid.length, grid[0].length];
+
+  for (let r = 1; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid[r][0] === grid[0][0]) {
+        if (grid[r][c] !== grid[0][c]) {
+          return false;
+        }
+      } else {
+        if (grid[r][c] !== 1 - grid[0][c]) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+};
+
+// Explanation:
+// -For each node in matrix:
+// -If beginning of curr row equals beginning of first row:
+// -Curr node must be equal to beginning of column to be valid else we return false
+// -Else if beginning of curr row and beginning of first row are different:
+// -Curr node and beginning of column must be inverted to be valid else we return false
+// -If we iterate through grid successfully, we return true
+
+// Notes:
+// -Time complexity: O(rows * cols)
+// -Space complexity: O(1)
+
+console.log(
+  removeOnes([
+    [0, 1, 0],
+    [1, 0, 1],
+    [0, 1, 0],
+  ])
+);
