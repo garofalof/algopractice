@@ -9272,3 +9272,58 @@ console.log(
     [0, 1, 0],
   ])
 );
+
+// 1048. Longest String Chain
+
+var longestStrChain = function (words) {
+  words = new Set(words);
+  let dp = new Map();
+  let max = 0;
+
+  for (let word of words) {
+    max = Math.max(max, dfs(word));
+  }
+
+  return max;
+
+  function dfs(word) {
+    if (!words.has(word)) {
+      return 0;
+    }
+    if (dp.has(word)) {
+      return dp.get(word);
+    }
+
+    let max = 0;
+
+    for (let i = 0; i < word.length; i++) {
+      let updated = word.substring(0, i) + word.substring(i + 1);
+
+      max = Math.max(max, dfs(updated) + 1);
+    }
+
+    dp.set(word, max);
+
+    return max;
+  }
+};
+
+// Explanation:
+// -Create hashset from words
+// -Initialize dp hashamp to store words w/ max length
+// -For each word in word list:
+// -Longest is greater of curr max or dfs on word
+// -In dfs:
+// -If word set doesn't have word, return 0
+// -If dp has word, return length at word
+// -Else set curr max to 0
+// -For each char in word:
+// -Remove char and set max to greater of curr max or dfs on updated word + 1
+// -Once done checking substrings, set curr word and max chain in dp and return max to our function call
+// -Once done recursing through words list, return max
+
+// Notes:
+// -Time complexity: O((l ^ 2) * n), where l is the longest word length and n is the number of words in list
+// -Space complexity: O(n) for recursion stack, map, and set
+
+console.log(longestStrChain(["xbc", "pcxbcf", "xb", "cxbc", "pcxbc"]));
