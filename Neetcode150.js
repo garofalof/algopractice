@@ -9398,3 +9398,108 @@ console.log(
     1
   )
 );
+
+// 818. Race Car
+
+var racecar = function (target) {
+  let q = [[0, 1, 0]];
+  let visited = new Set();
+
+  while (q.length) {
+    let [pos, speed, moves] = q.shift();
+    let key = `${pos},${speed}`;
+
+    if (pos === target) {
+      return moves;
+    }
+    if (visited.has(key)) {
+      continue;
+    }
+
+    visited.add(key);
+
+    q.push([pos + speed, speed * 2, moves + 1]);
+
+    if (
+      (pos + speed > target && speed > 0) ||
+      (pos + speed < target && speed < 0)
+    ) {
+      speed = speed > 0 ? -1 : 1;
+      q.push([pos, speed, moves + 1]);
+    }
+  }
+};
+
+// Explanation:
+// -Push pos 0, speed 1, and moves 0 to queue
+// -Intialize empty set to store pos / speed results
+// -While queue has work: pop first item off queue
+// -If pos equals target, return moves
+// -If visited has pos / speed pair, continue
+// -Else add pos / speed pair to visited and push updated pos, speed, and moves to queue
+// -For updated path, pos increased by speed, speed multiplied by 2, and moves increased by 1
+// -If we've overshot target and are accelerating or we're below target and we're in reverse:
+// -Set speed to -1 if we're accelerating or 1 if we're reversing
+// -Then push position, updated speed, and moves + 1 to queue
+
+// Notes:
+// -Time complexity: O(log t ^ 2) given shift operation, can be brought down to O(log t)
+// -Space complexity: O(log t)
+
+console.log(racecar(6));
+
+// 2158. Amount of New Area Painted Each Day
+
+var amountPainted = function (paint) {
+  let map = new Map();
+  let result = [];
+
+  for (let [start, end] of paint) {
+    let log = 0;
+    let index = start;
+
+    while (index < end) {
+      if (!map.has(index)) {
+        log++;
+        map.set(index, end);
+        index++;
+        continue;
+      }
+
+      let fastEnd = map.get(index);
+
+      if (fastEnd < end) {
+        map.set(index, end);
+      }
+
+      index = fastEnd;
+    }
+
+    result.push(log);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize empty map to store interval pairs
+// -Set result to to empty array
+// -For each interval in input array:
+// -Set curr log to 0 and index to start
+// -While index < end:
+// -If map doesn't have index, increase log and index by 1 and set curr index and curr end in map
+// -Else if map has index, get corresponding end and update map w/ curr index and curr end
+// -Once we reach interval end, push log to result for curr interval
+// -Once done iterating over intervals, return result
+
+// Notes:
+// -Time complexity: O(n * l), where n is number of intervals and l is longest interval length
+// -Space complexity: O(n)
+
+console.log(
+  amountPainted([
+    [1, 4],
+    [5, 8],
+    [4, 7],
+  ])
+);
