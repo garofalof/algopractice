@@ -9327,3 +9327,74 @@ var longestStrChain = function (words) {
 // -Space complexity: O(n) for recursion stack, map, and set
 
 console.log(longestStrChain(["xbc", "pcxbcf", "xb", "cxbc", "pcxbc"]));
+
+// 1293. Shortest Path in a Grid with Obstacles Elimination
+
+var shortestPath = function (grid, k) {
+  let [rows, cols] = [grid.length, grid[0].length];
+  let visited = new Set();
+  let q = [[0, 0, k, 0]];
+
+  while (q.length) {
+    let [r, c, left, path] = q.shift();
+    let key = `${r},${c},${left}`;
+
+    if (visited.has(key) || left < 0) {
+      continue;
+    }
+    if (r === rows - 1 && c === cols - 1) {
+      return path;
+    }
+
+    visited.add(key);
+
+    if (grid[r][c] === 1) {
+      left--;
+    }
+
+    let directions = [
+      [0, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+    ];
+
+    for (let [dr, dc] of directions) {
+      let newR = r + dr;
+      let newC = c + dc;
+
+      if (newR >= 0 && newC >= 0 && newR < rows && newC < cols) {
+        q.push([newR, newC, left, path + 1]);
+      }
+    }
+  }
+
+  return -1;
+};
+
+// Explanation:
+// -Push row 0, col 0, remaining, and dist traveled of 0 to queue
+// -Initialize hashset to keep track of visited coordinates
+// -While queue has work: pop first item off queue
+// -If visited has coordinates or remaining removals < 0, continue
+// -If we reach last node, return path
+// -Add coordinates to visited
+// -If curr node equals 1, subtract one from remaining
+// -For each direction up, down, left, right:
+// -If coordinate is valid add new coordinates to queue w/ updated remaining and path increased by 1
+// -If we go through queue without returning path, we return -1 as no valid path found
+
+// Notes:
+// -Time complexity: O(n ^ 2), where n is number of nodes, as we use shift operation in while loop. Can be brought down to O(n)
+// -Space complexity: O(n), where n is number of nodes, for both set and queue
+
+console.log(
+  shortestPath(
+    [
+      [0, 1, 1],
+      [1, 1, 1],
+      [1, 0, 0],
+    ],
+    1
+  )
+);
