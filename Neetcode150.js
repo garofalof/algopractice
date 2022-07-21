@@ -9862,3 +9862,44 @@ console.log(
     [3, 1, 1],
   ])
 );
+
+// 419. Battleships in a Board
+
+var countBattleships = function (board) {
+  let [m, n] = [board.length, board[0].length];
+  let count = 0;
+
+  for (let r = 0; r < m; r++) {
+    for (let c = 0; c < n; c++) {
+      if (board[r][c] === "X") {
+        if (
+          board[r][c - 1] !== "X" &&
+          (!board[r - 1] || board[r - 1][c] !== "X")
+        ) {
+          count++;
+        }
+      }
+    }
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Set initial count to 0
+// -For each node in board:
+// -If node marked as battleship:
+// -If neighbors left and above not marked as battleships, increase count
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(m * n)
+// -Space complexity: O(1)
+
+console.log(
+  countBattleships([
+    ["X", ".", ".", "X"],
+    [".", ".", ".", "X"],
+    [".", ".", ".", "X"],
+  ])
+);
