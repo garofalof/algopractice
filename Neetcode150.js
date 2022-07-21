@@ -9173,11 +9173,8 @@ var findAllRecipes = function (recipes, ingredients, supplies) {
   return result;
 
   function dfs(recipe) {
-    if (!graph.has(recipe)) {
+    if (!graph.get(recipe)) {
       return false;
-    }
-    if (graph.get(recipe).length === 0) {
-      return true;
     }
     if (visited.has(recipe)) {
       return false;
@@ -9191,7 +9188,7 @@ var findAllRecipes = function (recipes, ingredients, supplies) {
       }
     }
 
-    graph.set(recipe, []);
+    visited.delete(recipe);
 
     return true;
   }
@@ -9503,3 +9500,54 @@ console.log(
     [4, 7],
   ])
 );
+
+// 528. Random Pick with Weight
+
+class Solution {
+  constructor(weights) {
+    this.weights = [];
+    this.total = 0;
+
+    for (let w of weights) {
+      this.total += w;
+      this.weights.push(this.total);
+    }
+  }
+  pickIndex() {
+    let weights = this.weights;
+    let [l, r] = [0, weights.length - 1];
+    let index = Math.floor(Math.random() * this.total);
+
+    while (l <= r) {
+      let mid = Math.floor((r - l) / 2 + l);
+
+      if (index < weights[mid]) {
+        r = mid - 1;
+      } else {
+        l = mid + 1;
+      }
+    }
+
+    return l;
+  }
+}
+
+// Explanation:
+// -Initialize solution class
+// -For each weight in input weights:
+// -Add weight to total and push total to weights constructor array
+// -For pick index method:
+// -Get random index based on total
+// -Set left and right pointers to beginning and end of weights array
+// -While left <= right:
+// -Get midpoint
+// -If random index less than total at midpoint, set right to mid - 1
+// -Else set left to mid + 1
+// -Once binary search is done, return left index
+
+// Notes:
+// -Time complexity: O(n) for constructor function, O(log n) for pick index
+// -Space complexity: O(n) for constructor function, O(1) for pick index
+
+let prefix = new Solution([1, 2, 3, 4, 5]);
+console.log(prefix.pickIndex());
