@@ -5104,7 +5104,7 @@ var combinationSum2 = function (candidates, target) {
 // -Once done, return results
 
 // Notes:
-// -Time complexity: O(2 ^ n) in the worst case to exhaust all possible combinations in array
+// -Time complexity: O((2 ^ n) * n) in the worst case to exhaust all possible combinations in array
 // -Space complexity: O(n) for both the recursion stack and path
 
 console.log(combinationSum2([10, 1, 2, 7, 6, 1, 5], 8));
@@ -6569,6 +6569,7 @@ var findTargetSumWays = function (nums, target) {
 
     let count =
       backtrack(index + 1, amount - num) + backtrack(index + 1, amount + num);
+
     memo.set(key, count);
 
     return count;
@@ -9806,3 +9807,58 @@ var employeeFreeTime = function (schedule) {
 let employee1 = [{ start: 1, end: 2 }];
 let employee2 = [{ start: 4, end: 6 }];
 console.log(employeeFreeTime([employee1, employee2]));
+
+// 1937. Maximum Number of Points with Cost
+
+var maxPoints = function (points) {
+  let [m, n] = [points.length, points[0].length];
+  let [prev, curr] = [points[0], new Array(n)];
+
+  for (let r = 1; r < m; r++) {
+    let maxAdd = 0;
+
+    for (let c = 0; c < n; c++) {
+      maxAdd = Math.max(maxAdd - 1, prev[c]);
+      curr[c] = points[r][c] + maxAdd;
+    }
+
+    maxAdd = 0;
+
+    for (let c = n - 1; c >= 0; c--) {
+      maxAdd = Math.max(maxAdd - 1, prev[c]);
+      curr[c] = Math.max(curr[c], points[r][c] + maxAdd);
+    }
+
+    prev = curr;
+    curr = new Array(n);
+  }
+
+  return Math.max(...prev);
+};
+
+// Explanation:
+// -Get matrix height and width
+// -Set previous row to first row and curr row to empty array
+// -For each row starting at second row:
+// -Set running max to 0
+// -For each cell left to right in row:
+// -Set running max to greater of previous row number or running max - 1, as we have to account for distance traveled
+// -Add running max to current cell
+// -Reset running max to 0
+// -For each cell right to left:
+// -Set running max to greater of running max - 1 or prev row number
+// -Set current cell to greater of current cell or current number plus running max
+// -At each row, we set previous to curr row and curr to empty array
+// -Once done, we return the max number in our prev row
+
+// Notes:
+// -Time complexity: O(m * n), where m is number of rows and n is number of columns
+// -Space complexity: O(n), where n is number of columns
+
+console.log(
+  maxPoints([
+    [1, 2, 3],
+    [1, 5, 1],
+    [3, 1, 1],
+  ])
+);
