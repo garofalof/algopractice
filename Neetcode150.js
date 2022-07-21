@@ -9903,3 +9903,42 @@ console.log(
     [".", ".", ".", "X"],
   ])
 );
+
+// 539. Minimum Time Difference
+
+var findMinDifference = function (timePoints) {
+  timePoints = timePoints.map((time) => {
+    let [hh, mm] = time.split(":");
+
+    return 60 * Number(hh) + Number(mm);
+  });
+
+  timePoints.sort((a, b) => a - b);
+
+  let [first, last] = [timePoints[0], timePoints[timePoints.length - 1]];
+  let result = 1440 + first - last;
+
+  for (let i = 1; i < timePoints.length; i++) {
+    let [curr, prev] = [timePoints[i], timePoints[i - 1]];
+
+    if (curr - prev < result) {
+      result = curr - prev;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Convert times to their 24 hour minute counterparts
+// -Sort times
+// -Set result to difference between first and last time
+// -For each time starting at second time:
+// -If curr time - prev time < result, update result to curr time - prev time
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n log n) for sorting
+// -Space complexity: O(n) to store mapped times
+
+console.log(findMinDifference(["23:59", "00:00"]));
