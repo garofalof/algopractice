@@ -9551,3 +9551,208 @@ class Solution {
 
 let prefix = new Solution([1, 2, 3, 4, 5]);
 console.log(prefix.pickIndex());
+
+// 1146. Snapshot Array
+
+class SnapshotArray {
+  constructor(len) {
+    this.id = 0;
+    this.data = [];
+
+    for (let i = 0; i < len; i++) {
+      this.data.push([]);
+    }
+  }
+  set(index, val) {
+    this.data[index].push([val, this.id]);
+  }
+  snap() {
+    this.id++;
+    return this.id - 1;
+  }
+  get(index, snapId) {
+    let data = this.data[index];
+    let [l, r] = [0, data.length - 1];
+    let i = -1;
+
+    while (l <= r) {
+      let mid = Math.floor((r - l) / 2 + l);
+
+      if (data[mid][1] <= snapId) {
+        i = mid;
+        l = mid + 1;
+      } else {
+        r = mid - 1;
+      }
+    }
+
+    return i === -1 ? 0 : data[i][0];
+  }
+}
+
+// Explanation:
+// -Initialize snapshot class
+// -For each index through input lenth:
+// -Push empty array to data array in constructor
+// -For set method:
+// -Get array at input index and push val and snap id to that array
+// -For snap method:
+// -Increase id count in constructor by 1 and return prev count.
+// -For get method:
+// -Get data at input index
+// -Set left and right pointers to beginning and end of data
+// -Set result index to -1
+// -While left <= right:
+// -Get midpoint
+// -If id at midpoint <= target id:
+// -Update result id and set left pointer to mid + 1
+// -Else set right pointer to mid - 1
+// -Once done, if result index is -1 return 0, else return value at result index
+
+// Notes:
+// -Time complexity: O(n) for constructor, O(1) for set and snap, O(log n) for get
+// -Space complexity: O(n) for constructor and set, O(1) for snap and get
+
+let snapshot = new SnapshotArray(3);
+snapshot.set(0, 5);
+console.log(snapshot.snap());
+snapshot.set(0, 6);
+console.log(snapshot.get(0, 0));
+
+// 68. Text Justification
+
+var fullJustify = function(words, maxWidth) {
+  let result = [];
+  let line = [];
+  let width = 0;
+
+  for (let i = 0; i < words.length; i++) {
+    let word = words[i];
+
+    while (width + word.length > maxWidth) {
+      let spaces = maxWidth - width + line.length;
+      let [added, j] = [0, 0];
+
+      while (added < spaces) {
+        if (j >= line.length - 1) {
+          j = 0;
+        }
+
+        line[j] += ' ';
+
+        added++;
+        j++;
+      }
+
+      result.push(line);
+
+      [line, width] = [[], 0];
+    }
+
+    line.push(word);
+    width += word.length + 1;
+  }
+  for (let i = 0; i < line.length - 1; i++) {
+    line[i] += ' ';
+  }
+
+  let remaining = maxWidth - width + 1;
+  let added = 0;
+
+  while (added < remaining) {
+    line[line.length - 1] += ' ';
+    added++;
+  }
+
+  result.push(line);
+
+  for (let i = 0; i < result.length; i++) {
+    result[i] = result[i].join('');
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize empty arrays to store result and curr line
+// -Set width to 0
+// -For each word in word list:
+// -Get current word
+// -While width + word length > max width:
+// -Get available spaces
+// -Set added and curr line index to 0
+// -While added < spaces:
+// -Reset curr line index to 0 if index is out of line bounds
+// -Add space to curr word in line
+// -Increase spaces added and curr line index by 1
+// -Once done adding spaces, push line to result and reset curr line and width
+// -Else if word length + width still in bounds, add word to curr line and increase width by word length + 1
+// -Once we traverse words array, go through curr line and add space to all words except last
+// -Then add remaining spaces to last
+// -Push curr line up to result and join each line at each index
+// -Finally, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(fullJustify(['this', 'is', 'justification'], 13));
+
+// 489. Robot Room Cleaner
+
+var cleanRoom = function(robot) {
+  let directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+  let visited = new Set();
+
+  backtrack(0, 0, 0);
+
+  function goBack() {
+    robot.turnRight();
+    robot.turnRight();
+    robot.move();
+    robot.turnRight();
+    robot.turnRight();
+  }
+  function backtrack(x, y, d) {
+    let key = x + ',' + y;
+
+    visited.add(key);
+    robot.clean();
+
+    for (let i = 0; i < 4; i++) {
+      let nD = (d + i) % 4;
+      let nX = x + directions[nD][0];
+      let nY = y + directions[nD][1];
+      let nKey = nX + ',' + nY;
+
+      if (!visited.has(nKey) && robot.move()) {
+        backtrack(nX, nY, nD);
+        goBack();
+      }
+
+      robot.turnRight();
+    }
+  }
+};
+
+// Explanation:
+// -List out directions in clockwise order
+// -Initialize hashset to store visited nodes
+// -Backtrack on x / y coordinate 0 / 0 at direction 0
+// -In backtrack:
+// -Add coordinate to visited and clean node
+// -For each index 0 through 3:
+// -Get direction index by taking the remainder of (direction + index) / 4, which ensures we stay within our directions array bounds
+// -We then update coordinates and backtrack on those updated coordinates and new direction if move is valid and not in visited
+// -Once done backtracking, we go back by turning 180 degrees, moving, and turning back 180 degrees
+// -Finally, before moving on to next direction, we need to turn right
+
+// Notes:
+// -Time complexity: O(n - m), where n is the number of nodes and m is the number of obstacles
+// -Space complexity: O(n - m)
+
+// 759. Employee Free Time
+
+var employeeFreeTime = function(schedule) {
+
+};
