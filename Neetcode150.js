@@ -9621,7 +9621,7 @@ console.log(snapshot.get(0, 0));
 
 // 68. Text Justification
 
-var fullJustify = function(words, maxWidth) {
+var fullJustify = function (words, maxWidth) {
   let result = [];
   let line = [];
   let width = 0;
@@ -9638,7 +9638,7 @@ var fullJustify = function(words, maxWidth) {
           j = 0;
         }
 
-        line[j] += ' ';
+        line[j] += " ";
 
         added++;
         j++;
@@ -9653,21 +9653,21 @@ var fullJustify = function(words, maxWidth) {
     width += word.length + 1;
   }
   for (let i = 0; i < line.length - 1; i++) {
-    line[i] += ' ';
+    line[i] += " ";
   }
 
   let remaining = maxWidth - width + 1;
   let added = 0;
 
   while (added < remaining) {
-    line[line.length - 1] += ' ';
+    line[line.length - 1] += " ";
     added++;
   }
 
   result.push(line);
 
   for (let i = 0; i < result.length; i++) {
-    result[i] = result[i].join('');
+    result[i] = result[i].join("");
   }
 
   return result;
@@ -9696,12 +9696,17 @@ var fullJustify = function(words, maxWidth) {
 // -Time complexity: O(n)
 // -Space complexity: O(n)
 
-console.log(fullJustify(['this', 'is', 'justification'], 13));
+console.log(fullJustify(["this", "is", "justification"], 13));
 
 // 489. Robot Room Cleaner
 
-var cleanRoom = function(robot) {
-  let directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+var cleanRoom = function (robot) {
+  let directions = [
+    [-1, 0],
+    [0, 1],
+    [1, 0],
+    [0, -1],
+  ];
   let visited = new Set();
 
   backtrack(0, 0, 0);
@@ -9714,7 +9719,7 @@ var cleanRoom = function(robot) {
     robot.turnRight();
   }
   function backtrack(x, y, d) {
-    let key = x + ',' + y;
+    let key = x + "," + y;
 
     visited.add(key);
     robot.clean();
@@ -9723,7 +9728,7 @@ var cleanRoom = function(robot) {
       let nD = (d + i) % 4;
       let nX = x + directions[nD][0];
       let nY = y + directions[nD][1];
-      let nKey = nX + ',' + nY;
+      let nKey = nX + "," + nY;
 
       if (!visited.has(nKey) && robot.move()) {
         backtrack(nX, nY, nD);
@@ -9753,6 +9758,51 @@ var cleanRoom = function(robot) {
 
 // 759. Employee Free Time
 
-var employeeFreeTime = function(schedule) {
+var employeeFreeTime = function (schedule) {
+  let schedules = [];
 
+  for (let employee of schedule) {
+    for (let interval of employee) {
+      schedules.push(interval);
+    }
+  }
+
+  schedules.sort((a, b) => a.start - b.start);
+
+  let result = [];
+  let prev = schedules[0];
+  let [start, end] = [prev.start, prev.end];
+
+  for (let i = 1; i < schedules.length; i++) {
+    let curr = schedules[i];
+
+    if (end < curr.start) {
+      result.push({ start: end, end: curr.start });
+      start = curr.start;
+    }
+
+    end = Math.max(end, curr.end);
+  }
+
+  return result;
 };
+
+// Explanation:
+// -Push all intervals to array
+// -Sort intervals by start time
+// -Set result to empty array
+// -Set prev to first interval
+// -Set start and end pointers to first interval start and end
+// -For each subsequent interval:
+// -If curr start time > prev end time:
+// -Push prev end and curr start to result and set start to curr start
+// -At each iteration, update prev end to greater of prev end or curr end
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n log n), where n is the total number of intervals
+// -Space complexity: O(n) to maintain merged sorted intervals
+
+let employee1 = [{ start: 1, end: 2 }];
+let employee2 = [{ start: 4, end: 6 }];
+console.log(employeeFreeTime([employee1, employee2]));
