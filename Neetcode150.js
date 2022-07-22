@@ -10216,3 +10216,61 @@ var maximumEvenSplit = function (finalSum) {
 // -Space complexity: O(1), as our output array doesn't count as extra space
 
 console.log(maximumEvenSplit(24));
+
+// 652. Find Duplicate Subtrees
+
+var findDuplicateSubtrees = function (root) {
+  let map = {};
+  let result = [];
+
+  dfs(root);
+
+  return result;
+
+  function dfs(node) {
+    if (!node) {
+      return "N";
+    }
+
+    let left = dfs(node.left);
+    let right = dfs(node.right);
+    let key = `${node.val}-${left}-${right}`;
+
+    map[key] = map[key] + 1 || 1;
+
+    if (map[key] === 2) {
+      result.push(node);
+    }
+
+    return key;
+  }
+};
+
+// Explanation:
+// -Initialize empty map to store subtrees and dfs on root node
+// -In dfs:
+// -If node is null, return null char
+// -Get left and right keys by performing dfs on left and right subtrees
+// -Set curr node key to string including val, left, and right keys
+// -Set key count in map to key count + 1 or 1
+// -If key count equals 2, duplicate found so we push node to result
+// -Finally, we return our key to our function call
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.left.right = new Node(4);
+tree.right = new Node(2);
+tree.right.right = new Node(4);
+console.log(findDuplicateSubtrees(tree));
