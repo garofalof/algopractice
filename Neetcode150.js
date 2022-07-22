@@ -7759,7 +7759,7 @@ var largestRectangleArea = function (heights) {
 // -Set start index to last start index
 // -Once we pop all larger vals off stack, push start index and curr height to stack
 // -For each index / height pair in stack left over:
-// -Set max area as greater of max area of height * (heights length - index)
+// -Set max area as greater of max area or height * (heights length - index)
 // -Finally, return max area
 
 // Notes:
@@ -9630,7 +9630,7 @@ var fullJustify = function (words, maxWidth) {
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
 
-    while (width + word.length > maxWidth) {
+    if (width + word.length > maxWidth) {
       let spaces = maxWidth - width + line.length;
       let [added, j] = [0, 0];
 
@@ -9977,3 +9977,206 @@ var findReplaceString = function (s, indices, sources, targets) {
 // -Space complexity: O(s)
 
 console.log(findReplaceString("abcd", [0, 2], ["a", "cd"], ["eee", "ffff"]));
+
+// 843. Guess the Word
+
+var findSecretWord = function (wordlist, master) {
+  for (let i = 0; i < 10; i++) {
+    let index = Math.floor(Math.random() * wordlist.length);
+    let guess = wordlist[index];
+    let matches = master.guess(guess);
+    let candidates = [];
+
+    for (let word of wordlist) {
+      if (matches === wordMatch(guess, word)) {
+        candidates.push(word);
+      }
+    }
+
+    wordlist = candidates;
+  }
+
+  function wordMatch(w1, w2) {
+    let matches = 0;
+
+    for (let i = 0; i < w1.length; i++) {
+      if (w1[i] === w2[i]) {
+        matches++;
+      }
+    }
+
+    return matches;
+  }
+};
+
+// Explanation:
+// -Run for loop ten times, as we have 10 guesses
+// -At each iteration:
+// -Pick random index and get word at random index
+// -Run guess against match API to get matches
+// -If matches returns 6, we'll have guessed word
+// -For each word in word list:
+// -If word has same match count as our guess, add word to our candidate list
+// -Once we find our candidates, update word list with candidates and try again
+
+// Notes:
+// -Time complexity: O(n), where n is length of word list
+// -Space complexity: O(n) to store candidate list
+
+// 729. My Calendar I
+
+class MyCalendar {
+  constructor() {
+    this.data = [
+      [0, 0],
+      [Infinity, Infinity],
+    ];
+  }
+  book(start, end) {
+    let [l, r] = [0, this.data.length - 1];
+
+    while (l <= r) {
+      let mid = Math.floor((r - l) / 2 + l);
+
+      if (end > this.data[mid][0]) {
+        l = mid + 1;
+      } else if (end < this.data[mid][0]) {
+        r = mid - 1;
+      } else {
+        l = mid;
+        break;
+      }
+    }
+
+    if (start < this.data[l - 1][1]) {
+      return false;
+    }
+
+    this.data.splice(l, 0, [start, end]);
+
+    return true;
+  }
+}
+
+// Explanation:
+// -Initialize calendar class w/ smallest and largest intervals
+// -For book method:
+// -Set left and right pointers to beginning and end of calendar
+// -While left <= right:
+// -Get midpoint
+// -If input end > mid start, set left to mid + 1
+// -Else if input end < mid start, set right to mid - 1
+// -Else if equal, set left pointer to midpoint and break
+// -If start < found index's left neighbor, return false
+// -Else insert interval at found index and return true
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+let calendar = new MyCalendar();
+console.log(calendar.book(10, 15));
+console.log(calendar.book(20, 25));
+console.log(calendar.book(17, 23));
+
+// 777. Swap Adjacent in LR String
+
+var canTransform = function (start, end) {
+  let startCount = start.split("").filter((letter) => letter === "X").length;
+  let endCount = end.split("").filter((letter) => letter === "X").length;
+
+  if (startCount !== endCount) {
+    return false;
+  }
+
+  let n = start.length;
+  let [i, j] = [0, 0];
+
+  while (i < n && j < n) {
+    if (start[i] === "X") {
+      i++;
+      continue;
+    }
+    if (end[j] === "X") {
+      j++;
+      continue;
+    }
+    if (
+      start[i] !== end[j] ||
+      (start[i] === "L" && i < j) ||
+      (start[i] === "R" && i > j)
+    ) {
+      return false;
+    }
+
+    i++;
+    j++;
+  }
+
+  return true;
+};
+
+// Explanation:
+// -Get 'X' count in both start and end strings
+// -If counts are different, transformation not possible so return false
+// -Set start and end pointers to beginning of words
+// -While both pointers are less than start length:
+// -If either pointer is at an 'X', move that index forward and continue
+// -Else if chars at two pointers are not equal or start pointer is an 'L' and start pointer < end pointer or start pointer is an 'R' and start pointer > end pointer, return false
+// -Else move both pointers forward
+// -If we iterate through start string without returning false, return true
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(canTransform("RXXLRXRXL", "XRLXXRRLX"));
+
+// 939. Minimum Area Rectangle
+
+var minAreaRect = function (points) {
+  let map = new Map();
+  let min = Infinity;
+
+  for (let [x, y] of points) {
+    if (!map.has(x)) {
+      map.set(x, new Set());
+    }
+
+    map.get(x).add(y);
+  }
+  for (let [x1, y1] of points) {
+    for (let [x2, y2] of points) {
+      let sameCross = x1 === x2 || y1 === y2;
+
+      if (!sameCross && map.get(x1).has(y2) && map.get(x2).has(y1)) {
+        let area = Math.abs(x1 - x2) * Math.abs(y1 - y2);
+        min = Math.min(min, area);
+      }
+    }
+  }
+
+  return min === Infinity ? 0 : min;
+};
+
+// Explanation:
+// -Map out x / y coordinates and set min to infinity
+// -For each point in points:
+// -Iterate over points checking to see if map has x1 / y2 and x2 / y1 pairs
+// -If so, get area and update min if smaller than current min area
+// -Once done, return 0 if min not found
+// -Else return min area
+
+// Notes:
+// -Time complexity: O(n ^ 2)
+// -Space complexity: O(n)
+
+console.log(
+  minAreaRect([
+    [1, 1],
+    [1, 3],
+    [3, 1],
+    [3, 3],
+    [2, 2],
+  ])
+);
