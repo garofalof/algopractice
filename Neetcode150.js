@@ -10180,3 +10180,39 @@ console.log(
     [2, 2],
   ])
 );
+
+// 2178. Maximum Split of Positive Even Integers
+
+var maximumEvenSplit = function (finalSum) {
+  if (finalSum % 2) {
+    return [];
+  }
+
+  let result = new Set();
+  let [n, sum] = [2, 0];
+
+  while (sum < finalSum) {
+    sum += n;
+    result.add(n);
+    n += 2;
+  }
+
+  result.delete(sum - finalSum);
+
+  return [...result];
+};
+
+// Explanation:
+// -If input sum not divisible by 2, return empty array
+// -Set result to empty hashset
+// -Set n to 2 and sum 0
+// -While sum < input sum:
+// -Add n to sum, add n to result set, and add 2 to n
+// -Once we go over, we subtract final sum from sum to find what number made us go over and we delete from set
+// -Once done, we return nums in our set
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1), as our output array doesn't count as extra space
+
+console.log(maximumEvenSplit(24));
