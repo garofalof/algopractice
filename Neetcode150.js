@@ -9942,3 +9942,38 @@ var findMinDifference = function (timePoints) {
 // -Space complexity: O(n) to store mapped times
 
 console.log(findMinDifference(["23:59", "00:00"]));
+
+// 833. Find And Replace in String
+
+var findReplaceString = function (s, indices, sources, targets) {
+  let result = s.split("");
+
+  for (let i = 0; i < indices.length; i++) {
+    let [index, src, target] = [indices[i], sources[i], targets[i]];
+    let sample = s.substring(index, index + src.length);
+
+    if (sample === src) {
+      result[index] = target;
+
+      for (let i = 1; i < src.length; i++) {
+        result[index + i] = "";
+      }
+    }
+  }
+
+  return result.join("");
+};
+
+// Explanation:
+// -Split input string and set as result
+// -For each index in indices:
+// -Get index, src, and target
+// -Build sample string from index and source
+// -If sample equals source, replace curr index in result w/ target and turn subsequent indices up to source length blank
+// -Once done iterating through indices, join result array and return result
+
+// Notes:
+// -Time complexity: O(i * s), where i is length of indices array and s is length of input string
+// -Space complexity: O(s)
+
+console.log(findReplaceString("abcd", [0, 2], ["a", "cd"], ["eee", "ffff"]));
