@@ -10274,3 +10274,209 @@ tree.left.right = new Node(4);
 tree.right = new Node(2);
 tree.right.right = new Node(4);
 console.log(findDuplicateSubtrees(tree));
+
+// 2162. Minimum Cost to Set Cooking Time
+
+var minCostSetTime = function (startAt, moveCost, pushCost, targetSeconds) {
+  function cost(mins, secs) {
+    if (mins < 0 || secs < 0 || mins > 99 || secs > 99) {
+      return Infinity;
+    }
+
+    let str = String(mins * 100 + secs);
+    let curr = String(startAt);
+    let result = 0;
+
+    for (let char of str) {
+      if (char === curr) {
+        result += pushCost;
+      } else {
+        result += pushCost + moveCost;
+        curr = char;
+      }
+    }
+
+    return result;
+  }
+
+  let mins = Math.floor(targetSeconds / 60);
+  let secs = targetSeconds % 60;
+
+  return Math.min(cost(mins, secs), cost(mins - 1, secs + 60));
+};
+
+// Explanation:
+// -Convert target seconds to minutes and seconds
+// -Return lesser of running cost function on mins and secs or mins - 1 and secs + 60
+// -In cost function:
+// -If mins or secs < 0 or mins or secs > 99, return Infinity to our min function call as not possible
+// -Multiply minutes by 100, add seconds, and convert to string
+// -Convert start value to string as well and set cost count to 0
+// -For each character in converted time:
+// -If char equals curr, add push cost to cost count
+// -Else add push plus move cost to cost count and set curr to char
+// -Once done iterating through time, return cost count to function call
+
+// Notes:
+// -Time complexity: O(1) given integer constraints
+// -Space complexity: O(1)
+
+console.log(minCostSetTime(1, 2, 1, 80));
+
+// 1631. Path With Minimum Effort
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(index) {
+    return Math.floor((index - 1) / 2);
+  }
+  left(index) {
+    return 2 * index + 1;
+  }
+  right(index) {
+    return 2 * index + 2;
+  }
+  swap(start, end) {
+    [this.data[start], this.data[end]] = [this.data[end], this.data[start]];
+  }
+  size() {
+    return this.data.length;
+  }
+  top() {
+    return this.data[0] || null;
+  }
+  add(num) {
+    this.data.push(num);
+    this.bubbleUp();
+  }
+  pop() {
+    let top = this.data[0];
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
+
+    return top;
+  }
+  bubbleUp() {
+    let index = this.size() - 1;
+    let parent = this.parent(index);
+
+    while (this.compare(this.data[index], this.data[parent] || {}) < 0) {
+      this.swap(index, parent);
+      index = parent;
+      parent = this.parent(index);
+    }
+  }
+  bubbleDown() {
+    let index = 0;
+    let size = this.size();
+
+    while (true) {
+      let left = null;
+      let right = null;
+      let swap = null;
+      let leftIndex = this.left(index);
+      let rightIndex = this.right(index);
+
+      if (leftIndex < size) {
+        left = this.data[leftIndex];
+
+        if (this.compare(left, this.data[index]) < 0) {
+          swap = leftIndex;
+        }
+      }
+      if (rightIndex < size) {
+        right = this.data[rightIndex];
+
+        if (
+          (swap !== null && this.compare(right, left) < 0) ||
+          (swap === null && this.compare(right, this.data[index]) < 0)
+        ) {
+          swap = rightIndex;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(index, swap);
+      index = swap;
+    }
+  }
+}
+
+var minimumEffortPath = function (heights) {
+  let heap = new Heap((a, b) => a.diff - b.diff);
+  let visited = new Set();
+
+  heap.add({ cell: [0, 0], diff: 0 });
+
+  let directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+  let [rows, cols] = [heights.length, heights[0].length];
+
+  while (heap.size()) {
+    let { cell, diff } = heap.pop();
+    let [row, col] = cell;
+    let currHeight = heights[row][col];
+
+    if (row === rows - 1 && col === cols - 1) {
+      return diff;
+    }
+
+    let key = `${row},${col}`;
+
+    if (visited.has(key)) {
+      continue;
+    }
+
+    visited.add(key);
+
+    for (let [r, c] of directions) {
+      let newR = row + r;
+      let newC = col + c;
+
+      if (newR < 0 || newC < 0 || newR >= rows || newC >= cols) {
+        continue;
+      }
+
+      let newDiff = Math.abs(currHeight - heights[newR][newC]);
+      heap.add({ cell: [newR, newC], diff: Math.max(diff, newDiff) });
+    }
+  }
+};
+
+// Explanation:
+// -Initialize min heap based on difference between cells
+// -Initialize empty set to store visited cells
+// -Add first cell w/ difference of 0 to heap
+// -While heap has work:
+// -Pop min off heap
+// -If we've reached last cell, return difference
+// -If visited has cell, continue
+// -Add cell to visited
+// -For each direction up, down, left, right:
+// -If new cell out of bounds, continue
+// -Else get difference between new cell and prev cell and add the new cell with greater of prev difference or new difference to heap
+
+// Notes:
+// -Time complexity: O((rows * cols) * log(rows * cols))
+// -Space complexity: O(rows * cols)
+
+console.log(
+  minimumEffortPath([
+    [1, 2, 3],
+    [3, 8, 4],
+    [5, 3, 5],
+  ])
+);
