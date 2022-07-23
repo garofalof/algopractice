@@ -10576,3 +10576,65 @@ let rle = new RLEIterator([3, 8, 0, 9, 2, 5]);
 console.log(rle.next(2));
 console.log(rle.next(1));
 console.log(rle.next(3));
+
+// 1387. Sort Integers by The Power Value
+
+var getKth = function(lo, hi, k) {
+  let map = {};
+  let memo = new Map();
+  let result = [];
+
+  for (let i = lo; i <= hi; i++) {
+    let powerValue = power(i);
+
+    if (!map[powerValue]) {
+      map[powerValue] = [];
+    }
+
+    map[powerValue].push(i);
+  }
+  for (let powerVal in map) {
+    for (let num of map[powerVal]) {
+      result.push(num);
+    }
+  }
+
+  return result[k - 1];
+
+  function power(x) {
+    if (memo.has(x)) {
+      return memo.get(x);
+    }
+    if (x === 1) {
+      return 0;
+    }
+
+    let result;
+
+    if (x % 2) {
+      result = 1 + power(x * 3 + 1);
+    } else {
+      result = 1 + power(x / 2);
+    }
+
+    memo.set(x, result);
+
+    return result;
+  }
+};
+
+// Explanation:
+// -For each num in range:
+// -Get power value and map out nums to power values in map
+// -In recursion:
+// -if memo has val, get result at val
+// -If val is 1, return 0
+// -Set result to result of calc based on even or odd
+// -Add val and result to memo and return result
+// -Once done getting power values, push all nums to result array and return k - 1 element in array
+
+// Notes:
+// -Time complexity: O(n), where n is the length of range
+// -Space complexity: O(n)
+
+console.log(getKth(12, 17, 3));
