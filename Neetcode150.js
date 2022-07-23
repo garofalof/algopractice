@@ -10483,7 +10483,7 @@ console.log(
 
 // 1376. Time Needed to Inform All Employees
 
-var numOfMinutes = function(n, headID, manager, informTime) {
+var numOfMinutes = function (n, headID, manager, informTime) {
   if (n <= 1) {
     return 0;
   }
@@ -10515,3 +10515,20 @@ var numOfMinutes = function(n, headID, manager, informTime) {
 
   return result;
 };
+
+// Explanation:
+// -If n <= 1, return 0 as there are no employees
+// -Map out manager / employee relationships in graph
+// -Set result to 0 and push manager and inform time at manager to queue
+// -While queue has work:
+// -Pop employee and time from front of queue
+// -Set result to max of result or curr time
+// -For each report of curr employee:
+// -Push report and curr time + report time to queue
+// -Once done traversing employees, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(numOfMinutes(6, 2, [2, 2, -1, 2, 2, 2], [0, 0, 1, 0, 0, 0]));
