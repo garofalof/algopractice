@@ -10532,3 +10532,47 @@ var numOfMinutes = function (n, headID, manager, informTime) {
 // -Space complexity: O(n)
 
 console.log(numOfMinutes(6, 2, [2, 2, -1, 2, 2, 2], [0, 0, 1, 0, 0, 0]));
+
+// 900. RLE Iterator
+
+class RLEIterator {
+  constructor(encoding) {
+    this.encoding = encoding;
+    this.index = 0;
+  }
+  next(int) {
+    while (int && this.index < this.encoding.length) {
+      let count = this.encoding[this.index];
+      let num = this.encoding[this.index + 1];
+
+      if (count < int) {
+        int -= count;
+        this.index += 2;
+      } else {
+        this.encoding[this.index] = count - int;
+        return num;
+      }
+    }
+
+    return -1;
+  }
+}
+
+// Explanation:
+// -Intialize RLE iterator class w/ encoding array and index of 0
+// -For next iterator method:
+// -While iterator input > 0 and index < array length:
+// -Get count at index and num at subsequent index
+// -If count < iterator input:
+// -Subtract count from iterator and increase index by 2
+// -Else subtract iterator from curr index count and return num at subsequent index
+// -If itereator goes to 0 or below or we reach end of array without returning value, return -1
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+let rle = new RLEIterator([3, 8, 0, 9, 2, 5]);
+console.log(rle.next(2));
+console.log(rle.next(1));
+console.log(rle.next(3));
