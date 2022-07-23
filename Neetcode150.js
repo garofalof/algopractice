@@ -10480,3 +10480,38 @@ console.log(
     [5, 3, 5],
   ])
 );
+
+// 1376. Time Needed to Inform All Employees
+
+var numOfMinutes = function(n, headID, manager, informTime) {
+  if (n <= 1) {
+    return 0;
+  }
+
+  let graph = new Map();
+
+  for (let i = 0; i < n; i++) {
+    graph.set(i, []);
+  }
+  for (let i = 0; i < manager.length; i++) {
+    let parent = manager[i];
+
+    if (parent !== -1) {
+      graph.get(parent).push(i);
+    }
+  }
+
+  let result = 0;
+  let q = [[headID, informTime[headID]]];
+
+  while (q.length) {
+    let [employee, time] = q.shift();
+    result = Math.max(result, time);
+
+    for (let report of graph.get(employee)) {
+      q.push([report, time + informTime[report]]);
+    }
+  }
+
+  return result;
+};
