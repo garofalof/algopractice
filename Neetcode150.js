@@ -7801,7 +7801,7 @@ var maxSlidingWindow = function (nums, k) {
 // -If i >= window size, push front of queue to result
 
 // Notes:
-// -Time complexity: O(n ^ 2) because of shift operation, but can be reduced to O(n) w/ queue using stacks
+// -Time complexity: O(n * k), where n is length of nums and k is window size due to shift operation, but can be reduced to O(n) w/ queue using stacks
 // -Space complexity: O(n) for output array and O(k) for the queue
 
 console.log(maxSlidingWindow([1, 3, -1, -3, 5, 3, 6, 7], 3));
@@ -7857,7 +7857,7 @@ var findMedianSortedArrays = function (nums1, nums2) {
 
 // Notes:
 // -Time complexity: O(log m + n)
-// -Space complexity: O(n) for storing two arrays
+// -Space complexity: O(m + n) for storing two arrays
 
 console.log(findMedianSortedArrays([1, 3, 5], [2, 2, 5, 9, 10]));
 
@@ -10579,7 +10579,7 @@ console.log(rle.next(3));
 
 // 1387. Sort Integers by The Power Value
 
-var getKth = function(lo, hi, k) {
+var getKth = function (lo, hi, k) {
   let map = {};
   let memo = new Map();
   let result = [];
@@ -10638,3 +10638,184 @@ var getKth = function(lo, hi, k) {
 // -Space complexity: O(n)
 
 console.log(getKth(12, 17, 3));
+
+// 2135. Count Words Obtained After Adding a Letter
+
+var wordCount = function (startWords, targetWords) {
+  let sortedStart = new Set();
+  let result = 0;
+
+  for (let word of startWords) {
+    sortedStart.add(word.split("").sort().join(""));
+  }
+  for (let word of targetWords) {
+    let sorted = word.split("").sort().join("");
+
+    for (let i = 0; i < sorted.length; i++) {
+      let sample = sorted.substring(0, i) + sorted.substring(i + 1);
+
+      if (sortedStart.has(sample)) {
+        result++;
+        break;
+      }
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize empty set to store sorted start words and set result to 0
+// -Add sorted start words to set
+// -For each target word:
+// -Sort target word and remove a character at each index
+// -If set has updated word, add 1 to result and move on to next target word
+
+// Notes:
+// -Time complexity: O(n), where n is length of our word list, as our words are constrained to 26 characters so sort is constant time operation
+// -Space complexity: O(n)
+
+console.log(wordCount(["ant", "act", "tack"], ["tack", "act", "acti"]));
+
+// 1055. Shortest Way to Form String
+
+var shortestWay = function (source, target) {
+  let i = 0;
+  let count = 0;
+
+  while (i < target.length) {
+    let sub = "";
+
+    for (let j = 0; j < source.length; j++) {
+      if (source[j] === target[i]) {
+        sub += source[j];
+        i++;
+      }
+    }
+    if (sub.length === 0) {
+      return -1;
+    }
+
+    count++;
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Set target pointer to 0 and sub count to 0
+// -While target index in bounds:
+// -Intialize empty substring
+// -For each char in source:
+// -If char equal to target char, add char to substring and increase target index
+// -Once done iterating through source, check if substring exists
+// -If not, return -1
+// -Else increase count and continue
+// -Once we reach end of target, return count
+
+// Notes:
+// -Time complexity: O(s * t)
+// -Space complexity: O(1)
+
+console.log(shortestWay("abc", "abcbd"));
+
+// 1554. Strings Differ by One Character
+
+var differByOne = function(dict) {
+  let seen = new Set();
+
+  for (let word of dict) {
+    for (let i = 0; i < word.length; i++) {
+      let pattern = word.substring(0, i) + '*' + word.substring(i + 1);
+
+      if (seen.has(pattern)) {
+        return true;
+      }
+
+      seen.add(pattern);
+    }
+  }
+
+  return false;
+};
+
+// Explanation:
+// -Initialize hashset to store patterns
+// -For each word of dictionary:
+// -For each char in word:
+// -Create pattern by placing wildcard at curr index
+// -If seen has pattern, return true
+// -Else add pattern to seen and continue
+// -If we iterate through dictionary without returning true, return false
+
+// Notes:
+// -Time complexity: O(n * (m ^ 2)), where n is length of dictionary and m is length of word
+// -Space complexity: O(n * m)
+
+console.log(differByOne(['abcd', 'abce', 'abc']));
+
+// 1996. The Number of Weak Characters in the Game
+
+var numberOfWeakCharacters = function(properties) {
+  properties.sort((a, b) => b[0] - a[0] || a[1] - b[1]);
+
+  let [result, dMax] = [0, 0];
+
+  for (let [a, d] of properties) {
+    if (d < dMax) {
+      result++;
+    }
+
+    dMax = Math.max(dMax, d);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Sort players by attack descending and defense ascending
+// -Set result and max defense to 0
+// -For each player in game:
+// -If player defense < max defense, add 1 to result
+// -At each iteration, set max defense to greater of max defense or curr player defense
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(log n) for sorting
+
+console.log(numberOfWeakCharacters([[2,2],[3,3]]));
+
+// 418. Sentence Screen Fitting
+
+var wordsTyping = function(sentence, rows, cols) {
+  sentence = sentence.join(' ') + ' ';
+  let totalLen = 0;
+
+  for (let i = 0; i < rows; i++) {
+    totalLen += cols;
+
+    while (0 < totalLen && sentence[totalLen % sentence.length] !== ' ') {
+      totalLen--;
+    }
+
+    totalLen++;
+  }
+
+  return Math.floor(totalLen / sentence.length);
+};
+
+// Explanation:
+// -Join words in sentence and add space after each word
+// -Set total length to 0
+// -For each row in input rows:
+// -Add column count to total length
+// -While index at total length not empty space, we subtract 1 from total length
+// -Once done subtracting from total length, add back 1 to total length to account for extra space and continue
+// -Once we iterate through rows, we return floor of total length divided by sentence length
+
+// Notes:
+// -Time complexity: O(rows * len of longest word)
+// -Space complexity: O(n)
+
+console.log(wordsTyping(['hello', 'world'], 5, 8));
