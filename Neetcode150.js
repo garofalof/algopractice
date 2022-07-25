@@ -11094,3 +11094,356 @@ console.log(
     "abc"
   )
 );
+
+// 13. Roman to Integer
+
+var romanToInt = function (s) {
+  let romans = "IVXLCDM";
+  let nums = [1, 5, 10, 50, 100, 500, 1000];
+  let map = {};
+  let result = 0;
+
+  for (let i = 0; i < romans.length; i++) {
+    map[romans[i]] = nums[i];
+  }
+  for (let i = 0; i < s.length; i++) {
+    let curr = map[s[i]];
+    let next = map[s[i + 1]];
+
+    result += curr < next ? -curr : curr;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Map out roman numerals w/ respective values and set result to 0
+// -For each char in input string:
+// -Get curr and next value
+// -If curr < next, substract curr from result
+// -Else add curr to result
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(1), as there is a finite number of roman numerals
+// -Space complexity: O(1)
+
+console.log(romanToInt("XVII"));
+
+// 14. Longest Common Prefix
+
+var longestCommonPrefix = function (strs) {
+  if (strs === null || strs.length === 0) {
+    return "";
+  }
+  for (let i = 0; i < strs[0].length; i++) {
+    let char = strs[0][i];
+
+    for (let j = 1; j < strs.length; j++) {
+      if (i === strs[j].length || strs[j][i] !== char) {
+        return strs[0].substring(0, i);
+      }
+    }
+  }
+
+  return strs[0];
+};
+
+// Explanation:
+// -If input array null or empty, return empty string
+// -For each char in first word:
+// -For each subsequent word:
+// -if first word index equals curr word length or chars not equal, return substring up to curr first word index
+// -If we iterate through full list without returning prefix, return first word as it is prefix
+
+// Notes:
+// -Time complexity: O(s), where s is the sum of all characters in all strings
+// -Space complexity: O(1)
+
+console.log(longestCommonPrefix(["flower", "flow", "flaw"]));
+
+// 380. Insert Delete GetRandom O(1)
+
+class RandomizedSet {
+  constructor() {
+    this.list = [];
+    this.map = new Map();
+  }
+  swap(s, e) {
+    [this.list[s], this.list[e]] = [this.list[e], this.list[s]];
+  }
+  insert(val) {
+    if (this.map.has(val)) {
+      return false;
+    }
+
+    this.map.set(val, this.list.length);
+    this.list.push(val);
+
+    return true;
+  }
+  remove(val) {
+    if (!this.map.has(val)) {
+      return false;
+    }
+
+    let index = this.map.get(val);
+
+    this.swap(index, this.list.length - 1);
+    this.list.pop();
+    this.map.set(this.list[index], index);
+    this.map.delete(val);
+
+    return true;
+  }
+  getRandom() {
+    return this.list[Math.floor(Math.random() * this.list.length)];
+  }
+}
+
+// Explanation:
+// -Intialize random set class w/ empty list array and empty hashmap
+// -For insert method:
+// -If map has val, return false
+// -Else add val and list length to map and push val to list and return true
+// -For remove method:
+// -If val not in map, return false
+// -Else get index for val and swap w/ last item in list
+// -Pop off last item from list and add val at index and index to map
+// -Then delete val and return true
+// -For get random method:
+// -Return val at random index in list array
+
+// Notes:
+// -Time complexity: O(1) for all operations
+// -Space complexity: O(n) to store elements
+
+let rand = new RandomizedSet();
+rand.insert(4);
+rand.insert(3);
+rand.insert(2);
+console.log(rand.getRandom());
+rand.remove(2);
+console.log(rand.getRandom());
+
+// 227. Basic Calculator II
+
+var calculate = function (s) {
+  if (s === null || s.length === 0) {
+    return 0;
+  }
+
+  let stack = [];
+  let num = 0;
+  let operator = "+";
+  let operations = {
+    "+": true,
+    "-": true,
+    "/": true,
+    "*": true,
+  };
+
+  for (let i = 0; i < s.length; i++) {
+    let char = s[i];
+
+    if (char >= "0" && char <= "9") {
+      num = num * 10 + Number(char);
+    }
+    if (operations[char] || i === s.length - 1) {
+      if (operator === "-") {
+        stack.push(-num);
+      } else if (operator === "+") {
+        stack.push(num);
+      } else if (operator === "*") {
+        stack.push(stack.pop() * num);
+      } else if (operator === "/") {
+        stack.push(Math.trunc(stack.pop() / num));
+      }
+
+      operator = char;
+      num = 0;
+    }
+  }
+
+  return stack.reduce((a, b) => a + b);
+};
+
+// Explanation:
+// -If input string not valid, return 0
+// -Initialize empty stack and set curr num to 0 and prev operator to plus
+// -For each char in string:
+// -If char is number, add to curr num
+// -Else if char is sign:
+// -If sign is minus, push negative num to stack
+// -If sign is plus, push num to stack
+// -If sign is multiplication, pop last item off stack, multiply times num and add that num back to stack
+// -Else if sign is division, pop last item off stack and divide by num and push back to stack
+// -Then set operator to curr sign and reset curr num to 0
+// -Once done, add all nums in stack and return result
+
+// Notes:
+// -Time Complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(calculate("3 * 2 + 5 / 4"));
+
+// 41. First Missing Positive
+
+var firstMissingPositive = function (nums) {
+  for (let i = 0; i < nums.length; i++) {
+    let index = nums[i] - 1;
+
+    if (i === index || nums[i] === nums[index]) {
+      continue;
+    }
+    if (index >= 0 && index < nums.length) {
+      [nums[i], nums[index]] = [nums[index], nums[i]];
+      i--;
+    }
+  }
+  for (let i = 0; i < nums.length; i++) {
+    if (i + 1 !== nums[i]) {
+      return i + 1;
+    }
+  }
+
+  return nums.length + 1;
+};
+
+// Explanation:
+// -For each num in nums:
+// -Get target index of num by subtracting 1 from num
+// -If num is already in correct position, continue
+// -Else swap num at curr index with num at target index and decrease curr index by 1
+// -Once done, go through each index in nums and return missing positive
+// -If we don't find missing positive in nums, missing positive is nums length + 1
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(firstMissingPositive([1, 2, 6, 7]));
+
+// 341. Flatten Nested List Iterator
+
+class NestedIterator {
+  constructor(nestedList) {
+    this.nums = [];
+    this.position = 0;
+
+    this.flattenList(nestedList);
+  }
+  flattenList(list) {
+    for (let nestedItem of list) {
+      if (nestedItem.isInteger()) {
+        this.nums.push(nestedItem.getInteger());
+      } else {
+        this.flattenList(nestedItem.getList());
+      }
+    }
+  }
+  hasNext() {
+    return this.position < this.nums.length;
+  }
+  next() {
+    this.position++;
+
+    return this.nums[this.position - 1];
+  }
+}
+
+// Explanation:
+// -Initialize nested iterator class by flattening list recursively
+// -For method has next:
+// -Return true if index < flattened length
+// -For next method:
+// -Increase index and return num at index - 1
+
+// Notes:
+// -Time complexity: O(number of lists + number of integers) for constructor, O(1) for hasNext and next method
+// -Space complexity: O(number of integers + nesting depth)
+
+// 289. Game of Life
+
+var gameOfLife = function (board) {
+  let [rows, cols] = [board.length, board[0].length];
+  let directions = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+  ];
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      let neighbors = countNeighbors(r, c);
+
+      if (board[r][c]) {
+        if (neighbors === 2 || neighbors === 3) {
+          board[r][c] = 3;
+        }
+      } else if (neighbors === 3) {
+        board[r][c] = 2;
+      }
+    }
+  }
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (board[r][c] === 1) {
+        board[r][c] = 0;
+      } else if (board[r][c] > 1) {
+        board[r][c] = 1;
+      }
+    }
+  }
+
+  return board;
+
+  function countNeighbors(r, c) {
+    let count = 0;
+
+    for (let [dr, dc] of directions) {
+      let nr = r + dr;
+      let nc = c + dc;
+      let rBounds = 0 <= nr && nr < rows;
+      let cBounds = 0 <= nc && nc < cols;
+
+      if (!rBounds || !cBounds) {
+        continue;
+      }
+      if (board[nr][nc] === 1 || board[nr][nc] === 3) {
+        count++;
+      }
+    }
+
+    return count;
+  }
+};
+
+// Explanation:
+// -For each node in matrix:
+// -Count neighbors live neighbors
+// -If node is live:
+// -Mark node as 3 if node has 2 or 3 neighbors
+// -Else if node is dead but has 3 neighbors, mark node as 2
+// -For each node in matrix:
+// -If node marked as 1, mark as 0
+// -Else if node is marked as 2 or 3, mark as 1
+// -Once done, return matrix
+
+// Notes:
+// -Time complexity: O(m * n)
+// -Space complexity: O(1)
+
+console.log(
+  gameOfLife([
+    [0, 1, 0],
+    [0, 0, 1],
+    [1, 1, 1],
+    [0, 0, 0],
+  ])
+);
