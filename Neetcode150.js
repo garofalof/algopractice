@@ -10721,12 +10721,12 @@ console.log(shortestWay("abc", "abcbd"));
 
 // 1554. Strings Differ by One Character
 
-var differByOne = function(dict) {
+var differByOne = function (dict) {
   let seen = new Set();
 
   for (let word of dict) {
     for (let i = 0; i < word.length; i++) {
-      let pattern = word.substring(0, i) + '*' + word.substring(i + 1);
+      let pattern = word.substring(0, i) + "*" + word.substring(i + 1);
 
       if (seen.has(pattern)) {
         return true;
@@ -10752,11 +10752,11 @@ var differByOne = function(dict) {
 // -Time complexity: O(n * (m ^ 2)), where n is length of dictionary and m is length of word
 // -Space complexity: O(n * m)
 
-console.log(differByOne(['abcd', 'abce', 'abc']));
+console.log(differByOne(["abcd", "abce", "abc"]));
 
 // 1996. The Number of Weak Characters in the Game
 
-var numberOfWeakCharacters = function(properties) {
+var numberOfWeakCharacters = function (properties) {
   properties.sort((a, b) => b[0] - a[0] || a[1] - b[1]);
 
   let [result, dMax] = [0, 0];
@@ -10784,18 +10784,23 @@ var numberOfWeakCharacters = function(properties) {
 // -Time complexity: O(n log n)
 // -Space complexity: O(log n) for sorting
 
-console.log(numberOfWeakCharacters([[2,2],[3,3]]));
+console.log(
+  numberOfWeakCharacters([
+    [2, 2],
+    [3, 3],
+  ])
+);
 
 // 418. Sentence Screen Fitting
 
-var wordsTyping = function(sentence, rows, cols) {
-  sentence = sentence.join(' ') + ' ';
+var wordsTyping = function (sentence, rows, cols) {
+  sentence = sentence.join(" ") + " ";
   let totalLen = 0;
 
   for (let i = 0; i < rows; i++) {
     totalLen += cols;
 
-    while (0 < totalLen && sentence[totalLen % sentence.length] !== ' ') {
+    while (0 < totalLen && sentence[totalLen % sentence.length] !== " ") {
       totalLen--;
     }
 
@@ -10818,4 +10823,274 @@ var wordsTyping = function(sentence, rows, cols) {
 // -Time complexity: O(rows * len of longest word)
 // -Space complexity: O(n)
 
-console.log(wordsTyping(['hello', 'world'], 5, 8));
+console.log(wordsTyping(["hello", "world"], 5, 8));
+
+// 792. Number of Matching Subsequences
+
+var numMatchingSubseq = function (s, words) {
+  let buckets = [];
+  let result = 0;
+
+  for (let i = 0; i < 26; i++) {
+    buckets.push([]);
+  }
+  for (let word of words) {
+    buckets[getCharIndex(word[0])].push(word);
+  }
+  for (let char of s) {
+    let charIndex = getCharIndex(char);
+    let oldBucket = buckets[charIndex];
+    buckets[charIndex] = [];
+
+    while (oldBucket.length) {
+      let curr = oldBucket.pop();
+      let next = curr.slice(1);
+
+      if (next) {
+        let nextIndex = getCharIndex(next[0]);
+        buckets[nextIndex].push(next);
+      } else {
+        result++;
+      }
+    }
+  }
+
+  return result;
+
+  function getCharIndex(char) {
+    return char.charCodeAt() - "a".charCodeAt();
+  }
+};
+
+// Explanation:
+// -Initialize empty array to store words by start char and set result to 0
+// -For each index in alphabet, push empty array to buckets array
+// -For each word in input words:
+// -Push word to index at first char in word
+// -For each char of input string:
+// -Get char index and old bucket at index
+// -Empty bucket at char index
+// -While old bucket has words:
+// -Pop last word from bucket and slice first char off
+// -If we still have chars, find new bucket based on first char in new word and push word to that bucket
+// -Else increase our result by 1
+// -Once done iterating through input string chars, return result
+
+// Notes:
+// -Time complexity: O(s * n), where s is input string length and n is words list length
+// -Space complexity: O(n)
+
+console.log(numMatchingSubseq("abcde", ["a", "bb", "acd", "ace"]));
+
+// 1101. The Earliest Moment When Everyone Become Friends
+
+var earliestAcq = function (logs, n) {
+  logs.sort((a, b) => a[0] - b[0]);
+
+  let count = n;
+  let parents = [];
+  let rank = new Array(n).fill(1);
+
+  for (let i = 0; i < n; i++) {
+    parents[i] = i;
+  }
+  for (let [time, node, edge] of logs) {
+    if (union(node, edge)) {
+      count--;
+    }
+    if (count === 1) {
+      return time;
+    }
+  }
+
+  return -1;
+
+  function union(n1, n2) {
+    let [p1, p2] = [find(n1), find(n2)];
+
+    if (p1 === p2) {
+      return false;
+    }
+    if (rank[p1] > rank[p2]) {
+      parents[p2] = p1;
+      rank[p1] += rank[p2];
+    } else {
+      parents[p1] = p2;
+      rank[p2] += rank[p1];
+    }
+
+    return true;
+  }
+  function find(n) {
+    let p = parents[n];
+
+    while (p !== parents[p]) {
+      p = parents[p];
+      parents[p] = parents[parents[p]];
+    }
+
+    return p;
+  }
+};
+
+// Explanation:
+// -Sort logs by time
+// -Set count to n
+// -Fill parents and rank arrays
+// -For each log in logs:
+// -If we're able to merge friends using union find, we decrease our count by 1
+// -If our count equals 1, we've merged all of our friends so we return time
+// -Else if we're unable to merge all friends, we return -1
+
+// Notes:
+// -Time complexity: O(n + (m log m) + (m alpha n)), where n is number of people and m is number of logs. Sorting costs m log m. Creating parent and rank data structures costs n. Iterating and running union find on logs costs m alpha n.
+// -Space complexity: O(n + log m), where n is space used for data structures and log m is space used for sorting
+
+console.log(
+  earliestAcq(
+    [
+      [20190101, 0, 1],
+      [20190104, 3, 4],
+      [20190107, 2, 3],
+      [20190211, 1, 5],
+      [20190224, 2, 4],
+      [20190301, 0, 3],
+      [20190312, 1, 2],
+      [20190322, 4, 5],
+    ],
+    6
+  )
+);
+
+// 562. Longest Line of Consecutive One in Matrix
+
+var longestLine = function (mat) {
+  let max = 0;
+  let [m, n] = [mat.length, mat[0].length];
+  let dp = new Array(n).fill(0).map((node) => [0, 0, 0, 0]);
+
+  for (let i = 0; i < m; i++) {
+    let curr = new Array(n).fill(0).map((node) => [0, 0, 0, 0]);
+
+    for (let j = 0; j < n; j++) {
+      if (mat[i][j] === 1) {
+        curr[j][0] = j > 0 ? curr[j - 1][0] + 1 : 1;
+        curr[j][1] = dp[j][1] + 1;
+        curr[j][2] = j > 0 ? dp[j - 1][2] + 1 : 1;
+        curr[j][3] = j < n - 1 ? dp[j + 1][3] + 1 : 1;
+      }
+
+      max = Math.max(max, ...curr[j]);
+    }
+
+    dp = curr;
+  }
+
+  return max;
+};
+
+// Explanation:
+// -Fill dp array of size n w/ 4 zero arrays
+// -For each row in grid:
+// -Create fresh dp array
+// -For each col in row:
+// -If node equals 1:
+// -Set curr col at index 0 to previous plus col + 1 or 1 if col > 0
+// -Set curr col at index 1 to prev row in dp + 1
+// -Set curr col at index 2 to prev col in dp + 1 or 1 if curr col index > 0
+// -Set curr col at index 3 to next col in dp + 1 or 1 if curr index not last col
+// -Once done iterating through col, update max to greatest sum in col
+// -Once done iterating cols, set dp to curr and continue
+// -Once we iterate through entire grid, return max
+
+// Notes:
+// -Time complexity: O(m * n)
+// -Space complexity: O(n)
+
+console.log(
+  longestLine([
+    [1, 1, 1, 1],
+    [0, 1, 1, 0],
+    [0, 0, 0, 1],
+  ])
+);
+
+// 2018. Check if Word Can Be Placed In Crossword
+
+var placeWordInCrossword = function (board, word) {
+  let [m, n] = [board.length, board[0].length];
+  let directions = [
+    [1, 0],
+    [0, 1],
+    [-1, 0],
+    [0, -1],
+  ];
+
+  for (let r = 0; r < m; r++) {
+    for (let c = 0; c < n; c++) {
+      if (
+        board[r][c] !== "#" &&
+        (board[r][c] === " " || board[r][c] === word[0])
+      ) {
+        for (let [dr, dc] of directions) {
+          let [prevR, prevC] = [r - dr, c - dc];
+
+          if (!isValid(prevR, prevC) && dfs(r, c, 0, [dr, dc])) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+
+  function isValid(r, c) {
+    let rBounds = 0 <= r && r < m;
+    let cBounds = 0 <= c && c < n;
+
+    if (rBounds && cBounds) {
+      return board[r][c] !== "#";
+    }
+  }
+  function dfs(r, c, index, dir) {
+    if (index === word.length) {
+      return !isValid(r, c);
+    }
+    if (
+      !isValid(r, c) ||
+      (board[r][c] !== " " && board[r][c] !== word[index])
+    ) {
+      return false;
+    }
+
+    return dfs(r + dir[0], c + dir[1], index + 1, dir);
+  }
+};
+
+// Explanation:
+// -Get board dimensions and initialize directions
+// -For each node in board:
+// -If node not blocked and node is blank or node is equal to first char in word:
+// -For each direction up, down, left, right:
+// -If previous node not valid and dfs on node is true: return true
+// -In dfs:
+// -If index equals end of word: return check on curr node not valid
+// -If node not valid or node is empty but node char not equal to word index, return false
+// -Else return dfs on new directions with index increased by 1
+// -Once done w/ dfs, return false if we don't find valid path
+
+// Notes:
+// -Time complexity: O(m * n * l), where m and n represent row and column length, and l represents word length
+// -Space complexity: O(max m or n)
+
+console.log(
+  placeWordInCrossword(
+    [
+      ["#", " ", "#"],
+      [" ", " ", "#"],
+      ["#", "c", " "],
+    ],
+    "abc"
+  )
+);
