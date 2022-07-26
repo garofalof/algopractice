@@ -11283,7 +11283,7 @@ var calculate = function (s) {
 
 // Notes:
 // -Time Complexity: O(n)
-// -Space complexity: O(1)
+// -Space complexity: O(n)
 
 console.log(calculate("3 * 2 + 5 / 4"));
 
@@ -11445,5 +11445,301 @@ console.log(
     [0, 0, 1],
     [1, 1, 1],
     [0, 0, 0],
+  ])
+);
+
+// 1152. Analyze User Website Visit Pattern
+
+var mostVisitedPattern = function (username, timestamp, website) {
+  let merged = username
+    .map((item, index) => [timestamp[index], username[index], website[index]])
+    .sort((a, b) => a[0] - b[0]);
+
+  let userEntries = new Map();
+
+  for (let entry of merged) {
+    let [time, user, site] = entry;
+
+    if (!userEntries.has(user)) {
+      userEntries.set(user, []);
+    }
+
+    userEntries.get(user).push(site);
+  }
+
+  let patterns = {};
+
+  for (let [user, sites] of userEntries) {
+    let sequences = createThreeSequence(sites);
+
+    for (let seq of sequences) {
+      patterns[seq] = patterns[seq] + 1 || 1;
+    }
+  }
+
+  let maxCount = 0;
+  let result = "";
+
+  for (let seq in patterns) {
+    let count = patterns[seq];
+
+    if (count > maxCount) {
+      [maxCount, result] = [count, seq];
+    } else if (count === maxCount) {
+      result = seq < result ? seq : result;
+    }
+  }
+
+  return result.split(",");
+
+  function createThreeSequence(sites) {
+    let size = sites.length;
+    let sequences = new Set();
+
+    for (let i = 0; i < size - 2; i++) {
+      let site1 = sites[i];
+
+      for (let j = i + 1; j < size - 1; j++) {
+        let site2 = sites[j];
+
+        for (let k = j + 1; k < size; k++) {
+          let site3 = sites[k];
+
+          let seq = `${site1},${site2},${site3}`;
+          sequences.add(seq);
+        }
+      }
+    }
+
+    return sequences;
+  }
+};
+
+// Explanation:
+// -Merge entries and sort by time
+// -Map out users with their respective site visits
+// -For each user:
+// -Make all possible three combinations of sites
+// -If pattern exists in map, add 1 to count, else set to 1
+// -For each pattern in patterns:
+// -If pattern count > max count, update max count and result pattern
+// -Else if pattern count equals max count, update result pattern if curr pattern is lexographically smaller
+// -Once done, return result sequence
+
+// Notes:
+// -Time complexity: O(n ^ 3), where n is length of site list
+// -Space complexity: O(n)
+
+console.log(
+  mostVisitedPattern(
+    [
+      "joe",
+      "joe",
+      "joe",
+      "james",
+      "james",
+      "james",
+      "james",
+      "mary",
+      "mary",
+      "mary",
+    ],
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    [
+      "home",
+      "about",
+      "career",
+      "home",
+      "cart",
+      "maps",
+      "home",
+      "home",
+      "about",
+      "career",
+    ]
+  )
+);
+
+// 1268. Search Suggestions System
+
+var suggestedProducts = function (products, searchWord) {
+  products.sort();
+
+  let result = [];
+  let [l, r] = [0, products.length - 1];
+
+  for (let i = 0; i < searchWord.length; i++) {
+    let char = searchWord[i];
+
+    while (l <= r && (products[l].length <= i || products[l][i] !== char)) {
+      l++;
+    }
+    while (l <= r && (products[r].length <= i || products[r][i] !== char)) {
+      r--;
+    }
+
+    let suggestions = [];
+    let remaining = Math.min(3, r - l + 1);
+
+    for (let j = 0; j < remaining; j++) {
+      suggestions.push(products[l + j]);
+    }
+
+    result.push(suggestions);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Sort products by alphabetical order
+// -Intialize empty result array and set left and right pointers to beginning and end of products array
+// -For each char in search word:
+// -While left pointer <= right pointer and left / right pointer words shorter than input word or left / right pointer char not equal to input char:
+// -Increase / decrease left and right pointers
+// -Add three suggestions to results starting from left pointer
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n log n + (n * w) + m), where n is length of products array, w is length of longest word, and m is length of input string
+// -Space complexity: O(log n) for sorting
+
+console.log(
+  suggestedProducts(
+    ["mobile", "mouse", "moneypot", "monitor", "mousepad"],
+    "mouse"
+  )
+);
+
+// 12. Integer to Roman
+
+var intToRoman = function (num) {
+  let romans = [
+    "I",
+    "IV",
+    "V",
+    "IX",
+    "X",
+    "XL",
+    "L",
+    "XC",
+    "C",
+    "CD",
+    "D",
+    "CM",
+    "M",
+  ];
+  let values = [1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000];
+  let merged = romans.map((val, index) => [val, values[index]]).reverse();
+
+  let result = "";
+
+  for (let [sym, val] of merged) {
+    let count = Math.floor(num / val);
+
+    if (count) {
+      result += sym.repeat(count);
+      num %= val;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Write out all romans and corresponding values in separate arrays, merge, and sort from largest to smallest
+// -For each symbol / value pair in map:
+// -Get number of symbol by dividing num by val
+// -If count not 0:
+// -Repeat symbol by count and add to result
+// -Then update num to equal remainder of num divided by val and continue
+// -Once done return result
+
+// Notes:
+// -Time complexity: O(1) given upper limit on how many times loop can iterate
+// -Space complexity: O(1)
+
+console.log(intToRoman(375));
+
+// 2104. Sum of Subarray Ranges
+
+var subArrayRanges = function (nums) {
+  let total = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    let [smallest, largest] = [nums[i], nums[i]];
+
+    for (let j = 0; j < nums.length; j++) {
+      smallest = Math.min(nums[j], smallest);
+      largest = Math.max(nums[j], largest);
+
+      total += largest - smallest;
+    }
+  }
+
+  return total;
+};
+
+// Explanation:
+// -Set total to 0
+// -For each num in nums:
+// -Set curr num as smallest and largest num
+// -For each subsequent num:
+// -Update smallest and largest to lesser and greater of smallest or curr num
+// -At each iteration, add difference between largest and smallest to total
+// -Once done, return total
+
+// Notes:
+// -Time complexity: O(n ^ 2), could be brought down to O(n) w/ stack
+// -Space complexity: O(1)
+
+console.log(subArrayRanges([1, 5, 3, 2, 7, 8]));
+
+// 937. Reorder Data in Log Files
+
+var reorderLogFiles = function (logs) {
+  let letters = [];
+  let digits = [];
+
+  for (let log of logs) {
+    let last = log[log.length - 1];
+
+    if (last >= "0" && last <= "9") {
+      digits.push(log);
+    } else {
+      letters.push(log);
+    }
+  }
+  letters.sort((a, b) => {
+    let aBody = a.slice(a.indexOf(" ") + 1);
+    let bBody = b.slice(b.indexOf(" ") + 1);
+    let compare = aBody.localeCompare(bBody);
+
+    if (compare) {
+      return compare;
+    }
+
+    return a.localeCompare(b);
+  });
+
+  return [...letters, ...digits];
+};
+
+// Explanation:
+// -Push letter logs and digit logs to separate arrays
+// -Sort letters based on contents then identifier
+// -Once done, return array w/ sorted letter logs and subsequent digit logs
+
+// Notes:
+// -Time complexity: O(m * n log n), as we do m operations inside sort
+// -Space complexity: O(m * n) to keep the keys for the log
+
+console.log(
+  reorderLogFiles([
+    "dig1 8 1 5 1",
+    "let1 art can",
+    "dig2 3 6",
+    "let2 own kit dig",
+    "let3 art zero",
   ])
 );
