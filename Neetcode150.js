@@ -8283,7 +8283,7 @@ var findItinerary = function (tickets) {
 // -Once done, we reverse our list and return it
 
 // Notes:
-// -Time complexity: O(E ^ d), where e is the total number of flights and d is the maximum number of flights from an airport
+// -Time complexity: O(e log (e / v)), where e is the number of flights in the input
 // -Space complexity: O(no. of airports + no. of flights)
 
 console.log(
@@ -11743,3 +11743,518 @@ console.log(
     "let3 art zero",
   ])
 );
+
+// 588. Design In-Memory File System
+
+class Node {
+  constructor(content) {
+    this.content = content;
+    this.children = new Map();
+    this.isFile = false;
+  }
+}
+
+class FileSystem {
+  constructor() {
+    this.root = new Node();
+  }
+  ls(path) {
+    let nodes = path.split("/");
+    let curr = this.root;
+
+    if (path === "/") {
+      return [...curr.children.keys()].sort();
+    }
+    for (let i = 1; i < nodes.length; i++) {
+      let node = nodes[i];
+
+      if (curr.children.get(node).isFile) {
+        return [node];
+      }
+
+      curr = curr.children.get(node);
+    }
+
+    return [...curr.children.keys()].sort();
+  }
+  mkdir(path) {
+    this.findNode(path);
+  }
+  addContentToFile(path, content) {
+    let node = this.findNode(path);
+
+    node.content = node.content ? node.content + content : content;
+
+    node.isFile = true;
+  }
+  readContentFromFile(path) {
+    let node = this.findNode(path);
+
+    return node.content;
+  }
+  findNode(path) {
+    let nodes = path.split("/");
+    let curr = this.root;
+
+    for (let i = 1; i < nodes.length; i++) {
+      let node = nodes[i];
+
+      if (!curr.children.has(node)) {
+        curr.children.set(node, new Node());
+      }
+
+      curr = curr.children.get(node);
+    }
+
+    return curr;
+  }
+}
+
+// Explanation:
+// -Initialize node w/ content, children, and isFile set to false
+// -Initialize file system class w/ root equal to new node
+// -For ls method:
+// -Split path on '/' and set curr to root
+// -If path is root directory, return sorted children
+// -Else, iterate through nodes
+// -At each iteration, check if curr node is file path
+// -If so, return node
+// -Else get node's children from curr children and continue
+// -If we iterate through entire path without returning node, we return list of files and directory names in input directory
+// -For mkdir method:
+// -Use find node method to build path
+// -For add content to file method:
+// -Use find node method to either find node or build path
+// -If node is found, we add input content to its content
+// -Else we add content to the new node we just built
+// -Finally, we set is file for node to true
+// -For read content from file:
+// -We use find node method to find node and return its content
+// -For find node method:
+// -We split path on '/'
+// -We set curr to root
+// -For each node in nodes:
+// -If curr's children does not have node, set new node in children
+// -Then get node's children from curr and update curr
+// -Once done, return curr
+
+// Notes:
+// -Time complexity: O(n log n) for ls method, O(n) for mkdir method, add content method, and read content method
+// -Space complexity: O(n) for ls method to hold nodes list, O(n) for mkdir and add content to file, O(1) for read content from file
+
+let system = new FileSystem();
+system.mkdir("/a/b/c");
+system.addContentToFile("a/b/c/d", "hello");
+console.log(system.ls("/"));
+console.log(system.readContentFromFile("a/b/c/d"));
+
+// 863. All Nodes Distance K in Binary Tree
+
+var distanceK = function (root, target, k) {
+  let result = [];
+
+  if (!root) {
+    return result;
+  }
+
+  let node = findTarget(root, null, target);
+
+  findKApart(node, k);
+
+  return result;
+
+  function findTarget(node, parent, target) {
+    if (!node) {
+      return null;
+    }
+
+    node.parent = parent;
+
+    if (node === target) {
+      return node;
+    }
+
+    return (
+      findTarget(node.left, node, target) ||
+      findTarget(node.right, node, target)
+    );
+  }
+  function findKApart(node, k) {
+    if (!node || node.visited) {
+      return;
+    }
+    if (k === 0) {
+      result.push(node.val);
+      return;
+    }
+
+    node.visited = true;
+
+    findKApart(node.left, k - 1);
+    findKApart(node.right, k - 1);
+    findKApart(node.parent, k - 1);
+
+    return;
+  }
+};
+
+// Explanation:
+// -If root is null, return empty list
+// -Recurse through tree to find target node, adding parent to each node along the way
+// -Run find k apart from target node to find all nodes k apart from target, pushing each to result array
+// -Once done, return result array
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.right = new Node(3);
+tree.left.left = new Node(4);
+tree.left.right = new Node(5);
+tree.right.left = new Node(6);
+tree.right.right = new Node(7);
+console.log(distanceK(tree, tree.right.right, 2));
+
+// 348. Design Tic-Tac-Toe
+
+class TicTacToe {
+  constructor(n) {
+    this.len = n;
+    this.rows = new Array(n).fill(0);
+    this.cols = new Array(n).fill(0);
+    this.diagonal = 0;
+    this.antiDiagonal = 0;
+  }
+
+  move(row, col, player) {
+    let curr = player === 1 ? 1 : -1;
+
+    this.rows[row] += curr;
+    this.cols[col] += curr;
+
+    if (row === col) {
+      this.diagonal += curr;
+    }
+    if (col === this.len - row - 1) {
+      this.antiDiagonal += curr;
+    }
+    if (
+      Math.abs(this.rows[row]) === this.len ||
+      Math.abs(this.cols[col]) === this.len ||
+      Math.abs(this.diagonal) === this.len ||
+      Math.abs(this.antiDiagonal) === this.len
+    ) {
+      return player;
+    }
+
+    return 0;
+  }
+}
+
+// Explanation:
+// -Initialize tic tac toe class w/ length, rows, cols, and diagonal / antidiagonal properties
+// -For each move:
+// -Mark player as 1 or -1 based on player input
+// -Add / subtract 1 from input row and col
+// -If row and col equal, player has marked positive diagonal so we add or subtract by 1
+// -If input col equals board size - row - 1, player has marked antidiagonal so we add or subtract by 1
+// -If absolute value of row, col, or either diagonal is equal to board size, we return current player as they've won
+// -Else we return 0 and continue
+
+// Notes:
+// -Time complexity: O(1)
+// -Space complexity: O(n)
+
+let tictactoe = new TicTacToe(3);
+console.log(tictactoe.move(0, 0, 1));
+console.log(tictactoe.move(0, 1, 0));
+console.log(tictactoe.move(1, 1, 1));
+console.log(tictactoe.move(0, 2, 0));
+console.log(tictactoe.move(2, 2, 1));
+
+// 545. Boundary of Binary Tree
+
+var boundaryOfBinaryTree = function (root) {
+  let result = [root.val];
+
+  dfsLeft(root.left);
+  dfsLeaves(root.left);
+  dfsLeaves(root.right);
+  dfsRight(root.right);
+
+  return result;
+
+  function dfsLeft(node) {
+    if (!node || (!node.left && !node.right)) {
+      return;
+    }
+
+    result.push(node.val);
+
+    if (node.left) {
+      dfsLeft(node.left);
+    } else if (node.right) {
+      dfsLeft(node.right);
+    }
+  }
+  function dfsLeaves(node) {
+    if (!node) {
+      return;
+    }
+    if (!node.left && !node.right) {
+      result.push(node.val);
+      return;
+    }
+
+    dfsLeaves(node.left);
+    dfsLeaves(node.right);
+  }
+  function dfsRight(node) {
+    if (!node || (!node.left && !node.right)) {
+      return;
+    }
+    if (node.right) {
+      dfsRight(node.right);
+    } else if (node.left) {
+      dfsRight(node.left);
+    }
+
+    result.push(node.val);
+  }
+};
+
+// Explanation:
+// -Add root value to result
+// -Perform dfs on left subtree
+// -In dfs left:
+// -If node is null or node has no children, return
+// -Push node val to result
+// -If node has left child, dfs on left child
+// -Else if node has right child, dfs on right child
+// -Perform separate dfs on left and right substrees to find leaves
+// -In dfs leaves:
+// -If node is null, return
+// -If node has no children, add node val to result and return
+// -Else run dfs leaves on left then right subtrees
+// -Finally, run dfs on right subtree
+// -In dfs right:
+// -If node is null or node has no children, return
+// -If node has right child, dfs on right child
+// -Else if node has left child, dfs on left child
+// -Once done recursing, push node val to result
+// -Once done perform all dfs, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.left.left = new Node(3);
+tree.left.right = new Node(4);
+tree.right = new Node(5);
+tree.right.left = new Node(6);
+tree.right.right = new Node(7);
+console.log(boundaryOfBinaryTree(tree));
+
+// 767. Reorganize String
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(index) {
+    return Math.floor((index - 1) / 2);
+  }
+  left(index) {
+    return 2 * index + 1;
+  }
+  right(index) {
+    return 2 * index + 2;
+  }
+  swap(start, end) {
+    [this.data[start], this.data[end]] = [this.data[end], this.data[start]];
+  }
+  size() {
+    return this.data.length;
+  }
+  top() {
+    return this.data[0] || null;
+  }
+  add(num) {
+    this.data.push(num);
+    this.bubbleUp();
+  }
+  pop() {
+    let top = this.data[0];
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
+
+    return top;
+  }
+  bubbleUp() {
+    let index = this.size() - 1;
+    let parent = this.parent(index);
+
+    while (this.compare(this.data[index], this.data[parent] || []) < 0) {
+      this.swap(index, parent);
+      index = parent;
+      parent = this.parent(index);
+    }
+  }
+  bubbleDown() {
+    let index = 0;
+    let size = this.size();
+
+    while (true) {
+      let left = null;
+      let right = null;
+      let swap = null;
+      let leftIndex = this.left(index);
+      let rightIndex = this.right(index);
+
+      if (leftIndex < size) {
+        left = this.data[leftIndex];
+
+        if (this.compare(left, this.data[index]) < 0) {
+          swap = leftIndex;
+        }
+      }
+      if (rightIndex < size) {
+        right = this.data[rightIndex];
+
+        if (
+          (swap !== null && this.compare(right, left) < 0) ||
+          (swap === null && this.compare(right, this.data[index]) < 0)
+        ) {
+          swap = rightIndex;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(index, swap);
+      index = swap;
+    }
+  }
+}
+
+var reorganizeString = function (s) {
+  let freq = {};
+  let heap = new Heap((a, b) => b[1] - a[1]);
+
+  for (let char of s) {
+    freq[char] = freq[char] + 1 || 1;
+  }
+  for (let entry of Object.entries(freq)) {
+    heap.add(entry);
+  }
+
+  let result = [];
+
+  while (heap.size() > 1) {
+    let curr = heap.pop();
+    let next = heap.pop();
+
+    result.push(curr[0], next[0]);
+
+    curr[1]--;
+    next[1]--;
+
+    if (curr[1] > 0) {
+      heap.add(curr);
+    }
+    if (next[1] > 0) {
+      heap.add(next);
+    }
+  }
+  if (heap.size()) {
+    let [char, count] = heap.pop();
+
+    if (count > 1) {
+      return "";
+    }
+
+    result.push(char);
+  }
+
+  return result.join("");
+};
+
+// Explanation:
+// -Initialize max heap sorting by char count
+// -Map out frequencies of each char in hashmap
+// -Add all char / freq pairs to heap
+// -While heap size > 1, pop out first two items
+// -Push curr and next chars to result and decrement count for each
+// -If counts are > 0, add curr and next back to heap
+// -Once done, if heap has one item left:
+// -Pop out last item
+// -If count > 1, we cannot reorganize so we return empty string
+// -Else we push char to result
+// -Once done, we return our joined result array
+
+// Notes:
+// -Time Complexity: O(n log n)
+// -Space Complexity: O(n)
+
+console.log(reorganizeString("aaabbc"));
+
+// 1603. Design Parking System
+
+class ParkingSystem {
+  constructor(big, medium, small) {
+    this.list = [big, medium, small];
+  }
+  addCar(type) {
+    let index = type - 1;
+
+    if (this.list[index]) {
+      this.list[index]--;
+      return true;
+    }
+
+    return false;
+  }
+}
+
+// Explanation:
+// -Initialize parking system class w/ big, medium, and small vals in array
+// -For add car method:
+// -Get index by subtracting 1 from type
+// -If val at index > 0:
+// -Subtract from index and return true
+// -Else return false
+
+// Notes:
+// -Time complexity: O(1)
+// -Space complexity: O(1)
+
+let system = new ParkingSystem(10, 10, 2);
+console.log(system.addCar(3));
+console.log(system.addCar(3));
+console.log(system.addCar(3));
