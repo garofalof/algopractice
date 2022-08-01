@@ -3131,6 +3131,86 @@ class LRUCache {
   }
 }
 
+class Node {
+  constructor(key, val) {
+    this.key = key;
+    this.val = val;
+    this.next = null;
+    this.prev = null;
+  }
+}
+
+class DoublyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(key, val) {
+    const newNode = new Node(key, val);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      newNode.prev = this.tail;
+      this.tail = newNode;
+    }
+    this.length++;
+    return newNode;
+  }
+
+  remove(node) {
+    if (!node.next && !node.prev) {
+      // if there's only 1 node
+      this.head = null;
+      this.tail = null;
+    } else if (!node.next) {
+      // if the node is tail node
+      this.tail = node.prev;
+      this.tail.next = null;
+    } else if (!node.prev) {
+      // if the node is head node
+      this.head = node.next;
+      this.head.prev = null;
+    } else {
+      // if the node is in between
+      const prev = node.prev;
+      const next = node.next;
+      prev.next = next;
+      next.prev = prev;
+    }
+    this.length--;
+  }
+}
+
+class LRUCache {
+  constructor(capacity) {
+    this.DLL = new DoublyLinkedList();
+    this.map = {};
+    this.capacity = capacity;
+  }
+
+  get(key) {
+    if (!this.map[key]) return -1;
+    const value = this.map[key].val;
+    this.DLL.remove(this.map[key]);
+    this.map[key] = this.DLL.push(key, value);
+    return value;
+  }
+
+  put(key, value) {
+    if (this.map[key]) this.DLL.remove(this.map[key]);
+    this.map[key] = this.DLL.push(key, value);
+    if (this.DLL.length > this.capacity) {
+      const currKey = this.DLL.head.key;
+      delete this.map[currKey];
+      this.DLL.remove(this.DLL.head);
+    }
+  }
+}
+
 // Explanation:
 // -Set capacity to input capacity and set cache equal to empty map
 // -For get method:
@@ -7286,9 +7366,6 @@ console.log(
 
 var myPow = function (x, n) {
   function helper(x, n) {
-    if (x === 0) {
-      return 0;
-    }
     if (n === 0) {
       return 1;
     }
@@ -11839,7 +11916,7 @@ class FileSystem {
 // -Once done, return curr
 
 // Notes:
-// -Time complexity: O(n log n) for ls method, O(n) for mkdir method, add content method, and read content method
+// -Time complexity: O(m + n + k log k) for ls method, O(m + n) for mkdir method, add content method, and read content method. M refers to length of input string, n refers to the depth of the last directory level in the given input, and k refers to the number of entries in the last level directory.
 // -Space complexity: O(n) for ls method to hold nodes list, O(n) for mkdir and add content to file, O(1) for read content from file
 
 let system = new FileSystem();
@@ -12258,3 +12335,149 @@ let system = new ParkingSystem(10, 10, 2);
 console.log(system.addCar(3));
 console.log(system.addCar(3));
 console.log(system.addCar(3));
+
+// 412. Fizz Buzz
+
+var fizzBuzz = function (n) {
+  let result = [];
+  let map = { 3: "Fizz", 5: "Buzz" };
+
+  for (let i = 1; i <= n; i++) {
+    let curr = "";
+
+    for (let num in map) {
+      if (i % num === 0) {
+        curr += map[num];
+      }
+    }
+
+    curr === "" ? result.push(String(i)) : result.push(curr);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize empty result array
+// -Initialize map w/ 3 and 5 mapping to 'fizz' and 'buzz'
+// -For each num through n:
+// -Set curr string to empty string
+// -If curr num divisible by 3 and/or 5, add val from map to curr string
+// -Push num to result if string empty, else push curr string
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(fizzBuzz(27));
+
+// 234. Palindrome Linked List
+
+var isPalindrome = function (head) {
+  let frontPointer = head;
+
+  return dfs(head);
+
+  function dfs(node) {
+    if (node) {
+      if (!dfs(node.next)) {
+        return false;
+      }
+      if (frontPointer.val !== node.val) {
+        return false;
+      }
+
+      frontPointer = frontPointer.next;
+    }
+
+    return true;
+  }
+};
+
+// Explanation:
+// -Set front pointer to head
+// -Dfs on head node
+// -In dfs, if node not null:
+// -If dfs on next node false, return false
+// -If front pointer val not equal to curr node val, return false
+// -Else set front pointer to front pointer next and return true
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+// -Alternative: push vals to array and use two pointers to confirm
+
+function Node(val) {
+  return {
+    val,
+    next: null,
+  };
+}
+
+let list = new Node(1);
+list.next = new Node(2);
+list.next.next = new Node(2);
+list.next.next.next = new Node(1);
+console.log(isPalindrome(list));
+
+// 118. Pascal's Triangle
+
+var generate = function (numRows) {
+  let result = [[1]];
+
+  for (let i = 1; i < numRows; i++) {
+    let prev = result[result.length - 1];
+    let curr = new Array(i + 1).fill(0);
+
+    for (let j = 0; j < curr.length; j++) {
+      curr[j] = (prev[j] || 0) + (prev[j - 1] || 0);
+    }
+
+    result.push(curr);
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Push array w/ 1 to result
+// -For each subsequent row through num rows:
+// -Set prev to last element in result and curr to new array of size curr row + 1
+// -For each index in curr array:
+// -Set curr val to same index in prev or 0 + prev index in prev or 0
+// -Once done, push curr to result and continue
+// -Once we complete all rows, return result
+
+// Notes:
+// -Time complexity: O(n ^ 2), where n is number of rows
+// -Space complexity: O(n)
+
+console.log(generate(5));
+
+// 88. Merge Sorted Array
+
+var merge = function (nums1, m, nums2, n) {
+  let index = m + n - 1;
+  let [p1, p2] = [m - 1, n - 1];
+
+  while (p2 >= 0) {
+    nums1[index--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--];
+  }
+
+  return nums1;
+};
+
+// Explanation:
+// -Set insert pointer to length of two arrays - 1
+// -Set array pointers to end of each array
+// -While second pointer >= 0:
+// -Add greater of curr num in first array or second array to curr index
+// -Decrease result array pointer and array from where num was added pointer by 1
+// -Once done, return first array
+
+// Notes:
+// -Time complexity: O(n + m)
+// -Space complexity: O(1)
+
+console.log(merge([1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3));
