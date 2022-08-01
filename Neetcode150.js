@@ -12481,3 +12481,54 @@ var merge = function (nums1, m, nums2, n) {
 // -Space complexity: O(1)
 
 console.log(merge([1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3));
+
+// 344. Reverse String
+
+var reverseString = function (s) {
+  let [l, r] = [0, s.length - 1];
+
+  while (l <= r) {
+    [s[l++], s[r--]] = [s[r], s[l]];
+  }
+
+  return s;
+};
+
+// Explanation:
+// -Set left and right pointers to beginning and end of array
+// -While left <= right pointer:
+// -Swap left and right
+// -At each iteration, increase left and decrease right pointer by 1
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(reverseString("hello"));
+
+// 283. Move Zeroes
+
+var moveZeroes = function (nums) {
+  let pointer = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== 0) {
+      [nums[pointer], nums[i]] = [nums[i], nums[pointer]];
+      pointer++;
+    }
+  }
+
+  return nums;
+};
+
+// Explanation:
+// -Set left pointer to 0
+// -For each num in nums:
+// -If curr num not equal to 0, swap w/ left pointer and increase left pointer by 1
+// -Once done, return nums
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(moveZeroes([0, 1, 0, 3, 0, 12]));
