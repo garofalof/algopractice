@@ -12641,3 +12641,68 @@ var largestNumber = function (nums) {
 // -Space complexity: O(log n) for sort
 
 console.log(largestNumber([3, 30, 34, 5, 9]));
+
+// 149. Max Points on a Line
+
+var maxPoints = function (points) {
+  let max = 0;
+
+  for (let i = 0; i < points.length; i++) {
+    let slopeCount = {};
+
+    for (let j = i + 1; j < points.length; j++) {
+      let point1 = points[i];
+      let point2 = points[j];
+      let slope = findSlope(point1, point2);
+
+      slopeCount[slope] = slopeCount[slope] + 1 || 1;
+      max = Math.max(max, slopeCount[slope]);
+    }
+  }
+
+  return max + 1;
+
+  function findSlope(p1, p2) {
+    let slope;
+    let [x1, y1] = p1;
+    let [x2, y2] = p2;
+
+    if (y1 - y2 === 0) {
+      slope = 0;
+    } else {
+      slope = x1 - x2 === 0 ? "undefined" : (x1 - x2) / (y1 - y2);
+    }
+
+    return slope;
+  }
+};
+
+// Explanation:
+// -Set max to 0
+// -For each point in points:
+// -Set slope count to empty object
+// -For each subsequent point in points:
+// -Get curr point and subsequent point
+// -Find slope for point pair
+// -In find slope:
+// -If vertical line, set slope to 0
+// -Else if line is horizontal, set slope to undefined, else set slope to difference in x coordinates / difference in y coordinates
+// -Return slope to function call
+// -Increase slope count by 1 or set to 1 if slope doesn't exist
+// -Set max to greater of slope count or max
+// -Once done iterating through points, return max + 1
+
+// Notes:
+// -Time complexity: O(n ^ 2)
+// -Space complexity: O(n) for slope count
+
+console.log(
+  maxPoints([
+    [1, 1],
+    [3, 2],
+    [5, 3],
+    [4, 1],
+    [2, 3],
+    [1, 4],
+  ])
+);
