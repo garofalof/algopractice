@@ -12532,3 +12532,112 @@ var moveZeroes = function (nums) {
 // -Space complexity: O(1)
 
 console.log(moveZeroes([0, 1, 0, 3, 0, 12]));
+
+// 34. Find First and Last Position of Element in Sorted Array
+
+var searchRange = function (nums, target) {
+  let [l, r] = [0, nums.length - 1];
+
+  while (l <= r) {
+    let mid = Math.floor((r - l) / 2 + l);
+
+    if (nums[mid] >= target) {
+      r = mid - 1;
+    } else {
+      l = mid + 1;
+    }
+  }
+  if (nums[l] !== target) {
+    return [-1, -1];
+  }
+
+  let start = l;
+  [l, r] = [0, nums.length - 1];
+
+  while (l <= r) {
+    let mid = Math.floor((r - l) / 2 + l);
+
+    if (nums[mid] <= target) {
+      l = mid + 1;
+    } else {
+      r = mid - 1;
+    }
+  }
+
+  return [start, r];
+};
+
+// Explanation:
+// -Perform binary search on nums array
+// -For first search, we are trying to find first occurence
+// -If mid >= target, we set right pointer to mid - 1
+// -Else we set left pointer to mid + 1
+// -If num at left pointer not equal to target once we break from search, we return -1, -1 as there's no valid result
+// -For second search, we reset pointers
+// -At each iteration in search, if left pointer <= target, we set left to mid + 1
+// -Else we set right to mid - 1
+// -Once done, we return our start pointer and our right pointer
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(searchRange([5, 7, 7, 8, 8, 10], 8));
+
+// 162. Find Peak Element
+
+var findPeakElement = function (nums) {
+  let [l, r] = [0, nums.length - 1];
+
+  while (l < r) {
+    let mid = Math.floor((r - l) / 2 + l);
+
+    if (nums[mid] > nums[mid + 1]) {
+      r = mid;
+    } else {
+      l = mid + 1;
+    }
+  }
+
+  return l;
+};
+
+// Explanation:
+// -Perform binary search on nums array
+// -At each iteration, if mid > mid + 1, set right pointer to mid
+// -Else set left pointer to mid + 1
+// -Once we break out of loop, return left pointer
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(findPeakElement([1, 2, 1, 3, 2, 1]));
+
+// 179. Largest Number
+
+var largestNumber = function (nums) {
+  if (nums === null || nums.length === 0) {
+    return "0";
+  }
+
+  nums.sort((a, b) => `${b}${a}` - `${a}${b}`);
+
+  if (nums[0] === 0) {
+    return "0";
+  }
+
+  return nums.join("");
+};
+
+// Explanation:
+// -If nums is null or empty, return 0
+// -Sort nums based on custom comparator comparing merged num2 and num1 and merged num1 and num2
+// -If first num is 0, return 0
+// -Else return joined sorted nums
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(log n) for sort
+
+console.log(largestNumber([3, 30, 34, 5, 9]));
