@@ -12685,8 +12685,8 @@ var maxPoints = function (points) {
 // -Get curr point and subsequent point
 // -Find slope for point pair
 // -In find slope:
-// -If vertical line, set slope to 0
-// -Else if line is horizontal, set slope to undefined, else set slope to difference in x coordinates / difference in y coordinates
+// -If points on horizontal line, set slope to 0
+// -Else if points on vertical, set slope to undefined, else set slope to difference in x coordinates / difference in y coordinates
 // -Return slope to function call
 // -Increase slope count by 1 or set to 1 if slope doesn't exist
 // -Set max to greater of slope count or max
