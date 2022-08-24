@@ -13015,3 +13015,255 @@ var countAndSay = function (n) {
 // -Space complexity: O(n)
 
 console.log(countAndSay(8));
+
+// 26. Remove Duplicates from Sorted Array
+
+var removeDuplicates = function (nums) {
+  let n = nums.length;
+
+  if (n <= 1) {
+    return n;
+  }
+
+  let end = 1;
+
+  for (let i = 1; i < n; i++) {
+    if (nums[i] !== nums[i - 1]) {
+      nums[end++] = nums[i];
+    }
+  }
+
+  return end;
+};
+
+// Explanation:
+// -If nums length <= 1, return nums length
+// -Set end pointer to 1
+// -For each num from second num to end of nums:
+// -If curr num not equal to prev num:
+// -Set num at end pointer to curr num and increase end pointer by 1
+// -Once done, return end pointer
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(removeDuplicates([0, 0, 1, 1, 1, 2, 3, 4, 5]));
+
+// 240. Search a 2D Matrix II
+
+var searchMatrix = function (matrix, target) {
+  let [m, n] = [matrix.length, matrix[0].length];
+
+  if (matrix === null || !m || !n) {
+    return false;
+  }
+
+  let [r, c] = [m - 1, 0];
+
+  while (c < n && r >= 0) {
+    if (matrix[r][c] > target) {
+      r--;
+    } else if (matrix[r][c] < target) {
+      c++;
+    } else {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+// Explanation:
+// -If input matrix not valid, return false
+// -Set row to last row and col to first col
+// -While col < width and row >= 0:
+// -If curr node > target, decrease row by 1
+// -Else if curr node < target, increase col by 1
+// -Else return true
+// -If we don't return true and break out of while loop, return false
+
+// Notes:
+// -Time complexity: O(m + n), as row and col are decremented/incremented exactly once. Because row can only be decremented m times before while loop breaks and col can only be incremented n times, time complexity is O(m + n).
+// -Space complexity: O(1)
+
+console.log(
+  searchMatrix(
+    [
+      [1, 4, 7, 11, 15],
+      [2, 5, 8, 12, 19],
+      [3, 6, 9, 16, 22],
+      [10, 13, 14, 17, 24],
+      [18, 21, 23, 26, 30],
+    ],
+    21
+  )
+);
+
+// 166. Fraction to Recurring Decimal
+
+var fractionToDecimal = function (numerator, denominator) {
+  if (!numerator) {
+    return "0";
+  }
+
+  let result = "";
+
+  if (Math.sign(numerator) !== Math.sign(denominator)) {
+    result += "-";
+  }
+
+  let [num, den] = [Math.abs(numerator), Math.abs(denominator)];
+
+  result += Math.floor(num / den);
+  let remainder = num % den;
+
+  if (!remainder) {
+    return result;
+  }
+
+  result += ".";
+  let map = {};
+
+  while (remainder) {
+    map[remainder] = result.length;
+
+    remainder *= 10;
+    result += Math.floor(remainder / den);
+    remainder %= den;
+
+    if (map[remainder]) {
+      let idx = map[remainder];
+
+      return `${result.slice(0, idx)}(${result.slice(idx)})`;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -If numerator is 0, return 0
+// -Set result to empty string
+// -If signs of numerator and denominator aren't equal, add negative sign to result
+// -Get absolute value of numerator and denominator
+// -Add floor of numerator / denominator to result
+// -Set remainder to remainder of numerator / denominator
+// -If remainder is 0, return result
+// -Else add decimal to result and initialize empty hashmap
+// -While remainder not 0:
+// -Set remainder in map to result length
+// -Multiply remainder times 10 and add floor of remainder divided by denominator to result and update remainder
+// -If map has remainder, get start from map and return sliced result from 0 to index plus remaining result in parentheses from start index
+// -Else if remainder equals 0 and we break out of while loop, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+console.log(fractionToDecimal(4, 333));
+
+// 103. Binary Tree Zigzag Level Order Traversal
+
+var zigzagLevelOrder = function (root) {
+  let stack = [[root, 0]];
+  let map = {};
+
+  while (stack.length) {
+    let [curr, depth] = stack.pop();
+
+    if (curr) {
+      if (!map[depth]) {
+        map[depth] = [];
+      }
+      if (depth % 2) {
+        map[depth].unshift(curr.val);
+      } else {
+        map[depth].push(curr.val);
+      }
+
+      stack.push([curr.right, depth + 1]);
+      stack.push([curr.left, depth + 1]);
+    }
+  }
+
+  return Object.values(map);
+};
+
+// Explanation:
+// -Push root and depth of 0 to stack
+// -Initialize empty hashmap to store levels
+// -While stack length > 0:
+// -Pop last item off stack
+// -If curr item is valid:
+// -Add depth if not in map
+// -If depth is even, push curr val to end of depth array
+// -Else add curr val to front of depth array
+// -Push right and left children to stack and continue
+// -Once done, return object values from map
+
+// Notes:
+// -Time complexity: O(n ^ 2), can be brought down to O(n) using queues instead of arrays
+// -Space complexity: O(n)
+
+function Node(val) {
+  return {
+    val,
+    left: null,
+    right: null,
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(9);
+tree.right = new Node(20);
+tree.right.left = new Node(21);
+tree.right.right = new Node(25);
+
+console.log(zigzagLevelOrder(tree));
+
+// 29. Divide Two Integers
+
+var divide = function (dividend, divisor) {
+  let sign = Math.sign(dividend) === Math.sign(divisor) ? 1 : -1;
+  let maxSafe = Math.pow(2, 31) - 1;
+  let minSafe = -Math.pow(2, 31);
+  let d = Math.abs(dividend);
+  let dv = Math.abs(divisor);
+  let result = 0;
+
+  while (d >= dv) {
+    let temp = dv;
+    let multiple = 1;
+
+    while (temp * 2 <= d) {
+      temp *= 2;
+      multiple *= 2;
+    }
+
+    result += multiple;
+    d -= temp;
+  }
+  if (result > maxSafe) {
+    return sign === 1 ? maxSafe : minSafe;
+  }
+
+  return sign * result;
+};
+
+// Explanation:
+// -Get return sign and min/max safe integers
+// -Get absolute values of dividend and divisor and set result to 0
+// -While dividend >= divisor: set temp to divisor and multiple to 1
+// -While temp * 2 < dividend:
+// -Double temp and multiple
+// -Add multiple to result and decrease dividend by temp
+// -Once done, check to see if result is greater than max safe
+// -If so, return max safe or min safe if result sign is negative
+// -Else return result times sign
+
+// Notes:
+// -Time complexity: O(log n * log n)
+// -Space complexity: O(1)
+
+console.log(divide(-1324, 342));
