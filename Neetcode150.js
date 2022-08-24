@@ -2699,7 +2699,9 @@ var subsets = function (nums) {
     result.push(path);
 
     for (let i = index; i < nums.length; i++) {
-      backtrack([...path, nums[i]], i + 1);
+      path.push(nums[i]);
+      backtrack(path, i + 1);
+      path.pop();
     }
   }
 };
@@ -7899,10 +7901,10 @@ var findMedianSortedArrays = function (nums1, nums2) {
     let i = Math.floor((r - l) / 2 + l);
     let j = Math.floor((x + y) / 2) - i - 2;
 
-    aLeft = i >= 0 ? a[i] : -Infinity;
-    aRight = i + 1 < x ? a[i + 1] : Infinity;
-    bLeft = j >= 0 ? b[j] : -Infinity;
-    bRight = j + 1 < y ? b[j + 1] : Infinity;
+    let aLeft = i >= 0 ? a[i] : -Infinity;
+    let aRight = i + 1 < x ? a[i + 1] : Infinity;
+    let bLeft = j >= 0 ? b[j] : -Infinity;
+    let bRight = j + 1 < y ? b[j + 1] : Infinity;
 
     if (aLeft <= bRight && bLeft <= aRight) {
       if ((x + y) % 2) {
@@ -11746,7 +11748,7 @@ var subArrayRanges = function (nums) {
   for (let i = 0; i < nums.length; i++) {
     let [smallest, largest] = [nums[i], nums[i]];
 
-    for (let j = 0; j < nums.length; j++) {
+    for (let j = i + 1; j < nums.length; j++) {
       smallest = Math.min(nums[j], smallest);
       largest = Math.max(nums[j], largest);
 
@@ -12706,3 +12708,310 @@ console.log(
     [1, 4],
   ])
 );
+
+// 140. Word Break II
+
+const wordBreak = (s, wordDict) => {
+  let memo = new Map();
+
+  function backtrack(s) {
+    if (memo.has(s)) {
+      return memo.get(s);
+    }
+
+    let result = [];
+
+    if (!s.length) {
+      return result;
+    }
+    for (let word of wordDict) {
+      if (word.startsWith(word)) {
+        let next = s.slice(word.length);
+        let paths = backtrack(next);
+
+        if (!paths.length && !next.length) {
+          result.push(word);
+        }
+
+        let mapped = [...paths].map((rest) => word + " " + rest);
+
+        result.push(mapped);
+      }
+    }
+
+    memo.set(s, result);
+
+    return result;
+  }
+
+  return backtrack(s);
+};
+
+// 387. First Unique Character in a String
+
+var firstUniqChar = function (s) {
+  let map = new Map();
+
+  for (let char of s) {
+    map.set(char, map.get(char) + 1 || 1);
+  }
+  for (let i = 0; i < s.length; i++) {
+    let char = s[i];
+
+    if (map.get(char) === 1) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+// Explanation:
+// -Initialize empty hashmap
+// -For each char in string:
+// -Increase frequency in map
+// -For each char in string:
+// -If char frequency is 1, return index
+// -Else return -1 if we don't return char index
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1), as there are max 26 characters in map
+
+console.log(firstUniqChar("leetcode"));
+
+// 122. Best Time to Buy and Sell Stock II
+
+var maxProfit = function (prices) {
+  let max = 0;
+
+  for (let i = 1; i < prices.length; i++) {
+    if (prices[i] > prices[i - 1]) {
+      max += prices[i] - prices[i - 1];
+    }
+  }
+
+  return max;
+};
+
+// Explanation:
+// -Set max profit to 0
+// -For each price in prices starting at second price:
+// -If curr price > prev price, increase max by curr price - prev price
+// -Once done, return max
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(maxProfit([7, 1, 5, 3, 6, 4]));
+
+// 189. Rotate Array
+
+var rotate = function (nums, k) {
+  let n = nums.length;
+  k %= n;
+
+  reverse(0, n - 1);
+  reverse(0, k - 1);
+  reverse(k, n - 1);
+
+  return nums;
+
+  function reverse(l, r) {
+    while (l < r) {
+      [nums[l], nums[r]] = [nums[r], nums[l]];
+      l++;
+      r--;
+    }
+  }
+};
+
+// Explanation:
+// -Set n to input nums length
+// -Make k rangebound by setting k equal to remainder of k / n
+// -First reverse full list
+// -Then reverse first k nums
+// -Then reverse remaining part of list
+
+// Notes
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(rotate([1, 2, 3, 4, 5, 6], 3));
+
+// 378. Kth Smallest Element in a Sorted Matrix
+
+class Heap {
+  constructor(func) {
+    this.data = [];
+    this.compare = func;
+  }
+  parent(index) {
+    return Math.floor((index - 1) / 2);
+  }
+  left(index) {
+    return 2 * index + 1;
+  }
+  right(index) {
+    return 2 * index + 2;
+  }
+  swap(start, end) {
+    [this.data[start], this.data[end]] = [this.data[end], this.data[start]];
+  }
+  size() {
+    return this.data.length;
+  }
+  top() {
+    return this.data[0] || null;
+  }
+  add(num) {
+    this.data.push(num);
+    this.bubbleUp();
+  }
+  pop() {
+    let top = this.data[0];
+    let end = this.data.pop();
+
+    if (this.size()) {
+      this.data[0] = end;
+      this.bubbleDown();
+    }
+
+    return top;
+  }
+  bubbleUp() {
+    let index = this.size() - 1;
+    let parent = this.parent(index);
+
+    while (this.compare(this.data[index], this.data[parent] || []) < 0) {
+      this.swap(index, parent);
+      index = parent;
+      parent = this.parent(index);
+    }
+  }
+  bubbleDown() {
+    let index = 0;
+    let size = this.size();
+
+    while (true) {
+      let left = null;
+      let right = null;
+      let swap = null;
+      let leftIndex = this.left(index);
+      let rightIndex = this.right(index);
+
+      if (leftIndex < size) {
+        left = this.data[leftIndex];
+
+        if (this.compare(left, this.data[index]) < 0) {
+          swap = leftIndex;
+        }
+      }
+      if (rightIndex < size) {
+        right = this.data[rightIndex];
+
+        if (
+          (swap !== null && this.compare(right, left) < 0) ||
+          (swap === null && this.compare(right, this.data[index]) < 0)
+        ) {
+          swap = rightIndex;
+        }
+      }
+      if (swap === null) {
+        break;
+      }
+
+      this.swap(index, swap);
+      index = swap;
+    }
+  }
+}
+
+var kthSmallest = function (matrix, k) {
+  let n = matrix.length;
+  let heap = new Heap((a, b) => a[0] - b[0]);
+
+  for (let r = 0; r < Math.min(k, n); r++) {
+    heap.add([matrix[r][0], r, 0]);
+  }
+
+  let result;
+
+  while (k) {
+    let [node, r, c] = heap.pop();
+    result = node;
+
+    if (c < n - 1) {
+      heap.add([matrix[r][c + 1], r, c + 1]);
+    }
+
+    k--;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize min heap
+// -For each row in lesser of matrix size or k:
+// -Add first column val w/ coordinates to min heap
+// -While k not zero:
+// -Pop min item off heap and set result to curr val
+// -If col < matrix size - 1, add next col to heap
+// -Finally, decrease k by 1 and continue
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(x + k log x), where x is min of k or matrix size
+// -Space complexity: O(x)
+
+console.log(
+  kthSmallest(
+    [
+      [1, 5, 9],
+      [10, 11, 13],
+      [12, 13, 15],
+    ],
+    8
+  )
+);
+
+// 38. Count and Say
+
+var countAndSay = function (n) {
+  let str = "1";
+
+  for (let i = 1; i < n; i++) {
+    let copy = str;
+    let count = 1;
+
+    str = "";
+
+    for (let j = 0; j < copy.length; j++) {
+      if (copy[j] !== copy[j + 1]) {
+        str += count + copy[j];
+        count = 1;
+      } else {
+        count++;
+      }
+    }
+  }
+
+  return str;
+};
+
+// Explanation:
+// -Set result string to 1
+// -For each num from 1 to n:
+// -Copy result string, set count to 1, and set result to empty string
+// -For each digit in copy:
+// -If curr digit not equal to next digit, add count and curr digit to result string
+// -Else increase count
+// -Once done, return result string
+
+// Notes:
+// -Time complexity: O(n * m), where m is length of result string copy
+// -Space complexity: O(n)
+
+console.log(countAndSay(8));
