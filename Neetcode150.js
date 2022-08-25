@@ -13267,3 +13267,181 @@ var divide = function (dividend, divisor) {
 // -Space complexity: O(1)
 
 console.log(divide(-1324, 342));
+
+// 69. Sqrt(x)
+
+var mySqrt = function (x) {
+  let [l, r] = [1, x];
+  let result = 0;
+
+  while (l <= r) {
+    let mid = Math.floor((r - l) / 2 + l);
+    let squared = Math.pow(mid, 2);
+
+    if (squared <= x) {
+      result = mid;
+      l = mid + 1;
+    } else {
+      r = mid - 1;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set left and right pointers to 1 and x
+// -Set result to 0
+// -While left <= right:
+// -Get mid and mid squared
+// -If mid squared <= x, set result to mid and left to mid + 1
+// -Else set right to mid - 1
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(mySqrt(9));
+
+// 101. Symmetric Tree
+
+var isSymmetric = function (root) {
+  return dfs(root, root);
+
+  function dfs(n1, n2) {
+    if (!n1 && !n2) {
+      return true;
+    }
+    if (!n1 || !n2 || n1.val !== n2.val) {
+      return false;
+    }
+
+    return dfs(n1.left, n2.right) && dfs(n1.right, n2.left);
+  }
+};
+
+// Explanation:
+// -Return dfs on root nodes
+// -In dfs:
+// -If both input nodes null, return true
+// -If either input node is null or node vals aren't equal, return false
+// -Return dfs on node 1 left and node 2 right and dfs on node 1 right and node 2 left
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function Node(val, left = null, right = null) {
+  return {
+    val,
+    left,
+    right,
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.right = new Node(2);
+tree.left.left = new Node(3);
+tree.right.right = new Node(3);
+tree.left.right = new Node(4);
+tree.right.left = new Node(4);
+
+console.log(isSymmetric(tree));
+
+// 171. Excel Sheet Column Number
+
+var titleToNumber = function (columnTitle) {
+  let result = 0;
+
+  for (let i = 0; i < columnTitle.length; i++) {
+    result *= 26;
+    result += columnTitle[i].charCodeAt() - "A".charCodeAt() + 1;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set result to 0.
+// -For each char in string:
+// -Multiply result by 26 and add char code index + 1 to result
+// -Once done iterating through string, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(titleToNumber("ZYA"));
+
+// 277. Find the Celebrity
+
+var solution = function (knows) {
+  return function (n) {
+    let celebrity = 0;
+
+    for (let i = 0; i < n; i++) {
+      if (knows(celebrity, i)) {
+        celebrity = i;
+      }
+    }
+    for (let i = 0; i < n; i++) {
+      if ((i !== celebrity && knows(celebrity, i)) || !knows(i, celebrity)) {
+        return -1;
+      }
+    }
+
+    return celebrity;
+  };
+};
+
+// Explanation:
+// -Set celebrity to 0
+// -For each node in list from 0 to n:
+// -If celebrity knows curr node, set celebrity to curr node
+// -For each node in list:
+// -If curr node not equal to celebrity and celebrity knows curr node or curr node does not know celebrity, return -1
+// -Else if we iterate through entire list without returning -1, return celebrity
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+// 204. Count Primes
+
+var countPrimes = function (n) {
+  let isPrime = new Array(n).fill(true);
+
+  isPrime[1] = false;
+
+  for (let i = 2; i * i < n; i++) {
+    if (!isPrime[i]) {
+      continue;
+    }
+    for (let j = i * i; j < n; j += i) {
+      isPrime[j] = false;
+    }
+  }
+
+  let primes = isPrime.filter((num) => num === true).length - 1;
+
+  return primes < 0 ? 0 : primes;
+};
+
+// Explanation:
+// -Create isPrime array marking all nums as prime
+// -Set 1 to false, as we know 1 is not prime
+// -For each num through n where num squared < n:
+// -If curr num not prime, continue
+// -For each num from curr num squared through n of interval curr num:
+// -Mark num as false
+// -Once done, all non prime numbers through n will be marked as false
+// -We filter for true values and subtract 1 to exclude 0
+// -If primes < 0, return 0, else return primes
+
+// Notes:
+// -Time complexity: O(sqrt n * log log n). The sqrt n comes from the outer loop. Our inner loop is bounded by O(log log n).
+// -Space complexity: O(n)
+
+console.log(countPrimes(100));
