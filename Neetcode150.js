@@ -13445,3 +13445,83 @@ var countPrimes = function (n) {
 // -Space complexity: O(n)
 
 console.log(countPrimes(100));
+
+// 251. Flatten 2D Vector
+
+class Vector2D {
+  constructor(list) {
+    this.list = list;
+    this.outer = 0;
+    this.inner = 0;
+  }
+  next() {
+    let result = null;
+
+    if (this.hasNext()) {
+      result = this.list[this.outer][this.inner++];
+    }
+
+    return result;
+  }
+  hasNext() {
+    while (
+      this.outer < this.list.length &&
+      this.inner === this.list[this.outer].length
+    ) {
+      this.outer++;
+      this.inner = 0;
+    }
+
+    return this.outer < this.list.length;
+  }
+}
+
+// Explanation:
+// -Initialize list with inner and outer pointers of 0
+// -For next method:
+// -If iterator has next, return next val and increase inner pointer
+// -Else return null
+// -For has next:
+// -While outer pointer < list length and inner pointer equal to outer pointer length:
+// -Increase outer pointer and set inner pointer to 0
+// -Once done adjusting pointers, return whether outer pointer < list length
+
+// Notes:
+// -Time complexity: O(1) for constructor, O(v / n) for next and has next. If the iterator is completely exhausted, then all calls to has next will have performed (n + v) operations. However, because we perform n has next operations in order to exhaust the iterator, the amortized cost of this operation is O((n + v) / n), which is the same as O(n / n) + O(v / n), which is the same as O(v / n)
+// -Space complexity: O(1)
+
+let list = new Vector2D([[1, 2], [3], [4]]);
+console.log(list.next());
+console.log(list.next());
+console.log(list.next());
+console.log(list.next());
+console.log(list.next());
+
+// 279. Perfect Squares
+
+var numSquares = function (n) {
+  let dp = new Array(n + 1).fill(Infinity);
+  dp[0] = 0;
+
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j * j <= i; j++) {
+      dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
+    }
+  }
+
+  return dp[n];
+};
+
+// Explanation:
+// -Create array of size n + 1 and fill w/ infinity values
+// -Set index 0 to 0.
+// -For each num i from 1 to n:
+// -For each num squared from num 1 to i:
+// -Set index i in dp to min of val at index i or val at i - curr num squared + 1
+// -Once done, return val at index n in dp
+
+// Notes:
+// -Time complexity: O(n * sqrt n)
+// -Space complexity: O(n)
+
+console.log(numSquares(39));
