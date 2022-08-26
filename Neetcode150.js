@@ -13525,3 +13525,128 @@ var numSquares = function (n) {
 // -Space complexity: O(n)
 
 console.log(numSquares(39));
+
+// 350. Intersection of Two Arrays II
+
+var intersect = function (nums1, nums2) {
+  let [a, b] = [nums1, nums2];
+
+  if (a.length > b.length) {
+    [a, b] = [b, a];
+  }
+
+  let map = {};
+
+  for (let int of a) {
+    map[int] = map[int] + 1 || 1;
+  }
+
+  let result = [];
+
+  for (let int of b) {
+    if (map[int]) {
+      result.push(int);
+      map[int]--;
+    }
+  }
+
+  return result;
+};
+
+// Explanation:
+// -If nums2 smaller than nums1, swap nums1 and nums2
+// -Initialize empty hashmap
+// -For each num in nums1:
+// -Increase frequency count in map
+// -Set result to empty array
+// -For each num in b:
+// -If num in map has frequency > 0, push num to result and decrease frequency by 1
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(m + n)
+// -Space complexity: O(min(n, m))
+
+console.log(intersect([1, 2, 2, 4], [9, 4, 2, 2, 1]));
+
+// 160. Intersection of Two Linked Lists
+
+var getIntersectionNode = function (headA, headB) {
+  let pA = headA;
+  let pB = headB;
+
+  while (pA !== pB) {
+    pA = pA ? pA.next : headB;
+    pB = pB ? pB.next : headA;
+  }
+
+  return pA;
+};
+
+// Explanation:
+// -Set pointer A and pointer B to heads of each list
+// -While pointer A not equal to pointer B:
+// -If pointers are not null, set them to their next value
+// -Else set them to the head of the opposite list
+// -Once done, return either pointer
+
+// Notes:
+// -Time complexity: O(n + m), as each list is traversed twice in the worst case
+// -Space complexity: O(1)
+
+function Node(val, next = null) {
+  return {
+    val,
+    next,
+  };
+}
+
+let l1 = new Node(4);
+l1.next = new Node(1);
+l1.next.next = new Node(8);
+l1.next.next.next = new Node(4);
+l1.next.next.next.next = new Node(5);
+
+let l2 = new Node(5);
+l2.next = new Node(6);
+l2.next.next = new Node(1);
+l2.next.next.next = l1.next.next;
+
+console.log(getIntersectionNode(l1, l2));
+
+// 28. Implement strStr()
+
+var strStr = function (haystack, needle) {
+  if (needle === "") {
+    return 0;
+  }
+
+  let [m, n] = [haystack.length, needle.length];
+
+  for (let i = 0; i < m + 1 - n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (haystack[i + j] !== needle[j]) {
+        break;
+      }
+      if (j === n - 1) {
+        return i;
+      }
+    }
+  }
+
+  return -1;
+};
+
+// Explanation:
+// -If needle is empty string, return 0
+// -For each char in haystack through haystack length + 1 - needle length:
+// -For each index in needle:
+// -If chars in haystack and needle not equal, break
+// -Else if we've reached end of needle, return index i from haystack
+// -If we iterate through haystack without finding start, return -1
+
+// Notes:
+// -Time complexity: O(n + m)
+// -Space complexity: O(1)
+
+console.log(strStr("leetcode", "code"));
