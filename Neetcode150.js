@@ -13021,10 +13021,6 @@ console.log(countAndSay(8));
 var removeDuplicates = function (nums) {
   let n = nums.length;
 
-  if (n <= 1) {
-    return n;
-  }
-
   let end = 1;
 
   for (let i = 1; i < n; i++) {
@@ -13650,3 +13646,148 @@ var strStr = function (haystack, needle) {
 // -Space complexity: O(1)
 
 console.log(strStr("leetcode", "code"));
+
+// 108. Convert Sorted Array to Binary Search Tree
+
+var sortedArrayToBST = function (nums) {
+  function dfs(l, r) {
+    if (l > r) {
+      return null;
+    }
+
+    let mid = Math.floor((l + r) / 2);
+    let root = new TreeNode(nums[mid]);
+
+    root.left = dfs(l, mid - 1);
+    root.right = dfs(mid + 1, r);
+
+    return root;
+  }
+
+  return dfs(0, nums.length - 1);
+};
+
+// Explanation:
+// -Perform dfs on entire input array
+// -In dfs:
+// -If left index > right index, return null
+// -Get midpoint index and create root node from val
+// -Set root.left to result of dfs on left and midpoint - 1 as bounds and root.right to result of dfs on midpoint + 1 and right bounds
+// -Once done, return root
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(log n), as the recursion stack only requires log n space because tree is height-balanced
+
+function TreeNode(val, left = null, right = null) {
+  return {
+    val,
+    left,
+    right,
+  };
+}
+
+console.log(sortedArrayToBST([-10, -3, 0, 5, 9]));
+
+// 384. Shuffle an Array
+
+class Solution {
+  constructor(nums) {
+    this.original = nums.slice();
+    this.clone = nums;
+  }
+  reset() {
+    this.clone = this.original;
+    this.original = this.original.slice();
+
+    return this.clone;
+  }
+  shuffle() {
+    let n = this.clone.length;
+
+    for (let i = 0; i < n; i++) {
+      let rand = Math.floor(Math.random() * n);
+
+      [this.clone[i], this.clone[rand]] = [this.clone[rand], this.clone[i]];
+    }
+
+    return this.clone;
+  }
+}
+
+// Explanation:
+// -Initialize original and clone in constructor
+// -For reset:
+// -Set clone to original and original to copy of original and return clone
+// -For shuffle:
+// -For each index in clone, swap with random index
+// -Once done, return clone
+
+// Notes:
+// -Time complexity: O(1) for reset and O(n) for shuffle
+// -Space complexity: O(n) for reset and O(1) for shuffle
+
+let list = new Solution([1, 2, 3, 4, 5]);
+console.log(list.shuffle());
+console.log(list.reset());
+
+// 116. Populating Next Right Pointers in Each Node
+
+var connect = function (root) {
+  let q = [root];
+
+  while (q.length) {
+    let size = q.length;
+
+    for (let i = 0; i < size; i++) {
+      let curr = q.shift();
+
+      if (curr) {
+        curr.next = i < size - 1 ? q[0] : null;
+
+        if (curr.left) {
+          q.push(curr.left);
+        }
+        if (curr.right) {
+          q.push(curr.right);
+        }
+      }
+    }
+  }
+
+  return root;
+};
+
+// Explanation:
+// -Add root to queue
+// -While queue has work:
+// -Get queue size
+// -For each node in queue size:
+// -Get curr by popping front off queue
+// -If node not last in group size, set next to front of queue
+// -Else set to null
+// -If left child not null, push to queue
+// -If right child not null, push to queue
+// -Once done, return root
+
+// Notes:
+// -Time complexity: O(n ^ 2), can be brought down using actual queue data structure
+// -Space complexity: O(n) for queue
+
+function Node(val, left = null, right = null) {
+  return {
+    val,
+    left,
+    right,
+  };
+}
+
+let tree = new Node(1);
+tree.left = new Node(2);
+tree.right = new Node(3);
+tree.left.left = new Node(4);
+tree.left.right = new Node(5);
+tree.right.left = new Node(6);
+tree.right.right = new Node(7);
+
+console.log(connect(tree));
