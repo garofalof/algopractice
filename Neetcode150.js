@@ -13791,3 +13791,78 @@ tree.right.left = new Node(6);
 tree.right.right = new Node(7);
 
 console.log(connect(tree));
+
+// 237. Delete Node in a Linked List
+
+var deleteNode = function (node) {
+  [node.val, node.next] = [node.next.val, node.next.next];
+};
+
+// Explanation:
+// -Set curr node val to next node val and curr node next to next node's next pointer
+
+// Notes:
+// -Time complexity: O(1)
+// -Space complexity: O(1)
+
+function Node(val, next = null) {
+  return {
+    val,
+    next,
+  };
+}
+
+let list = new Node(1);
+list.next = new Node(2);
+list.next.next = new Node(3);
+list.next.next.next = new Node(4);
+list.next.next.next.next = new Node(5);
+
+deleteNode(list.next.next);
+
+console.log(list);
+
+// 285. Inorder Successor in BST
+
+var inorderSuccessor = function (root, p) {
+  let curr = root;
+  let successor = null;
+
+  while (curr) {
+    if (p.val >= curr.val) {
+      curr = curr.right;
+    } else {
+      successor = curr;
+      curr = curr.left;
+    }
+  }
+
+  return successor;
+};
+
+// Explanation:
+// -Set curr to root node and successor to null
+// -While curr not null:
+// -If p val >= curr val, set curr to right child
+// -Else set successor to curr and curr to left child
+// -Once done, return successor
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+function TreeNode(val, left = null, right = null) {
+  return {
+    val,
+    left,
+    right,
+  };
+}
+
+let tree = new TreeNode(1);
+tree.left = new TreeNode(4);
+tree.right = new TreeNode(5);
+tree.left.left = new TreeNode(3);
+tree.right.right = new TreeNode(6);
+
+console.log(inorderSuccessor(tree, tree.left));
