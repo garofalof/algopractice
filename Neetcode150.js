@@ -14031,3 +14031,66 @@ var longestSubstring = function (s, k) {
 // -Space complexity: O(1)
 
 console.log(longestSubstring("aaabb", 3));
+
+// 148. Sort List
+
+var sortList = function (head) {
+  function merge(l1, l2) {
+    let dummy = new ListNode();
+    let curr = dummy;
+
+    while (l1 && l2) {
+      curr.next = l1.val < l2.val ? l1 : l2;
+      curr = curr.next;
+
+      if (l1.val < l2.val) {
+        l1 = l1.next;
+      } else {
+        l2 = l2.next;
+      }
+    }
+
+    curr.next = l1 ? l1 : l2;
+
+    return dummy.next;
+  }
+  if (!head || !head.next) {
+    return head;
+  }
+
+  let [fast, slow] = [head, head];
+
+  while (fast.next && fast.next.next) {
+    [fast, slow] = [fast.next.next, slow.next];
+  }
+
+  let middle = slow.next;
+  slow.next = null;
+
+  return merge(sortList(head), sortList(middle));
+};
+
+// Explanation:
+// -Recursively split the list in two halves until there is only one node in list
+// -To split the list in two halves, we use the fast and slow pointer approach to find middle
+// -Recursively sort each sublist and combine it into a single list
+// -Continue until we have a single sorted list
+
+// Notes:
+// -Time complexity: O(n log n)
+// -Space complexity: O(log n) on the recursion stack
+
+function ListNode(val, next = null) {
+  return {
+    val,
+    next,
+  };
+}
+
+let list = new ListNode(4);
+list.next = new ListNode(1);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(7);
+list.next.next.next.next = new ListNode(5);
+
+console.log(sortList(list));
