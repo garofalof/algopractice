@@ -3108,107 +3108,68 @@ console.log(kthSmallest(bst, 3));
 
 // 146. LRU Cache
 
-class LRUCache {
-  constructor(capacity) {
-    this.capacity = capacity;
-    this.cache = new Map();
-  }
-  get(key) {
-    if (!this.cache.has(key)) {
-      return -1;
-    }
-    let value = this.cache.get(key);
-    this.cache.delete(key);
-    this.cache.set(key, value);
-    return value;
-  }
-  put(key, value) {
-    this.cache.delete(key);
-    this.cache.set(key, value);
-
-    if (this.cache.size > this.capacity) {
-      let first = this.cache.keys().next().value;
-      this.cache.delete(first);
-    }
-  }
-}
-
 class Node {
   constructor(key, val) {
     this.key = key;
     this.val = val;
-    this.next = null;
     this.prev = null;
-  }
-}
-
-class DoublyLinkedList {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
-  }
-
-  push(key, val) {
-    const newNode = new Node(key, val);
-    if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      this.tail.next = newNode;
-      newNode.prev = this.tail;
-      this.tail = newNode;
-    }
-    this.length++;
-    return newNode;
-  }
-
-  remove(node) {
-    if (!node.next && !node.prev) {
-      // if there's only 1 node
-      this.head = null;
-      this.tail = null;
-    } else if (!node.next) {
-      // if the node is tail node
-      this.tail = node.prev;
-      this.tail.next = null;
-    } else if (!node.prev) {
-      // if the node is head node
-      this.head = node.next;
-      this.head.prev = null;
-    } else {
-      // if the node is in between
-      const prev = node.prev;
-      const next = node.next;
-      prev.next = next;
-      next.prev = prev;
-    }
-    this.length--;
+    this.next = null;
   }
 }
 
 class LRUCache {
   constructor(capacity) {
-    this.DLL = new DoublyLinkedList();
-    this.map = {};
-    this.capacity = capacity;
+    this.count = 0;
+    this.cap = capacity;
+    this.cache = new Map();
+    this.head = new Node(0, 0);
+    this.tail = new Node(0, 0);
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
   }
+  remove(node) {
+    let { prev, next } = node;
 
+    node.prev.next = next;
+    node.next.prev = prev;
+  }
+  add(node) {
+    node.next = this.head.next;
+    node.next.prev = node;
+    node.prev = this.head;
+    this.head.next = node;
+  }
   get(key) {
-    if (!this.map[key]) return -1;
-    const value = this.map[key].val;
-    this.DLL.remove(this.map[key]);
-    this.map[key] = this.DLL.push(key, value);
-    return value;
-  }
+    if (this.cache.has(key)) {
+      let node = this.cache.get(key);
 
-  put(key, value) {
-    if (this.map[key]) this.DLL.remove(this.map[key]);
-    this.map[key] = this.DLL.push(key, value);
-    if (this.DLL.length > this.capacity) {
-      const currKey = this.DLL.head.key;
-      delete this.map[currKey];
-      this.DLL.remove(this.DLL.head);
+      this.remove(node);
+      this.add(node);
+
+      return node.val;
+    }
+
+    return -1;
+  }
+  set(key, val) {
+    if (this.cache.has(key)) {
+      let node = this.cache.get(key);
+      node.val = val;
+
+      this.remove(node);
+      this.add(node);
+    } else {
+      let node = new Node(key, val);
+      this.cache.set(key, node);
+
+      if (this.count < this.cap) {
+        this.count++;
+        this.add(node);
+      } else {
+        this.cache.delete(this.tail.prev.key);
+        this.remove(this.tail.prev);
+        this.add(node);
+      }
     }
   }
 }
@@ -13866,3 +13827,207 @@ tree.left.left = new TreeNode(3);
 tree.right.right = new TreeNode(6);
 
 console.log(inorderSuccessor(tree, tree.left));
+
+// 94. Binary Tree Inorder Traversal
+
+var inorderTraversal = function (root) {
+  let stack = [];
+  let curr = root;
+  let result = [];
+
+  while (curr || stack.length) {
+    while (curr) {
+      stack.push(curr);
+      curr = curr.left;
+    }
+
+    curr = stack.pop();
+    result.push(curr.val);
+    curr = curr.right;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Initialize stack and set curr node to root node
+// -Initialize result as empty array
+// -While curr not null or stack has work:
+// -While curr not null, push curr to stack and set curr to left child
+// -Once we go all the way left, pop last node of stack and push node val to result
+// -Then set curr to right child and continue
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(n)
+
+function TreeNode(val, left = null, right = null) {
+  return {
+    val,
+    left,
+    right,
+  };
+}
+
+let tree = new TreeNode(4);
+tree.left = new TreeNode(2);
+tree.left.right = new TreeNode(3);
+tree.right = new TreeNode(7);
+tree.right.left = new TreeNode(6);
+tree.right.right = new TreeNode(8);
+
+console.log(inorderTraversal(tree));
+
+// 326. Power of Three
+
+var isPowerOfThree = function (n) {
+  if (n < 1) {
+    return false;
+  }
+  while (n % 3 === 0) {
+    n /= 3;
+  }
+
+  return n === 1;
+};
+
+// Explanation:
+// -If n < 1, return false
+// -While n is divisible by 3:
+// -Divide n by 3 and continue
+// -Once n is no longer divisible by 3, return true if n equals 1, else return false
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(isPowerOfThree(27));
+
+// 340. Longest Substring with At Most K Distinct Characters
+
+var lengthOfLongestSubstringKDistinct = function (s, k) {
+  let [l, r] = [0, 0];
+  let distinct = 0;
+  let longest = 0;
+  let map = {};
+
+  while (r < s.length) {
+    let right = s[r];
+
+    if (!map[right]) {
+      distinct++;
+      map[right] = 1;
+    } else {
+      map[right]++;
+    }
+    while (distinct === k + 1) {
+      let left = s[l];
+      map[left]--;
+
+      if (map[left] === 0) {
+        distinct--;
+      }
+
+      l++;
+    }
+
+    longest = Math.max(longest, r - l + 1);
+    r++;
+  }
+
+  return longest;
+};
+
+// Explanation:
+// -Set left and right pointers to 0
+// -Set distinct count and longest count to 0
+// -Initialize hashmap to store character frequencies
+// -While right pointer < string length:
+// -Get right char
+// -If map doesn't have right char, increase distinct count by 1 and set char count in map to 1
+// -Else add 1 to char count in map
+// -While distinct equals k + 1:
+// -Get left char and decrease count in map by 1
+// -If char count equals 0, decrease distinct by 1
+// -Then increase left pointer by 1 and continue
+// -Once done, get longest by taking max of curr window or longest and increase right pointer by 1
+// -Finally, once we iterate through entire string, return longest
+
+// Notes:
+// -Time complexity: O(n * k), where n is length of string and k is amount of distinct characters. In the worst case, the input string contains n distinct characters, in which case we'll use O(k) time at each step to find a min value in the hashmap w/ k elements.
+// -Space complexity: O(k)
+
+console.log(lengthOfLongestSubstringKDistinct("ecebda", 2));
+
+// 395. Longest Substring with At Least K Repeating Characters
+
+var longestSubstring = function (s, k) {
+  if (k === 1) {
+    return s.length;
+  }
+
+  let maxUnique = new Set(s).size;
+  let maxLen = 0;
+
+  for (let i = 1; i <= maxUnique; i++) {
+    let freq = {};
+    let [start, end, unique, kCount] = [0, 0, 0, 0];
+
+    while (end < s.length) {
+      if (unique <= i) {
+        let currEnd = s[end];
+
+        if (!freq[currEnd]) {
+          unique++;
+        }
+
+        freq[currEnd] = freq[currEnd] + 1 || 1;
+
+        if (freq[currEnd] === k) {
+          kCount++;
+        }
+
+        end++;
+      } else {
+        let currStart = s[start];
+
+        if (freq[currStart] === k) {
+          kCount--;
+        }
+
+        freq[currStart]--;
+
+        if (freq[currStart] === 0) {
+          unique--;
+        }
+
+        start++;
+      }
+      if (unique === i && unique === kCount) {
+        maxLen = Math.max(maxLen, end - start);
+      }
+    }
+  }
+
+  return maxLen;
+};
+
+// Explanation:
+// -Find the number of unique chars in string and store in max unique
+// -For each number of unique chars from 1 to max unique:
+// -Initialize hashmap to store char frequencies
+// -Set start and end pointers of sliding window to beginning of string
+// -Set unique char count to 0 and k count to 0
+// -While end < string:
+// -Shrink or expand window to ensure number of unique chars not greater than curr unique
+// -If number of unique chars in sliding window <= curr unique, expand the window to the right
+// -Else, shrink the window from the left
+// -Keep track of the number of unique chars in the curr window having at least k frequency and update result if all chars in window have at least k frequency
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(max unique * n), where n is input string length
+// -Space complexity: O(1)
+
+console.log(longestSubstring("aaabb", 3));
