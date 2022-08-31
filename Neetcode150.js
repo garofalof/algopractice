@@ -3119,7 +3119,7 @@ class Node {
 
 class LRUCache {
   constructor(capacity) {
-    this.count = 0;
+    this.size = 0;
     this.cap = capacity;
     this.cache = new Map();
     this.head = new Node(0, 0);
@@ -3134,9 +3134,9 @@ class LRUCache {
     node.next.prev = prev;
   }
   add(node) {
-    node.next = this.head.next;
-    node.next.prev = node;
     node.prev = this.head;
+    node.next = this.head.next;
+    this.head.next.prev = node;
     this.head.next = node;
   }
   get(key) {
@@ -3151,7 +3151,7 @@ class LRUCache {
 
     return -1;
   }
-  set(key, val) {
+  put(key, val) {
     if (this.cache.has(key)) {
       let node = this.cache.get(key);
       node.val = val;
@@ -3162,8 +3162,8 @@ class LRUCache {
       let node = new Node(key, val);
       this.cache.set(key, node);
 
-      if (this.count < this.cap) {
-        this.count++;
+      if (this.size < this.cap) {
+        this.size++;
         this.add(node);
       } else {
         this.cache.delete(this.tail.prev.key);
@@ -3175,17 +3175,23 @@ class LRUCache {
 }
 
 // Explanation:
-// -Set capacity to input capacity and set cache equal to empty map
-// -For get method:
-// -If cache doesn't have key, return -1
-// -Else get curr key value and set to temp value
-// -Delete key from cache
-// -Set key value in cache
-// -Return value
+// -Initialize node class w/ key, val, prev, and next
+// -Initialize LRU Cache class with size set to 0, cap set to capacity, cache set to empty map, and linking dummy head and tail nodes
+// -For remove method:
+// -Get prev and next from node
+// -Set previous node's next pointer to input node and next node's next pointer to input node
+// -For add method:
+// -Set input node's prev pointer to head and next pointer to head's next pointer
+// -Set prev pointer for node next to head to node and next pointer for head to node
+// -For get:
+// -If cache has input key, get node from cache, remove from front, add to back, and return node val
+// -Else return -1
 // -For put method:
-// -Delete key from cache
-// -Set key value in cache
-// -If cache size exceeds capacity, remove first key from cache
+// -If cache has input key, get node from cache and update val
+// -Then remove node from front and add to back
+// -Else create new node w/ input key / val pair and set in cache
+// -If size < cap, increase size and add node to tail
+// -Else delete tail node from cache and list and add node to head
 
 // Notes:
 // -Time complexity: O(1) for all operations
@@ -8414,7 +8420,7 @@ var numDistinct = function (s, t) {
     if (dp.has(key)) {
       return dp.get(key);
     }
-    if (i === s.length || j === t.length) {
+    if (i === s.length) {
       return j === t.length ? 1 : 0;
     }
 
