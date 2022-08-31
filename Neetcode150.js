@@ -14255,3 +14255,29 @@ var increasingTriplet = function (nums) {
 // -Space complexity: O(1)
 
 console.log(increasingTriplet([5, 1, 4, 0, 2, 6]));
+
+// 172. Factorial Trailing Zeroes
+
+var trailingZeroes = function(n) {
+  let zeroes = 0;
+
+  while (n > 0) {
+      n = Math.floor(n / 5);
+      zeroes += n;
+  }
+
+  return zeroes;
+};
+
+// Explanation:
+// -Set zero count to 0
+// -While n > 0:
+// -Set n to floor of n / 5
+// -Increase zero count by n
+// -Once done, return zero count
+
+// Notes:
+// -Time complexity: O(log n)
+// -Space complexity: O(1)
+
+console.log(trailingZeroes(1045));
