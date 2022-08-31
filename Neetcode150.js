@@ -14100,3 +14100,158 @@ list.next.next.next = new ListNode(7);
 list.next.next.next.next = new ListNode(5);
 
 console.log(sortList(list));
+
+// 163. Missing Ranges
+
+var findMissingRanges = function (nums, lower, upper) {
+  let result = [];
+  let prev = lower - 1;
+
+  for (let i = 0; i <= nums.length; i++) {
+    let curr = i < nums.length ? nums[i] : upper + 1;
+
+    if (prev + 1 <= curr - 1) {
+      let formatted =
+        prev + 1 === curr - 1 ? String(prev + 1) : `${prev + 1}->${curr - 1}`;
+
+      result.push(formatted);
+    }
+
+    prev = curr;
+  }
+
+  return result;
+};
+
+// Explanation:
+// -Set result to empty array and prev to lower - 1
+// -For each num in nums:
+// -Set curr to num at curr index if index within nums, else set to upper + 1
+// -If prev + 1 <= curr - 1, push formatted range to result
+// -Then set prev to curr and continue
+// -Once done, return result
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1), as we don't count output array as extra space
+
+console.log(findMissingRanges([0, 1, 3, 50, 75], 0, 99));
+
+// 328. Odd Even Linked List
+
+var oddEvenList = function (head) {
+  if (!head) {
+    return head;
+  }
+
+  let [odd, even] = [head, head.next];
+  let evenHead = even;
+
+  while (even && even.next) {
+    odd.next = even.next;
+    odd = odd.next;
+    even.next = odd.next;
+    even = even.next;
+  }
+
+  odd.next = evenHead;
+
+  return head;
+};
+
+// Explanation:
+// -If input head is null, return null
+// -Set odd to head and even to head's next node
+// -Set even head to even
+// -While even not null and even's next node not null:
+// -Set odd's next pointer to even's next pointer and advance odd
+// -Set even's next pointer to odd's next pointer and advance even
+// -Once done iterating through list, set odd's next pointer to even head and return head
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+function ListNode(val, next = null) {
+  return {
+    val,
+    next,
+  };
+}
+
+let list = new ListNode(1);
+list.next = new ListNode(2);
+list.next.next = new ListNode(3);
+list.next.next.next = new ListNode(4);
+list.next.next.next.next = new ListNode(5);
+
+console.log(oddEvenList(list));
+
+// 454. 4Sum II
+
+var fourSumCount = function (nums1, nums2, nums3, nums4) {
+  let map = {};
+  let count = 0;
+
+  for (let n1 of nums1) {
+    for (let n2 of nums2) {
+      let sum = n1 + n2;
+
+      map[sum] = map[sum] + 1 || 1;
+    }
+  }
+  for (let n1 of nums3) {
+    for (let n2 of nums4) {
+      let sum = -(n1 + n2);
+
+      count += map[sum] || 0;
+    }
+  }
+
+  return count;
+};
+
+// Explanation:
+// -Initialize empty map and set count to 0
+// -Get sum of all pairs in first two lists and count frequencies of those sums in map
+// -Get inverse sum of all pairs in second two lists and if sum exists in map, add frequency to our count
+// -Once done, return count
+
+// Notes:
+// -Time complexity: O(n ^ 2)
+// -Space complexity: O(n ^ 2)
+
+console.log(fourSumCount([1, 2], [-2, -1], [-1, 2], [0, 2]));
+
+// 334. Increasing Triplet Subsequence
+
+var increasingTriplet = function (nums) {
+  let firstNum = Infinity;
+  let secondNum = Infinity;
+
+  for (let n of nums) {
+    if (n <= firstNum) {
+      firstNum = n;
+    } else if (n <= secondNum) {
+      secondNum = n;
+    } else {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+// Explanation:
+// -Set first and second num to Infinity
+// -For each num in input nums:
+// -If curr num <= first num, set first num to curr num
+// -Else if curr num > first num and <= second num, set second num to curr num
+// -Else if we find a num that's greater than both our first and second num, we return true
+// -If we iterate through entire list without returning true, we return false
+
+// Notes:
+// -Time complexity: O(n)
+// -Space complexity: O(1)
+
+console.log(increasingTriplet([5, 1, 4, 0, 2, 6]));
