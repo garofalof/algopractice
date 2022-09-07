@@ -11065,23 +11065,21 @@ console.log(
 
 var placeWordInCrossword = function (board, word) {
   let [m, n] = [board.length, board[0].length];
-  let directions = [
-    [1, 0],
+  let dirs = [
     [0, 1],
-    [-1, 0],
+    [1, 0],
     [0, -1],
+    [-1, 0],
   ];
 
   for (let r = 0; r < m; r++) {
     for (let c = 0; c < n; c++) {
-      if (
-        board[r][c] !== "#" &&
-        (board[r][c] === " " || board[r][c] === word[0])
-      ) {
-        for (let [dr, dc] of directions) {
-          let [prevR, prevC] = [r - dr, c - dc];
+      if (isValid(r, c)) {
+        for (let [dr, dc] of dirs) {
+          let pr = r - dr;
+          let pc = c - dc;
 
-          if (!isValid(prevR, prevC) && dfs(r, c, 0, [dr, dc])) {
+          if (!isValid(pr, pc) && dfs(r, c, 0, [dr, dc])) {
             return true;
           }
         }
@@ -11092,25 +11090,19 @@ var placeWordInCrossword = function (board, word) {
   return false;
 
   function isValid(r, c) {
-    let rBounds = 0 <= r && r < m;
-    let cBounds = 0 <= c && c < n;
+    let inBounds = 0 <= r && r < m && 0 <= c && c < n;
 
-    if (rBounds && cBounds) {
-      return board[r][c] !== "#";
-    }
+    return inBounds && board[r][c] !== "#";
   }
-  function dfs(r, c, index, dir) {
-    if (index === word.length) {
+  function dfs(r, c, i, dir) {
+    if (i === word.length) {
       return !isValid(r, c);
     }
-    if (
-      !isValid(r, c) ||
-      (board[r][c] !== " " && board[r][c] !== word[index])
-    ) {
+    if (!isValid(r, c) || (board[r][c] !== " " && board[r][c] !== word[i])) {
       return false;
     }
 
-    return dfs(r + dir[0], c + dir[1], index + 1, dir);
+    return dfs(r + dir[0], c + dir[1], i + 1, dir);
   }
 };
 
@@ -11573,7 +11565,7 @@ var mostVisitedPattern = function (username, timestamp, website) {
 // -Once done, return result sequence
 
 // Notes:
-// -Time complexity: O(n ^ 3), where n is length of site list
+// -Time complexity: O(m * n ^ 3), where m is number of users and n is length of site list
 // -Space complexity: O(n)
 
 console.log(
@@ -11710,20 +11702,20 @@ console.log(intToRoman(375));
 // 2104. Sum of Subarray Ranges
 
 var subArrayRanges = function (nums) {
-  let total = 0;
+  let sum = 0;
 
   for (let i = 0; i < nums.length; i++) {
-    let [smallest, largest] = [nums[i], nums[i]];
+    let [smaller, larger] = [nums[i], nums[i]];
 
     for (let j = i + 1; j < nums.length; j++) {
-      smallest = Math.min(nums[j], smallest);
-      largest = Math.max(nums[j], largest);
+      smaller = Math.min(smaller, nums[j]);
+      larger = Math.max(larger, nums[j]);
 
-      total += largest - smallest;
+      sum += larger - smaller;
     }
   }
 
-  return total;
+  return sum;
 };
 
 // Explanation:
@@ -11736,7 +11728,7 @@ var subArrayRanges = function (nums) {
 // -Once done, return total
 
 // Notes:
-// -Time complexity: O(n ^ 2), could be brought down to O(n) w/ stack
+// -Time complexity: O(n ^ 2), could be brought down to O(n) w/ monotonic stack
 // -Space complexity: O(1)
 
 console.log(subArrayRanges([1, 5, 3, 2, 7, 8]));
@@ -12753,9 +12745,7 @@ var maxProfit = function (prices) {
   let max = 0;
 
   for (let i = 1; i < prices.length; i++) {
-    if (prices[i] > prices[i - 1]) {
-      max += prices[i] - prices[i - 1];
-    }
+    max += Math.max(0, prices[i] - prices[i - 1]);
   }
 
   return max;
@@ -12764,7 +12754,7 @@ var maxProfit = function (prices) {
 // Explanation:
 // -Set max profit to 0
 // -For each price in prices starting at second price:
-// -If curr price > prev price, increase max by curr price - prev price
+// -Add greater of 0 or curr price - prev price to max
 // -Once done, return max
 
 // Notes:
@@ -14033,7 +14023,7 @@ var longestSubstring = function (s, k) {
 // -Once done, return result
 
 // Notes:
-// -Time complexity: O(max unique * n), where n is input string length
+// -Time complexity: O(max unique * n) or O(n), where n is input string length and max unique is capped at 26 characters
 // -Space complexity: O(1)
 
 console.log(longestSubstring("aaabb", 3));
@@ -14258,12 +14248,12 @@ console.log(increasingTriplet([5, 1, 4, 0, 2, 6]));
 
 // 172. Factorial Trailing Zeroes
 
-var trailingZeroes = function(n) {
+var trailingZeroes = function (n) {
   let zeroes = 0;
 
   while (n > 0) {
-      n = Math.floor(n / 5);
-      zeroes += n;
+    n = Math.floor(n / 5);
+    zeroes += n;
   }
 
   return zeroes;
