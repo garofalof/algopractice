@@ -13567,7 +13567,7 @@ l2.next.next.next = l1.next.next;
 
 console.log(getIntersectionNode(l1, l2));
 
-// 28. Implement strStr()
+// 28. Find the Index of the First Occurrence in a String
 
 var strStr = function (haystack, needle) {
   if (needle === "") {
